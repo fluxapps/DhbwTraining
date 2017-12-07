@@ -1,0 +1,19 @@
+xdht_new#:#Neues Training anlegen
+objs_xdht_duplicate#:#Training kopieren
+objs_xdht_import#:#Training importieren
+xdht_add#:#Training hinzufügen
+start#:#Start
+settings#:#Einstellungen
+permissions#:#Berechtigungen
+start_training#:#Training starten
+continue_training#:#Training fortsetzen
+start_new_training#:#Training neu starten
+info_start_training#:#Um das Training zu starten klicken Sie auf den Button "Training starten". Mit einem Klick auf den Button "Training fortsetzen" können Sie das Training fortsetzen. Wenn Sie ein neues Training starten möchten klicken Sie auf den Button "Neues Training starten".
+general_settings#:#Einstellungen
+title#:#Titel
+description#:#Beschreibung
+select_question_pool#:#Fragenpool auswählen
+save#:#Speichern
+cancel#:#Abbrechen
+please_select_question_pool#:#Bitte wählen Sie einen Fragepool aus
+choose_question_pool_info#:#Bitte wählen sie einen Fragepool von welchem Fragen bezogen werden sollen.

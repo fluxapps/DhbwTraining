@@ -1,0 +1,19 @@
+xdht_new#:#Create new training
+objs_xdht_duplicate#:#Copy training
+objs_xdht_import#:#Import training
+xdht_add#:#Add Training
+xdht_start#:#Start
+settings#:#Settings
+permissions#:#Permissions
+start_training#:#Start training
+continue_training#:#Continue training
+start_new_training#:#Start new training
+info_start_training#:#To start the training click on the button "start training". With a click on the button "continue training" you can continue the training. If you want to start a new training you can click on the button "start new training".
+general_settings#:#Settings
+title#:#Title
+description#:#Description
+select_question_pool#:#Select question pool
+save#:#Save
+cancel#:#Cancel
+please_select_question_pool#:#Please select a question pool
+choose_question_pool_info#:#Please choose a question pool from which the questions will be retrieved.
