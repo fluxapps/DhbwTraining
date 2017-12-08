@@ -10,6 +10,8 @@ require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/
 
 interface xdhtSettingFactoryInterface {
 
+	const QUESTION_TYPE = 'qpl';
+
 	/**
 	 * @param int    $id
 	 *
@@ -29,5 +31,4 @@ interface xdhtSettingFactoryInterface {
 	 * @return \xdhtSettingsInterface
 	 */
 	public function findOrGetInstanceByObjId($dhbw_training_object_id);
-
 }

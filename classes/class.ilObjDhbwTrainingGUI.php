@@ -59,26 +59,6 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 	 */
 	public $object;
 	/**
-	 * @var xdhtSettings
-	 */
-	protected $xdht_settings;
-	/**
-	 * @var ilCtrl
-	 */
-	protected $ctrl;
-	/**
-	 * @var ilObjDhbwTrainingAccess
-	 */
-	protected $access;
-	/**
-	 * @var ilDhbwTrainingPlugin
-	 */
-	protected $pl;
-	/**
-	 * @var \ILIAS\DI\Container
-	 */
-	protected $dic;
-	/**
 	 * @var ilPropertyFormGUI
 	 */
 	protected $form;
@@ -102,9 +82,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 		$this->tpl = $DIC['tpl'];
 		$this->facade = xdhtObjectFacade::getInstance($_GET['ref_id']);
 
-		if (!$this->getCreationMode() && is_object($this->getSettings())) {
+/*		if (!$this->getCreationMode() && is_object($this->getSettings())) {
 			$this->xdht_settings = $this->getSettings();
-		}
+		}*/
 	}
 
 	public function executeCommand() {
@@ -113,13 +93,13 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 		if (!$this->getCreationMode()) {
 			$this->tpl->setTitleIcon(ilObject::_getIcon($this->object->getId()));
 		} else {
-			$this->tpl->setTitleIcon(ilObject::_getIcon(ilObject::_lookupObjId($_GET['ref_id']), 'big'), $this->pl->txt('obj_'
+			$this->tpl->setTitleIcon(ilObject::_getIcon(ilObject::_lookupObjId($_GET['ref_id']), 'big'), $this->facade->pl()->txt('obj_'
 				. ilObject::_lookupType($_GET['ref_id'], true)));
 		}
 
-		$next_class = $this->dic->ctrl()->getNextClass($this);
+		$next_class = $this->facade->dic()->ctrl()->getNextClass($this);
 
-		$cmd = $this->dic->ctrl()->getCmd(xdhtStartGUI::CMD_STANDARD);
+		$cmd = $this->facade->dic()->ctrl()->getCmd(xdhtStartGUI::CMD_STANDARD);
 
 		$this->facade = xdhtObjectFacade::getInstance($_GET['ref_id']);
 
@@ -145,7 +125,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				break;*/
 
 			case 'ilpropertyformgui':
-				$ilPropertyFormGUI = new xdhtSettingsFormGUI($this, $this->facade, $this->xdht_settings);
+				$ilPropertyFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
 				$this->ctrl->forwardCommand($ilPropertyFormGUI);
 				break;
 
@@ -166,7 +146,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				$this->setLocator();
 				$this->tabs->activateTab(self::TAB_START);
 				$this->tpl->getStandardTemplate();
-				$xdhtStartGUI = new xdhtStartGUI($this->object);
+				$xdhtStartGUI = new xdhtStartGUI($this->facade);
 				$this->ctrl->forwardCommand($xdhtStartGUI);
 				break;
 
@@ -182,8 +162,8 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 		switch ($cmd) {
 			case self::CMD_STANDARD:
-				if ($this->access->hasReadAccess()) {
-					$this->ctrl->redirect(new xdhtStartGUI($this->object), xdhtStartGUI::CMD_STANDARD);
+				if ($this->facade->access()->hasReadAccess()) {
+					$this->ctrl->redirect(new xdhtStartGUI($this->facade), xdhtStartGUI::CMD_STANDARD);
 					break;
 				} else {
 					ilUtil::sendFailure(ilAssistedExercisePlugin::getInstance()->txt('permission_denied'), true);
@@ -192,7 +172,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 			case self::CMD_EDIT:
 			case self::CMD_UPDATE:
 			case self::CMD_AFTER_SAVE:
-				if ($this->access->hasWriteAccess()) {
+				if ($this->facade->access()->hasWriteAccess()) {
 					$this->{$cmd}();
 					break;
 				} else {
@@ -204,12 +184,12 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 	protected function setTabs() {
 		if (strtolower($_GET['baseClass']) != 'iladministrationgui') {
-			$this->tabs->addTab(self::TAB_START, $this->pl->txt('start'), $this->ctrl->getLinkTarget(new xdhtStartGUI($this->object), xdhtStartGUI::CMD_STANDARD));
-			if ($this->access->hasWriteAccess()) {
-					$this->tabs->addTab(self::TAB_SETTINGS, $this->pl->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
+			$this->tabs->addTab(self::TAB_START, $this->facade->pl()->txt('start'), $this->ctrl->getLinkTarget(new xdhtStartGUI($this->facade), xdhtStartGUI::CMD_STANDARD));
+			if ($this->facade->access()->hasWriteAccess()) {
+					$this->tabs->addTab(self::TAB_SETTINGS, $this->facade->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
 			}
 			if ($this->checkPermissionBool('edit_permission')) {
-				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->pl->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(
+				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->facade->pl()->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(
 					strtolower(ilObjDhbwTrainingGUI::class),
 					strtolower(ilPermissionGUI::class),
 				), 'perm'));
@@ -228,7 +208,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 	public function edit() {
 		$this->tabs->activateTab(self::TAB_SETTINGS);
-		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, $this->facade, $this->xdht_settings);
+		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
 		$xdhtSettingsFormGUI->fillForm();
 		$this->tpl->setContent($xdhtSettingsFormGUI->getHTML());
 	}
@@ -236,9 +216,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 	public function update() {
 		$this->tabs->activateTab(self::TAB_SETTINGS);
-		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, $this->facade, $this->xdht_settings);
+		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
 		if ($xdhtSettingsFormGUI->updateObject() && $this->object->update()) {
-			ilUtil::sendSuccess($this->pl->txt('changes_saved_success'), true);
+			ilUtil::sendSuccess($this->facade->pl()->txt('changes_saved_success'), true);
 		}
 		$xdhtSettingsFormGUI->setValuesByPost();
 		$this->tpl->setContent($xdhtSettingsFormGUI->getHTML());

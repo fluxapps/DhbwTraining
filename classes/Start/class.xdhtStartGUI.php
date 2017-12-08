@@ -1,9 +1,12 @@
 <?php
 
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilObjDhbwTrainingAccess.php');
+require_once('./Modules/TestQuestionPool/classes/class.assQuestionGUI.php');
 
 /**
  * Class xdhtStartGUI
+ *
+ * @ilCtrl_Calls      xdhtStartGUI: ilAssQuestionPageGUI
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
@@ -16,49 +19,17 @@ class xdhtStartGUI {
 	const CMD_NEW_START = 'newStart';
 
 	/**
-	 * @var ilObjDhbwTraining
+	 * @var xdhtObjectFacadeInterface
 	 */
-	public $dhbw_training;
-	/**
-	 * @var \ILIAS\DI\Container
-	 */
-	protected $dic;
-	/**
-	 * @var ilTemplate
-	 */
-	protected $tpl;
-	/**
-	 * @var ilTabsGUI
-	 */
-	protected $tabs;
-	/**
-	 * @var ilCtrl
-	 */
-	protected $ctrl;
-	/**
-	 * @var ilDhbwTrainingPlugin
-	 */
-	protected $pl;
-	/**
-	 * @var ilObjDhbwTrainingAccess
-	 */
-	protected $access;
+	protected $facade;
 
 
-	public function __construct(ilObjDhbwTraining $dhbw_training) {
-		global $DIC;
-		$this->dic = $DIC;
-		$this->tpl = $this->dic['tpl'];
-		$this->tabs = $DIC->tabs();
-		$this->ctrl = $this->dic->ctrl();
-		$this->access = new ilObjDhbwTrainingAccess();
-		$this->pl = ilDhbwTrainingPlugin::getInstance();
-		$this->dhbw_training = $dhbw_training;
-		//parent::__construct();
+	public function __construct(xdhtObjectFacadeInterface $facade) {
+		$this->facade = $facade;
 	}
 
 	public function executeCommand() {
-		$nextClass = $this->ctrl->getNextClass();
+		$nextClass = $this->facade->ctrl()->getNextClass();
 		switch ($nextClass) {
 			default:
 				$this->performCommand();
@@ -67,12 +38,13 @@ class xdhtStartGUI {
 
 
 	protected function performCommand() {
-		$cmd = $this->ctrl->getCmd(self::CMD_STANDARD);
+		$cmd = $this->facade->ctrl()->getCmd(self::CMD_STANDARD);
 		switch ($cmd) {
 			case self::CMD_STANDARD:
+			case self::CMD_START:
 			case self::CMD_CONTINUE:
 			case self::CMD_NEW_START:
-				if ($this->access->hasReadAccess()) {
+				if ($this->facade->access()->hasReadAccess()) {
 					$this->{$cmd}();
 					break;
 				} else {
@@ -83,29 +55,59 @@ class xdhtStartGUI {
 	}
 
 	public function index() {
-		ilUtil::sendInfo($this->pl->txt('info_start_training'));
-		$start_training_link = $this->ctrl->getLinkTarget($this, self::CMD_START);
+		ilUtil::sendInfo($this->facade->pl()->txt('info_start_training'));
+		$start_training_link = $this->facade->ctrl()->getLinkTarget($this, self::CMD_START);
 		$ilLinkButton = ilLinkButton::getInstance();
-		$ilLinkButton->setCaption($this->pl->txt("start_training"), false);
+		$ilLinkButton->setCaption($this->facade->pl()->txt("start_training"), false);
 		$ilLinkButton->setUrl($start_training_link);
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic->toolbar()->addButtonInstance($ilLinkButton);
+		$this->facade->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$continue_training_link = $this->ctrl->getLinkTarget($this, self::CMD_CONTINUE);
+		$continue_training_link = $this->facade->ctrl()->getLinkTarget($this, self::CMD_CONTINUE);
 		$ilLinkButton = ilLinkButton::getInstance();
-		$ilLinkButton->setCaption($this->pl->txt("continue_training"), false);
+		$ilLinkButton->setCaption($this->facade->pl()->txt("continue_training"), false);
 		$ilLinkButton->setUrl($continue_training_link);
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic->toolbar()->addButtonInstance($ilLinkButton);
+		$this->facade->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$new_start_training_link = $this->ctrl->getLinkTarget($this, self::CMD_NEW_START);
+		$new_start_training_link = $this->facade->ctrl()->getLinkTarget($this, self::CMD_NEW_START);
 		$ilLinkButton = ilLinkButton::getInstance();
-		$ilLinkButton->setCaption($this->pl->txt("start_new_training"), false);
+		$ilLinkButton->setCaption($this->facade->pl()->txt("start_new_training"), false);
 		$ilLinkButton->setUrl($new_start_training_link);
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic->toolbar()->addButtonInstance($ilLinkButton);
+		$this->facade->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$this->tpl->show();
+
+		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
+		$tpl->setVariable("ACTION", $this->facade->ctrl()->getLinkTarget($this, self::CMD_START));
+		$q_gui = assQuestionGUI::_getQuestionGUI("", 16);
+		// $q_gui->setRenderPurpose(assQuestionGUI::RENDER_PURPOSE_PLAYBACK);
+		//$a_html = $q_gui->getPreview();
+
+		$tpl->setCurrentBlock('question');
+		$tpl->setVariable('QUESTION', $q_gui->getPreview());
+		$tpl->parseCurrentBlock();
+
+		$tpl->setVariable('SUBMIT_BTN_NAME', 'cancel');
+		$tpl->setVariable('CANCEL_BTN_TEXT', $this->facade->pl()->txt('cancel'));
+
+		$tpl->setVariable('SUBMIT_BTN_NAME', 'next');
+		$tpl->setVariable('PROCEED_BTN_TEXT', $this->facade->pl()->txt('next_question'));
+
+		$this->facade->tpl()->setContent( $tpl->get());
+
+		$this->facade->tpl()->show();
+	}
+
+
+	/**
+	 * 1) get all questions from question pool (probably in a new gui class)
+	 * 2) click on continue button -> increase the index variable of the question pool array
+	 *  a) save log entry
+	 *  b) show next question
+	 */
+	public function start() {
+		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/templates/default/');
 	}
 
 }

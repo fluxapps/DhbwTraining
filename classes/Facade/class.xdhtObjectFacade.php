@@ -5,6 +5,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Facade/interface.xdhtObjectFacadeInterface.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettingFactory.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/QuestionPool/class.xdhtQuestionPoolFactory.php');
 
 /**
  * Class ilObjDhbwTrainingFacade
@@ -41,7 +42,22 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 * @var int
 	 */
 	protected $ref_id;
-
+	/**
+	 * @var xdhtSettingFactoryInterface
+	 */
+	protected $xdht_settings_factory;
+	/**
+	 * @var xdhtQuestionPoolFactoryInterface
+	 */
+	protected $xdht_question_pool_factory;
+	/**
+	 * @var ilObjDhbwTrainingAccess
+	 */
+	protected $access;
+	/**
+	 * @var ilTemplate
+	 */
+	protected $tpl;
 
 	/**
 	 * ilObjDhbwTrainingFacade constructor.
@@ -53,10 +69,14 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 
 		$this->ref_id = $object->getRefId();
 		$this->object_id = $object->getId();
+		$this->access = new ilObjDhbwTrainingAccess();
 		$this->pl = ilDhbwTrainingPlugin::getInstance();
 		$this->dic = $DIC;
 		$this->settings = (new xdhtSettingFactory())->findOrGetInstanceByObjId($this->object_id);
 		$this->training_object = $object;
+		$this->xdht_settings_factory = new xdhtSettingFactory();
+		$this->xdht_question_pool_factory = new xdhtQuestionPoolFactory();
+		$this->tpl = $this->dic['tpl'];
 	}
 
 
@@ -136,7 +156,38 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	}
 
 
+	/**
+	 * @inheritdoc
+	 */
 	public function training_object() {
 		return $this->training_object;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function xdhtSettingsFactory() {
+		return $this->xdht_settings_factory;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function xdhtQuestionPoolFactory() {
+		return $this->xdht_question_pool_factory;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function access() {
+		return $this->access;
+	}
+
+
+	public function tpl() {
+		return $this->tpl;
 	}
 }

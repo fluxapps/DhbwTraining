@@ -19,12 +19,7 @@ class xdhtSettingFactory implements xdhtSettingFactoryInterface {
 
 
 	/**
-	 * @param int $dhbw_training_object_id
-	 *
-	 * @description Returns an existing Object with given object_id
-	 * or a new Instance of xaseSettingM1 with given object_id set but not yet created
-	 *
-	 * @return ActiveRecord
+	 * @inheritDoc
 	 */
 	public function findOrGetInstanceByObjId($dhbw_training_object_id) {
 		/**
@@ -41,4 +36,5 @@ class xdhtSettingFactory implements xdhtSettingFactoryInterface {
 			return $obj;
 		}
 	}
+
 }

@@ -68,4 +68,28 @@ interface xdhtObjectFacadeInterface {
 	 * @return ilObjDhbwTraining
 	 */
 	public function training_object();
+
+
+	/**
+	 * @return xdhtSettingFactoryInterface
+	 */
+	public function xdhtSettingsFactory();
+
+
+	/**
+	 * @return xdhtQuestionPoolFactoryInterface
+	 */
+	public function xdhtQuestionPoolFactory();
+
+
+	/**
+	 * @return ilObjDhbwTrainingAccess
+	 */
+	public function access();
+
+
+	/**
+	 * @return ilTemplate
+	 */
+	public function tpl();
 }

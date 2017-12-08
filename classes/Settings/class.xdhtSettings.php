@@ -44,6 +44,15 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	 */
 	protected $dhbw_training_object_id;
 
+	/**
+	 * @var int
+	 *
+	 * @db_has_field  true
+	 * @db_fieldtype  integer
+	 * @db_length     4
+	 */
+	protected $question_pool_id;
+
 
 	/**
 	 * @return int
@@ -76,5 +85,20 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 		$this->dhbw_training_object_id = $dhbw_training_object_id;
 	}
 
+
+	/**
+	 * @return int
+	 */
+	public function getQuestionPoolId() {
+		return $this->question_pool_id;
+	}
+
+
+	/**
+	 * @param int $question_pool_id
+	 */
+	public function setQuestionPoolId($question_pool_id) {
+		$this->question_pool_id = $question_pool_id;
+	}
 
 }
