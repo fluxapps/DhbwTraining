@@ -6,6 +6,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Facade/interface.xdhtObjectFacadeInterface.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettingFactory.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/QuestionPool/class.xdhtQuestionPoolFactory.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Question/class.xdhtQuestionFactory.php');
 
 /**
  * Class ilObjDhbwTrainingFacade
@@ -51,6 +52,10 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 */
 	protected $xdht_question_pool_factory;
 	/**
+	 * @var xdhtQuestionFactoryInterface
+	 */
+	protected $xdht_question_factory;
+	/**
 	 * @var ilObjDhbwTrainingAccess
 	 */
 	protected $access;
@@ -76,6 +81,7 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 		$this->training_object = $object;
 		$this->xdht_settings_factory = new xdhtSettingFactory();
 		$this->xdht_question_pool_factory = new xdhtQuestionPoolFactory();
+		$this->xdht_question_factory = new xdhtQuestionFactory();
 		$this->tpl = $this->dic['tpl'];
 	}
 
@@ -178,6 +184,15 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	public function xdhtQuestionPoolFactory() {
 		return $this->xdht_question_pool_factory;
 	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function xdhtQuestionFactory() {
+		return $this->xdht_question_factory;
+	}
+
 
 	/**
 	 * @inheritdoc

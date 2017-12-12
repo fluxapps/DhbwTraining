@@ -81,10 +81,6 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 		$this->ctrl = $DIC->ctrl();
 		$this->tpl = $DIC['tpl'];
 		$this->facade = xdhtObjectFacade::getInstance($_GET['ref_id']);
-
-/*		if (!$this->getCreationMode() && is_object($this->getSettings())) {
-			$this->xdht_settings = $this->getSettings();
-		}*/
 	}
 
 	public function executeCommand() {
@@ -115,21 +111,12 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				$this->ctrl->forwardCommand($xdhtQuestionGUI);
 				break;
 
-/*			case strtolower(xdhtSettingsGUI::class):
-				$this->setTabs();
-				$this->setLocator();
-				$this->tabs->activateTab(self::TAB_SETTINGS);
-				$this->tpl->getStandardTemplate();
-				$xdhtSettingsGUI = new xdhtSettingsGUI();
-				$this->ctrl->forwardCommand($xdhtSettingsGUI);
-				break;*/
-
-			case 'ilpropertyformgui':
+/*			case 'ilpropertyformgui':
 				$ilPropertyFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
 				$this->ctrl->forwardCommand($ilPropertyFormGUI);
-				break;
+				break;*/
 
-			case strtolower(DhbwRepositorySelectorInputGUI::class):
+/*			case strtolower(DhbwRepositorySelectorInputGUI::class):
 				$this->tpl->getStandardTemplate();
 				$dhbwrepositoryselectorinputgui = new DhbwRepositorySelectorInputGUI($this->facade->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
 				$dhbwrepositoryselectorinputgui->setParent($this);
@@ -139,7 +126,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				$this->ctrl->setReturn($this, self::CMD_EDIT);
 				$this->ctrl->forwardCommand($dhbwrepositoryselectorinputgui);
 				$this->tpl->show();
-				break;
+				break;*/
 
 			case strtolower(xdhtStartGUI::class):
 				$this->setTabs();

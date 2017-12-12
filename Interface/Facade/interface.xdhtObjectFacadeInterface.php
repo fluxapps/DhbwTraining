@@ -83,6 +83,12 @@ interface xdhtObjectFacadeInterface {
 
 
 	/**
+	 * @return xdhtQuestionFactoryInterface
+	 */
+	public function xdhtQuestionFactory();
+
+
+	/**
 	 * @return ilObjDhbwTrainingAccess
 	 */
 	public function access();

@@ -22,10 +22,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 	 * @var ilObjDhbwTrainingGUI
 	 */
 	protected $parent_gui;
-	/**
-	 * @var boolean
-	 */
-	//protected $is_creation_mode;
+
 
 	/**
 	 * xdhtSettingsFormGUI constructor.
@@ -88,7 +85,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$values['desc'] = $this->facade->training_object()->getDescription();
 		/*$value_from_session = unserialize($_SESSION["form_".ilObjDhbwTrainingGUI::class]['question_pool_selection']);
 		$values['question_pool_selection'] = $value_from_session;*/
-		$question_pool_obj_data = $this->facade->xdhtQuestionPoolFactory()->getQuestionPoolObjectById($this->facade->settings()->getId());
+		$question_pool_obj_data = $this->facade->xdhtQuestionPoolFactory()->getQuestionPoolObjectById($this->facade->settings()->getQuestionPoolId());
 		$values['question_pool_selection'] = $question_pool_obj_data['title'];
 		$this->setValuesByArray($values);
 	}

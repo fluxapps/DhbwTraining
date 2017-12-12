@@ -1,11 +1,13 @@
 <!-- BEGIN form -->
-<form action="{ACTION}">
+<form action="{ACTION}" method="post">
 	<div class="form-group">
 		<!-- BEGIN question -->
 		{QUESTION}
 		<!-- END question -->
 	</div>
-	<button type="submit" class="btn btn-primary" name="{SUBMIT_BTN_NAME}">{CANCEL_BTN_TEXT}</button>
-	<button type="submit" class="btn btn-primary" name="{SUBMIT_BTN_NAME}">{PROCEED_BTN_TEXT}</button>
+	<button type="submit" class="btn btn-primary" name="submitted" value="{CANCEL_BTN_VALUE}">{CANCEL_BTN_TEXT}</button>
+	<button type="submit" class="btn btn-primary" name="submitted" value="{NEXT_BTN_VALUE}">{PROCEED_BTN_TEXT}</button>
+	<input type="hidden" name="question_id" value="{QUESTION_ID}" />
+	<input type="hidden" name="questions_and_answers" value="{QUESTIONS_AND_ANSWERS_VALUE}" />
 </form>
 <!-- END form -->
