@@ -8,19 +8,13 @@
 interface xdhtQuestionPoolFactoryInterface {
 
 	/**
-	 * @param integer $id
-	 *
-	 * @return array with object data
-	 */
-	public function getQuestionPoolObjectById($id);
-
-	/**
 	 *
 	 * @description Returns question pool objects
 	 *
 	 * @return array of question pool objects
 	 */
 	public function getQuestionPools();
+
 
 	/**
 	 *
@@ -29,5 +23,4 @@ interface xdhtQuestionPoolFactoryInterface {
 	 * @return array consisting of ref_id as key and title as options text
 	 */
 	public function getSelectOptionsArray();
-
 }

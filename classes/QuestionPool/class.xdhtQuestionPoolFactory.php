@@ -7,26 +7,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
-
 class xdhtQuestionPoolFactory implements xdhtQuestionPoolFactoryInterface {
-
-
-	public function getQuestionPoolObjectById($id) {
-		global $ilDB;
-
-		$sql = "SELECT * FROM object_data AS object
-				inner join object_reference AS reference ON object.obj_id = reference.obj_id
-				WHERE object.obj_id = $id";
-
-		$set = $ilDB->query($sql);
-
-		$arr_question_pool = array();
-		while($row = $ilDB->fetchAssoc($set)) {
-			$arr_question_pool[] = $row;
-		}
-
-		return $arr_question_pool;
-	}
 
 	/**
 	 * @inheritDoc
@@ -41,12 +22,13 @@ class xdhtQuestionPoolFactory implements xdhtQuestionPoolFactoryInterface {
 		$set = $ilDB->query($sql);
 
 		$arr_question_pools = array();
-		while($row = $ilDB->fetchAssoc($set)) {
+		while ($row = $ilDB->fetchAssoc($set)) {
 			$arr_question_pools[] = $row;
 		}
 
 		return $arr_question_pools;
 	}
+
 
 	/**
 	 * @inheritDoc
@@ -54,10 +36,10 @@ class xdhtQuestionPoolFactory implements xdhtQuestionPoolFactoryInterface {
 	public function getSelectOptionsArray() {
 		$question_pools_array = $this->getQuestionPools();
 		$sel_opt_array = [];
-		foreach($question_pools_array as $question_pool) {
+		foreach ($question_pools_array as $question_pool) {
 			$sel_opt_array[$question_pool['obj_id']] = $question_pool['title'];
 		}
+
 		return $sel_opt_array;
 	}
-
 }

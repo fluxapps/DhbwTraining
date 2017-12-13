@@ -64,25 +64,33 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 */
 	protected $tpl;
 
+
 	/**
 	 * ilObjDhbwTrainingFacade constructor.
 	 *
 	 * @param ilObjDhbwTraining $object
 	 */
-	private function __construct(ilObjDhbwTraining $object) {
+	public function __construct(ilObjDhbwTraining $object) {
 		global $DIC;
 
 		$this->ref_id = $object->getRefId();
 		$this->object_id = $object->getId();
-		$this->access = new ilObjDhbwTrainingAccess();
+
+		if (!$this->object_id || !$this->ref_id) {
+			throw new LogicException("We need a ref_id and object_id of the ilObjDhbwTraining");
+		}
+
 		$this->pl = ilDhbwTrainingPlugin::getInstance();
 		$this->dic = $DIC;
+		$this->tpl = $this->dic['tpl'];
+		$this->access = new ilObjDhbwTrainingAccess();
+
 		$this->settings = (new xdhtSettingFactory())->findOrGetInstanceByObjId($this->object_id);
 		$this->training_object = $object;
+
 		$this->xdht_settings_factory = new xdhtSettingFactory();
 		$this->xdht_question_pool_factory = new xdhtQuestionPoolFactory();
 		$this->xdht_question_factory = new xdhtQuestionFactory();
-		$this->tpl = $this->dic['tpl'];
 	}
 
 
@@ -91,9 +99,17 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 */
 	public static function getInstance($ref_id) {
 		if (!isset(self::$instance)) {
-			$object = ilObjectFactory::getInstanceByRefId($ref_id);
-			self::$instance = new self($object);
+			// $object = ilObjectFactory::getInstanceByRefId($ref_id);
+
+			if (ilObject::_lookupType($ref_id, true) == ilDhbwTrainingPlugin::PLUGIN_PREFIX) {
+					$il_object = new ilObjDhbwTraining($ref_id);
+			} else {
+				$il_object = new ilObjDhbwTraining();
+			}
+
+			self::$instance = new self($il_object);
 		}
+
 		return self::$instance;
 	}
 

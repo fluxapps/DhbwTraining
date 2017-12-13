@@ -17,18 +17,15 @@ class xdhtStartGUI {
 	const CMD_START= "start";
 	const CMD_PROCEED = 'proceed';
 	const CMD_NEW_START = 'newStart';
-
+	const CMD_CANCEL = 'cancel';
+	//const QUESTION_IDENTIFIER = 'question_id';
 
 	/**
 	 * @var xdhtObjectFacadeInterface
 	 */
 	protected $facade;
-
-
 	/**
-	 * 1) get all questions for the used question pool
-	 * 2) save in hidden input which questions are already answered
-	 * 3) show only questions after a click on the next button if the question wasn't already answered
+	 * @var array of questions
 	 */
 	protected $questions;
 
@@ -94,7 +91,7 @@ class xdhtStartGUI {
 	/**
 	 * @param integer $question
 	 */
-	protected function initQuestionForm($question, $questions_answers = null) {
+	protected function initQuestionForm($question) {
 		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
 		$tpl->setVariable("ACTION", $this->facade->ctrl()->getLinkTarget($this, self::CMD_PROCEED));
 		$q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
@@ -113,9 +110,7 @@ class xdhtStartGUI {
 
 		$tpl->setVariable('QUESTION_ID', $question['question_id']);
 
-		if(!empty($questions_answers)) {
-			$tpl->setVariable('QUESTIONS_AND_ANSWERS_VALUE', json_encode($questions_answers));
-		}
+		//$this->facade->ctrl()->setParameter($this, self::QUESTION_IDENTIFIER, $question['question_id']);
 
 		$this->facade->tpl()->setContent( $tpl->get());
 
@@ -134,13 +129,24 @@ class xdhtStartGUI {
 		if($_POST['submitted'] == 'cancel') {
 			$this->facade->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
-			$questions_and_answers = $_POST['questions_and_answers'];
-			//the last element is the id of the submitted answer of the user
-			$lastEl = end($questions_and_answers);
-			$this->createLogEntry($lastEl->key(), $lastEl->value());
-			$not_answered_questions = array_diff($this->questions, $questions_and_answers);
+			if(!array_key_exists('answered_questions', $_SESSION) || !in_array($_POST['question_id'], $_SESSION['answered_questions'])) {
+				$_SESSION['answered_questions'][] = $_POST['question_id'];
+			}
+			//TODO replace hard coded second argument
+			$this->createLogEntry($_POST['question_id'], 1);
+			$question_ids = $this->facade->xdhtQuestionFactory()->getQuestionIds($this->questions);
+			$session_question_ids = [];
+			foreach($_SESSION['answered_questions'] as $answered_question) {
+				$session_question_ids[] = $answered_question;
+			}
+			$not_answered_questions_ids = array_diff($question_ids, $session_question_ids);
+
+			$not_answered_questions = $this->facade->xdhtQuestionFactory()->getNotAnsweredQuestionsByIds($not_answered_questions_ids, $this->facade->settings()->getQuestionPoolId());
+
 			if(!empty($not_answered_questions)) {
-				$this->initQuestionForm($not_answered_questions[0], json_decode($questions_and_answers));
+				$this->initQuestionForm($not_answered_questions[0]);
+			} else {
+				$this->facade->ctrl()->redirect($this, self::CMD_STANDARD);
 			}
 		}
 	}

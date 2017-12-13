@@ -13,7 +13,8 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilDhbwTrainingPlugin.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettingsFormGUI.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Facade/class.xdhtObjectFacade.php');
-//require_once('./Services/AccessControl/classes/class.ilPermissionGUI.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Traits/trait.xdhtDIC.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participants/class.xdhtParticipantGUI.php');
 
 
 /**
@@ -38,10 +39,11 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: ilObjectCopyGUI
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtStartGUI
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtSettingsGUI
+ * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtParticipantGUI
  */
-
 class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
+	use xdhtDIC;
 	const CMD_STANDARD = "index";
 	const CMD_EDIT = "edit";
 	const CMD_UPDATE = "update";
@@ -53,7 +55,6 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 	const TAB_LEARNING_PROGRESS = "learning_progress";
 	const TAB_EXPORT = "export";
 	const TAB_PERMISSIONS = "permissions";
-
 	/**
 	 * @var ilObjDhbwTraining
 	 */
@@ -71,6 +72,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 	 */
 	protected $facade;
 
+
 	protected function afterConstructor() {
 		global $DIC;
 
@@ -80,26 +82,39 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 		$this->tabs = $DIC->tabs();
 		$this->ctrl = $DIC->ctrl();
 		$this->tpl = $DIC['tpl'];
-		$this->facade = xdhtObjectFacade::getInstance($_GET['ref_id']);
 	}
+
 
 	public function executeCommand() {
 
 		$this->setTitleAndDescription();
-		if (!$this->getCreationMode()) {
-			$this->tpl->setTitleIcon(ilObject::_getIcon($this->object->getId()));
+				if (!$this->getCreationMode()) {
+					$this->tpl->setTitleIcon(ilObject::_getIcon($this->object->getId()));
+				} else {
+					$this->tpl->setTitleIcon(ilObject::_getIcon(ilObject::_lookupObjId($_GET['ref_id']), 'big'), $this->pl()->txt('obj_'
+						. ilObject::_lookupType($_GET['ref_id'], true)));
+				}
+
+		$next_class = $this->ctrl()->getNextClass($this);
+
+		if($this->creation_mode) {
+			$cmd = $this->ctrl()->getCmd(self::CMD_EDIT);
 		} else {
-			$this->tpl->setTitleIcon(ilObject::_getIcon(ilObject::_lookupObjId($_GET['ref_id']), 'big'), $this->facade->pl()->txt('obj_'
-				. ilObject::_lookupType($_GET['ref_id'], true)));
+			$cmd = $this->ctrl()->getCmd(xdhtStartGUI::CMD_STANDARD);
 		}
 
-		$next_class = $this->facade->dic()->ctrl()->getNextClass($this);
-
-		$cmd = $this->facade->dic()->ctrl()->getCmd(xdhtStartGUI::CMD_STANDARD);
-
-		$this->facade = xdhtObjectFacade::getInstance($_GET['ref_id']);
-
 		switch ($next_class) {
+			case strtolower(xdhtParticipantGUI::class):
+				$this->setTabs();
+				$this->setLocator();
+				$this->tabs->activateTab(self::TAB_PARTICIPANTS);
+				//has to be called because in this case parent::executeCommand is not executed(contains getStandardTempplate and Show)
+				//Show Method has to be called in the corresponding methods
+				$this->tpl->getStandardTemplate();
+				$xdhtParticipantsGUI = new xdhtParticipantGUI(xdhtObjectFacade::getInstance($_GET['ref_id']));
+				$this->ctrl->forwardCommand($xdhtParticipantsGUI);
+				break;
+
 			case strtolower(xdhtQuestionGUI::class):
 				$this->setTabs();
 				$this->setLocator();
@@ -107,33 +122,16 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				//has to be called because in this case parent::executeCommand is not executed(contains getStandardTempplate and Show)
 				//Show Method has to be called in the corresponding methods
 				$this->tpl->getStandardTemplate();
-				$xdhtQuestionGUI = new xdhtQuestionGUI($this->facade);
+				$xdhtQuestionGUI = new xdhtQuestionGUI(xdhtObjectFacade::getInstance($_GET['ref_id']));
 				$this->ctrl->forwardCommand($xdhtQuestionGUI);
 				break;
-
-/*			case 'ilpropertyformgui':
-				$ilPropertyFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
-				$this->ctrl->forwardCommand($ilPropertyFormGUI);
-				break;*/
-
-/*			case strtolower(DhbwRepositorySelectorInputGUI::class):
-				$this->tpl->getStandardTemplate();
-				$dhbwrepositoryselectorinputgui = new DhbwRepositorySelectorInputGUI($this->facade->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
-				$dhbwrepositoryselectorinputgui->setParent($this);
-				$dhbwrepositoryselectorinputgui->setSelectText($this->facade->pl()->txt('please_select_question_pool'));
-				$dhbwrepositoryselectorinputgui->setClickableTypes(array('qpl'));
-				$dhbwrepositoryselectorinputgui->readFromSession();
-				$this->ctrl->setReturn($this, self::CMD_EDIT);
-				$this->ctrl->forwardCommand($dhbwrepositoryselectorinputgui);
-				$this->tpl->show();
-				break;*/
 
 			case strtolower(xdhtStartGUI::class):
 				$this->setTabs();
 				$this->setLocator();
 				$this->tabs->activateTab(self::TAB_START);
 				$this->tpl->getStandardTemplate();
-				$xdhtStartGUI = new xdhtStartGUI($this->facade);
+				$xdhtStartGUI = new xdhtStartGUI(xdhtObjectFacade::getInstance($_GET['ref_id']));
 				$this->ctrl->forwardCommand($xdhtStartGUI);
 				break;
 
@@ -149,34 +147,42 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 		switch ($cmd) {
 			case self::CMD_STANDARD:
-				if ($this->facade->access()->hasReadAccess()) {
-					$this->ctrl->redirect(new xdhtStartGUI($this->facade), xdhtStartGUI::CMD_STANDARD);
+				if ($this->access()->hasReadAccess()) {
+					$this->ctrl()->redirect(new xdhtStartGUI(xdhtObjectFacade::getInstance($_GET['ref_id'])), xdhtStartGUI::CMD_STANDARD);
 					break;
 				} else {
 					ilUtil::sendFailure(ilAssistedExercisePlugin::getInstance()->txt('permission_denied'), true);
 					break;
-			}
+				}
 			case self::CMD_EDIT:
 			case self::CMD_UPDATE:
 			case self::CMD_AFTER_SAVE:
-				if ($this->facade->access()->hasWriteAccess()) {
+				if ($this->access()->hasWriteAccess()) {
 					$this->{$cmd}();
 					break;
 				} else {
-					ilUtil::sendFailure($this->pl->txt('permission_denied'), true);
+					ilUtil::sendFailure($this->pl()->txt('permission_denied'), true);
 					break;
 				}
 		}
 	}
 
+
 	protected function setTabs() {
 		if (strtolower($_GET['baseClass']) != 'iladministrationgui') {
-			$this->tabs->addTab(self::TAB_START, $this->facade->pl()->txt('start'), $this->ctrl->getLinkTarget(new xdhtStartGUI($this->facade), xdhtStartGUI::CMD_STANDARD));
-			if ($this->facade->access()->hasWriteAccess()) {
-					$this->tabs->addTab(self::TAB_SETTINGS, $this->facade->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
+			$this->tabs->addTab(self::TAB_START, $this->pl()
+				->txt('start'), $this->ctrl->getLinkTargetByClass(xdhtStartGUI::class, xdhtStartGUI::CMD_STANDARD));
+			if ($this->access()->hasWriteAccess()) {
+				$this->tabs->addTab(self::TAB_SETTINGS, $this->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
+			}
+			if ($this->checkPermissionBool('write')) {
+				$this->tabs->addTab(self::TAB_PARTICIPANTS, $this->pl()->txt('participants'), $this->ctrl->getLinkTargetByClass(array(
+					strtolower(ilObjDhbwTrainingGUI::class),
+					strtolower(xdhtParticipantGUI::class),
+				), xdhtParticipantGUI::CMD_STANDARD));
 			}
 			if ($this->checkPermissionBool('edit_permission')) {
-				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->facade->pl()->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(
+				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->pl()->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(
 					strtolower(ilObjDhbwTrainingGUI::class),
 					strtolower(ilPermissionGUI::class),
 				), 'perm'));
@@ -193,9 +199,10 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 		return ilDhbwTrainingPlugin::PLUGIN_PREFIX;
 	}
 
+
 	public function edit() {
 		$this->tabs->activateTab(self::TAB_SETTINGS);
-		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
+		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, xdhtObjectFacade::getInstance($_GET['ref_id']));
 		$xdhtSettingsFormGUI->fillForm();
 		$this->tpl->setContent($xdhtSettingsFormGUI->getHTML());
 	}
@@ -203,9 +210,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 	public function update() {
 		$this->tabs->activateTab(self::TAB_SETTINGS);
-		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, $this->facade);
+		$xdhtSettingsFormGUI = new xdhtSettingsFormGUI($this, xdhtObjectFacade::getInstance($_GET['ref_id']));
 		if ($xdhtSettingsFormGUI->updateObject() && $this->object->update()) {
-			ilUtil::sendSuccess($this->facade->pl()->txt('changes_saved_success'), true);
+			ilUtil::sendSuccess($this->pl()->txt('changes_saved_success'), true);
 		}
 		$xdhtSettingsFormGUI->setValuesByPost();
 		$this->tpl->setContent($xdhtSettingsFormGUI->getHTML());
@@ -216,13 +223,14 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 	 * Cmd that will be redirected to after creation of a new object.
 	 */
 	function getAfterCreationCmd() {
-		// TODO: Implement getAfterCreationCmd() method.
+		return self::CMD_EDIT;
 	}
 
 
 	function getStandardCmd() {
 		return xdhtStartGUI::CMD_STANDARD;
 	}
+
 
 	protected function getSettings() {
 		if (xdhtSettings::where([ 'dhbw_training_object_id' => intval($this->object->getId()) ])->hasSets()) {
