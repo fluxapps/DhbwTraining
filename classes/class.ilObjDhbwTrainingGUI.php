@@ -14,7 +14,8 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettingsFormGUI.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Facade/class.xdhtObjectFacade.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Traits/trait.xdhtDIC.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participants/class.xdhtParticipantGUI.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipantGUI.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipantFactory.php');
 
 
 /**
@@ -71,7 +72,6 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 	 * @var xdhtObjectFacadeInterface
 	 */
 	protected $facade;
-
 
 	protected function afterConstructor() {
 		global $DIC;
@@ -172,14 +172,14 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 		if (strtolower($_GET['baseClass']) != 'iladministrationgui') {
 			$this->tabs->addTab(self::TAB_START, $this->pl()
 				->txt('start'), $this->ctrl->getLinkTargetByClass(xdhtStartGUI::class, xdhtStartGUI::CMD_STANDARD));
-			if ($this->access()->hasWriteAccess()) {
-				$this->tabs->addTab(self::TAB_SETTINGS, $this->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
-			}
 			if ($this->checkPermissionBool('write')) {
-				$this->tabs->addTab(self::TAB_PARTICIPANTS, $this->pl()->txt('participants'), $this->ctrl->getLinkTargetByClass(array(
+				$this->tabs->addTab(self::TAB_PARTICIPANTS, $this->pl()->txt('participant'), $this->ctrl->getLinkTargetByClass(array(
 					strtolower(ilObjDhbwTrainingGUI::class),
 					strtolower(xdhtParticipantGUI::class),
 				), xdhtParticipantGUI::CMD_STANDARD));
+			}
+			if ($this->access()->hasWriteAccess()) {
+				$this->tabs->addTab(self::TAB_SETTINGS, $this->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
 			}
 			if ($this->checkPermissionBool('edit_permission')) {
 				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->pl()->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(

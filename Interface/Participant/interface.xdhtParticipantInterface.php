@@ -1,13 +1,13 @@
 <?php
 /**
- * Class xdhtParticipantsInterface
+ * Class xdhtParticipantInterface
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-interface xdhtParticipantsInterface {
+interface xdhtParticipantInterface {
 
-	const TABLE_NAME = 'xdht_participants';
+	const TABLE_NAME = 'rep_robj_xdht_partic';
 
 
 	/**
@@ -79,13 +79,13 @@ interface xdhtParticipantsInterface {
 	/**
 	 * @return string
 	 */
-	public function getUpdated();
+	public function getUpdatedStatus();
 
 
 	/**
 	 * @param string $updated
 	 */
-	public function setUpdated($updated);
+	public function setUpdatedStatus($updated);
 
 
 	/**

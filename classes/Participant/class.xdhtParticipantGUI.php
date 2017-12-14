@@ -1,4 +1,7 @@
 <?php
+
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipantTableGUI.php');
+
 /**
  * Class xdhtParticipantsGUI
  *
@@ -30,7 +33,7 @@ class xdhtParticipantGUI {
 
 	public function executeCommand() {
 
-		$nextClass = $this->facade->ctrl()->getNextClass();
+		$nextClass = $this->ctrl()->getNextClass();
 		switch ($nextClass) {
 			default:
 				$this->performCommand();
@@ -39,7 +42,7 @@ class xdhtParticipantGUI {
 
 
 	protected function performCommand() {
-		$cmd = $this->facade->ctrl()->getCmd(self::CMD_STANDARD);
+		$cmd = $this->ctrl()->getCmd(self::CMD_STANDARD);
 		switch ($cmd) {
 			case self::CMD_STANDARD:
 			case self::CMD_APPLY_FILTER:
@@ -54,25 +57,26 @@ class xdhtParticipantGUI {
 		}
 	}
 
+
 	public function index() {
-		$this->ctrl()->saveParameterByClass(xaseItemTableGUI::class, self::ITEM_IDENTIFIER);
-		$xaseItemTableGUI = new xaseItemTableGUI($this, self::CMD_STANDARD, $this->object);
-		$this->tpl()->setContent($xaseItemTableGUI->getHTML());
+		$this->ctrl()->saveParameterByClass(xdhtParticipantTableGUI::class, self::PARTICIPANT_IDENTIFIER);
+		$xdhtParticipantTableGUI = new xdhtParticipantTableGUI($this, self::CMD_STANDARD, $this->facade);
+		$this->tpl()->setContent($xdhtParticipantTableGUI->getHTML());
 		$this->tpl()->show();
 	}
 
 
 	protected function applyFilter() {
-		$xaseItemTableGUI = new xaseItemTableGUI($this, self::CMD_STANDARD, $this->object);
-		$xaseItemTableGUI->writeFilterToSession();
+		$xdhtParticipantTableGUI = new xdhtParticipantTableGUI($this, self::CMD_APPLY_FILTER, $this->facade);
+		$xdhtParticipantTableGUI->writeFilterToSession();
 		$this->ctrl()->redirect($this, self::CMD_STANDARD);
 	}
 
 
 	protected function resetFilter() {
-		$xaseItemTableGUI = new xaseItemTableGUI($this, self::CMD_STANDARD, $this->object);
-		$xaseItemTableGUI->resetFilter();
-		$xaseItemTableGUI->resetOffset();
+		$xdhtParticipantTableGUI = new xdhtParticipantTableGUI($this, self::CMD_RESET_FILTER, $this->facade);
+		$xdhtParticipantTableGUI->resetFilter();
+		$xdhtParticipantTableGUI->resetOffset();
 		$this->ctrl()->redirect($this, self::CMD_STANDARD);
 	}
 

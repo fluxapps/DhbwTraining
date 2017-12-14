@@ -20,3 +20,13 @@ choose_question_pool_info#:#Bitte wählen sie einen Fragepool von welchem Fragen
 changes_saved_success#:#Änderungen wurden erfolgreich gespeichert.
 next_question#:#Nächste Frage
 please_choose#:#Bitte wählen
+participant_name#:#Name
+usr_name#:#Benutzername
+learning_progress#:#Lernfortschritt
+first_access#:#Erster Zugriff
+last_access#:#Letzter Zugriff
+common_actions#:#Aktionen
+participant#:#Teilnehmer
+status_not_attempted#:#Noch nicht begonnen
+status_in_progress#:#In Bearbeitung
+status_completed#:#Bearbeitet

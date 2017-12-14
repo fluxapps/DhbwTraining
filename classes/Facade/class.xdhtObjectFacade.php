@@ -28,10 +28,6 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 */
 	private $settings;
 	/**
-	 * @var \ILIAS\DI\Container
-	 */
-	private $dic;
-	/**
 	 * @var xdhtObjectFacadeInterface
 	 */
 	protected static $instance;
@@ -56,13 +52,9 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 */
 	protected $xdht_question_factory;
 	/**
-	 * @var ilObjDhbwTrainingAccess
+	 * @var xdhtParticipantFactoryInterface
 	 */
-	protected $access;
-	/**
-	 * @var ilTemplate
-	 */
-	protected $tpl;
+	protected $xdht_participant_factory;
 
 
 	/**
@@ -71,7 +63,6 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 * @param ilObjDhbwTraining $object
 	 */
 	public function __construct(ilObjDhbwTraining $object) {
-		global $DIC;
 
 		$this->ref_id = $object->getRefId();
 		$this->object_id = $object->getId();
@@ -80,17 +71,13 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 			throw new LogicException("We need a ref_id and object_id of the ilObjDhbwTraining");
 		}
 
-		$this->pl = ilDhbwTrainingPlugin::getInstance();
-		$this->dic = $DIC;
-		$this->tpl = $this->dic['tpl'];
-		$this->access = new ilObjDhbwTrainingAccess();
-
 		$this->settings = (new xdhtSettingFactory())->findOrGetInstanceByObjId($this->object_id);
 		$this->training_object = $object;
 
 		$this->xdht_settings_factory = new xdhtSettingFactory();
 		$this->xdht_question_pool_factory = new xdhtQuestionPoolFactory();
 		$this->xdht_question_factory = new xdhtQuestionFactory();
+		$this->xdht_participant_factory = new xdhtParticipantFactory();
 	}
 
 
@@ -119,46 +106,6 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 	 */
 	public function settings() {
 		return $this->settings;
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function dic() {
-		return $this->dic;
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function ui() {
-		return $this->dic()->ui()->mainTemplate();
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function user() {
-		return $this->dic()->user();
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function ctrl() {
-		return $this->dic()->ctrl();
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function pl() {
-		return $this->pl;
 	}
 
 
@@ -209,16 +156,12 @@ class xdhtObjectFacade implements xdhtObjectFacadeInterface {
 		return $this->xdht_question_factory;
 	}
 
-
 	/**
 	 * @inheritdoc
 	 */
-	public function access() {
-		return $this->access;
+	public function xdhtParticipantFactory() {
+		return $this->xdht_participant_factory;
 	}
 
 
-	public function tpl() {
-		return $this->tpl;
-	}
 }

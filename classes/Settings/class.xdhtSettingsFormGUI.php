@@ -46,39 +46,39 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 	public function initForm() {
 		$this->setTarget('_top');
 		$this->setId('xdht_settings_form');
-		$this->setFormAction($this->facade->ctrl()->getFormAction($this->parent_gui));
-		$this->setTitle($this->facade->pl()->txt('general_settings'));
+		$this->setFormAction($this->ctrl()->getFormAction($this->parent_gui));
+		$this->setTitle($this->pl()->txt('general_settings'));
 
-		$ti = new ilTextInputGUI($this->facade->pl()->txt('title'), 'title');
+		$ti = new ilTextInputGUI($this->pl()->txt('title'), 'title');
 		$ti->setRequired(true);
 		$this->addItem($ti);
 
-		$ta = new ilTextAreaInputGUI($this->facade->pl()->txt('description'), 'desc');
+		$ta = new ilTextAreaInputGUI($this->pl()->txt('description'), 'desc');
 		$ta->setRows(10);
 		$this->addItem($ta);
 		/*
-				$rep_sel_input = new DhbwRepositorySelectorInputGUI($this->facade->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
+				$rep_sel_input = new DhbwRepositorySelectorInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
 				$rep_sel_input->setParent($this->parent_gui);
-				$rep_sel_input->setSelectText($this->facade->pl()->txt('please_select_question_pool'));
+				$rep_sel_input->setSelectText($this->pl()->txt('please_select_question_pool'));
 				$rep_sel_input->readFromSession();
 				$rep_sel_input->setHeaderMessage('header message');
 				$rep_sel_input->setClickableTypes(array("qpl"));
 				$this->addItem($rep_sel_input);*/
 
-		/*		$sel_qpl = new ilSelectInputGUI($this->facade->pl()->txt('select_question_pool'), 'question_pool_selection');
+		/*		$sel_qpl = new ilSelectInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection');
 				$sel_qpl->setOptions(array());
 				$sel_qpl->setRequired(true);
 				$this->addItem($sel_qpl);*/
 
-		$rep_sel_input = new ilSelectInputGUI($this->facade->pl()->txt('select_question_pool'), 'question_pool_selection');
+		$rep_sel_input = new ilSelectInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection');
 		$rep_sel_input->setRequired(true);
 		$question_pools_array = $this->facade->xdhtQuestionPoolFactory()->getSelectOptionsArray();
 		$question_pools_array_2 = array(null => $this->pl()->txt('please_choose')) + $question_pools_array;
 		$rep_sel_input->setOptions($question_pools_array_2);
 		$this->addItem($rep_sel_input);
 
-		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_UPDATE, $this->facade->pl()->txt('save'));
-		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_STANDARD, $this->facade->pl()->txt("cancel"));
+		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_UPDATE, $this->pl()->txt('save'));
+		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_STANDARD, $this->pl()->txt("cancel"));
 	}
 
 

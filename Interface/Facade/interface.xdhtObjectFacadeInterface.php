@@ -22,36 +22,6 @@ interface xdhtObjectFacadeInterface {
 
 
 	/**
-	 * @return \ILIAS\DI\Container
-	 */
-	public function dic();
-
-
-	/**
-	 * @return ilTemplate
-	 */
-	public function ui();
-
-
-	/**
-	 * @return ilObjUser
-	 */
-	public function user();
-
-
-	/**
-	 * @return ilCtrl
-	 */
-	public function ctrl();
-
-
-	/**
-	 * @return ilDhbwTrainingPlugin
-	 */
-	public function pl();
-
-
-	/**
 	 * @return int
 	 */
 
@@ -89,13 +59,7 @@ interface xdhtObjectFacadeInterface {
 
 
 	/**
-	 * @return ilObjDhbwTrainingAccess
+	 * @return xdhtParticipantFactoryInterface
 	 */
-	public function access();
-
-
-	/**
-	 * @return ilTemplate
-	 */
-	public function tpl();
+	public function xdhtParticipantFactory();
 }

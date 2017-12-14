@@ -1,4 +1,11 @@
 <?php
+
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipant.php');
+require_once('./Services/Table/classes/class.ilTable2GUI.php');
+require_once('./Services/Tracking/classes/class.ilLPStatus.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/LearningProgress/class.LearningProgressStatusRepresentation.php');
+require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
+
 /**
  * Class xdhtParticipantTableGUI
  *
@@ -48,7 +55,7 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 		$this->setFormAction($this->ctrl()->getFormActionByClass(xdhtParticipantGUI::class));
 		$this->setExternalSorting(true);
 
-		$this->setDefaultOrderField("item_title");
+		$this->setDefaultOrderField("full_name");
 		$this->setDefaultOrderDirection("asc");
 		$this->setExternalSegmentation(true);
 		$this->setEnableHeader(true);
@@ -60,19 +67,20 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 
 	protected function addFilterItems() {
-		$participant_name = new ilTextInputGUI($this->pl()->txt('participant_name'), 'participant_name');
+		$participant_name = new ilTextInputGUI($this->pl()->txt('participant_name'), 'full_name');
 		$this->addAndReadFilterItem($participant_name);
 
-		$usr_name = new ilTextInputGUI($this->pl()->txt('usr_name'), 'usr_name');
+		$usr_name = new ilTextInputGUI($this->pl()->txt('usr_name'), 'login');
 		$this->addAndReadFilterItem($usr_name);
 
 		include_once("./Services/Form/classes/class.ilSelectInputGUI.php");
-		$option[0] = $this->pl()->txt('not_attempted');
+/*		$option[0] = $this->pl()->txt('not_attempted');
 		$option[1] = $this->pl()->txt('in_progress');
-		$option[2] = $this->pl()->txt('edited');
+		$option[2] = $this->pl()->txt('edited');*/
 
-		$status = new ilSelectInputGUI($this->pl()->txt("learning_progress"), "learning_progress");
-		$status->setOptions($option);
+		$status = new ilSelectInputGUI($this->pl()->txt("learning_progress"), "status");
+		//$status->setOptions($option);
+		$status->setOptions(LearningProgressStatusRepresentation::getDropdownDataLocalized($this->pl()));
 		$this->addAndReadFilterItem($status);
 	}
 
@@ -92,7 +100,7 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 	protected function getUserDataById($usr_id) {
 		global $ilDB;
-		$q = "SELECT * FROM usr_data WHERE id = " . $ilDB->quote($usr_id, "integer");
+		$q = "SELECT * FROM usr_data WHERE usr_id = " . $ilDB->quote($usr_id, "integer");
 		$usr_set = $ilDB->query($q);
 		$usr_rec = $ilDB->fetchAssoc($usr_set);
 
@@ -110,33 +118,33 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 		$usr_data = $this->getUserDataById($xdhtParticipant->getUsrId());
 
-		if ($this->isColumnSelected('participant_name')) {
+		if ($this->isColumnSelected('full_name')) {
 			$this->tpl->setCurrentBlock("PARTICIPANT_NAME");
 			$this->tpl->setVariable('PARTICIPANT_NAME', $usr_data['firstname'] . " " . $usr_data['lastname']);
 			$this->tpl->parseCurrentBlock();
 		}
 
-		if ($this->isColumnSelected('usr_name')) {
+		if ($this->isColumnSelected('login')) {
 			$this->tpl->setCurrentBlock("USR_NAME");
 			$this->tpl->setVariable('USR_NAME', $usr_data['login']);
 			$this->tpl->parseCurrentBlock();
 		}
-
-		if ($this->isColumnSelected('learning_progress')) {
+		if ($this->isColumnSelected('status')) {
 			$this->tpl->setCurrentBlock("LEARNING_PROGRESS");
-			$this->tpl->setVariable('LEARNING_PROGRESS', $xdhtParticipant->getStatus());
+			$this->tpl->setVariable('LP_STATUS_ALT', LearningProgressStatusRepresentation::statusToRepr($xdhtParticipant->getStatus()));
+			$this->tpl->setVariable('LP_STATUS_PATH', LearningProgressStatusRepresentation::getStatusImage($xdhtParticipant->getStatus()));
 			$this->tpl->parseCurrentBlock();
 		}
 
-		if ($this->isColumnSelected('first_access')) {
-			$this->tpl->setCurrentBlock("FIRST_ACCESS");
-			$this->tpl->setVariable('FIRST_ACCESS', $xdhtParticipant->getCreated());
+		if ($this->isColumnSelected('created')) {
+			$this->tpl->setCurrentBlock("CREATED");
+			$this->tpl->setVariable('CREATED', ilDatePresentation::formatDate(new ilDateTime($xdhtParticipant->getCreated(),IL_CAL_DATETIME)));
 			$this->tpl->parseCurrentBlock();
 		}
 
 		if ($this->isColumnSelected('last_access')) {
 			$this->tpl->setCurrentBlock("LAST_ACCESS");
-			$this->tpl->setVariable('LAST_ACCESS', $xdhtParticipant->getUpdated());
+			$this->tpl->setVariable('LAST_ACCESS', ilDatePresentation::formatDate(new ilDateTime($xdhtParticipant->getLastAccess(),IL_CAL_DATETIME)));
 			$this->tpl->parseCurrentBlock();
 		}
 
@@ -184,8 +192,9 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 		$collection = xdhtParticipant::getCollection();
 		$collection->where(array( 'training_obj_id' => $this->facade->settings()->getDhbwTrainingObjectId() ));
+		$collection->leftjoin('usr_data', 'usr_id', 'usr_id');
 
-		$sorting_column = $this->getOrderField() ? $this->getOrderField() : 'name';
+		$sorting_column = $this->getOrderField() ? $this->getOrderField() : 'full_name';
 		$offset = $this->getOffset() ? $this->getOffset() : 0;
 
 		$sorting_direction = $this->getOrderDirection();
@@ -196,15 +205,15 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 		foreach ($this->filter as $filter_key => $filter_value) {
 			switch ($filter_key) {
-				case 'name':
-				case 'usr_name':
+				case 'full_name':
+				case 'login':
 					$collection->where(array( $filter_key => '%' . $filter_value . '%' ), 'LIKE');
 					break;
-				case 'learning_progress':
-					if (!empty($filter_value)) {
+				case 'status':
+					//if (!empty($filter_value)) {
 						$collection->where(array( $filter_key => $filter_value ), '=');
 						break;
-					}
+					//}
 			}
 		}
 		$this->setData($collection->getArray());
@@ -212,19 +221,19 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 
 	public function getSelectableColumns() {
-		$cols["participant_name"] = array(
+		$cols["full_name"] = array(
 			"txt" => $this->pl()->txt("participant_name"),
 			"default" => true
 		);
-		$cols["usr_name"] = array(
+		$cols["login"] = array(
 			"txt" => $this->pl()->txt("usr_name"),
 			"default" => true
 		);
-		$cols["learning_progress"] = array(
+		$cols["status"] = array(
 			"txt" => $this->pl()->txt("learning_progress"),
 			"default" => true
 		);
-		$cols["first_access"] = array(
+		$cols["created"] = array(
 			"txt" => $this->pl()->txt("first_access"),
 			"default" => true
 		);

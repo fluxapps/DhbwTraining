@@ -1,11 +1,15 @@
 <?php
+
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Participant/interface.xdhtParticipantInterface.php');
+require_once('./Services/Tracking/classes/class.ilLPStatus.php');
+
 /**
  * Class xdhtParticipant
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface {
+class xdhtParticipant extends ActiveRecord implements xdhtParticipantInterface {
 
 	/**
 	 * @return string
@@ -70,7 +74,14 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 	 * @db_has_field    true
 	 * @db_fieldtype    timestamp
 	 */
-	protected $updated;
+	protected $updated_status;
+	/**
+	 * @var string
+	 *
+	 * @db_has_field    true
+	 * @db_fieldtype    timestamp
+	 */
+	protected $last_access;
 	/**
 	 * @var int
 	 *
@@ -90,6 +101,14 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 	protected $updated_usr_id = 0;
 
 	/**
+	 * @var string
+	 * @db_has_field    true
+	 * @db_fieldtype    text
+	 * @db_length       8
+	 */
+	protected $full_name;
+
+	/**
 	 * @var bool
 	 */
 	protected $status_changed = false;
@@ -105,10 +124,11 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 		global $ilUser;
 
 		$this->created = date('Y-m-d H:i:s');
-		$this->updated = date('Y-m-d H:i:s');
+		$this->updated_status = date('Y-m-d H:i:s');
 		$this->created_usr_id = $ilUser->getId();
 		$this->updated_usr_id = $ilUser->getId();
-		$this->status = ilLPStatus::LP_STATUS_NOT_ATTEMPTED;
+		$this->full_name = $ilUser->getFirstname() . " " . $ilUser->getLastName();
+		//$this->status = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
 		parent::create();
 	}
 
@@ -116,7 +136,7 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 	{
 		global $ilUser;
 
-		$this->updated = date('Y-m-d H:i:s');
+		$this->updated_status = date('Y-m-d H:i:s');
 		$this->updated_usr_id = $ilUser->getId();
 		parent::update();
 
@@ -251,7 +271,6 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 		return $this->created;
 	}
 
-
 	/**
 	 * @param string $created
 	 */
@@ -263,16 +282,32 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 	/**
 	 * @return string
 	 */
-	public function getUpdated() {
-		return $this->updated;
+	public function getUpdatedStatus() {
+		return $this->updated_status;
 	}
 
 
 	/**
-	 * @param string $updated
+	 * @param string $updated_status
 	 */
-	public function setUpdated($updated) {
-		$this->updated = $updated;
+	public function setUpdatedStatus($updated_status) {
+		$this->updated_status = $updated_status;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getLastAccess() {
+		return $this->last_access;
+	}
+
+
+	/**
+	 * @param string $last_access
+	 */
+	public function setLastAccess($last_access) {
+		$this->last_access = $last_access;
 	}
 
 
@@ -337,5 +372,21 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantsInterface 
 	 */
 	public function setOldStatus($old_status) {
 		$this->old_status = $old_status;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getFullName() {
+		return $this->full_name;
+	}
+
+
+	/**
+	 * @param string $full_name
+	 */
+	public function setFullName($full_name) {
+		$this->full_name = $full_name;
 	}
 }

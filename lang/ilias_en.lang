@@ -20,3 +20,13 @@ choose_question_pool_info#:#Please choose a question pool from which the questio
 changes_saved_success#:#Changes saved successfully.
 next_question#:#Next question
 please_choose#:#Please choose
+participant_name#:#Name
+usr_name#:#User name
+learning_progress#:#Learning progress
+first_access#:#First access
+last_access#:#Last access
+common_actions#:#Actions
+participant#:#Participant
+status_not_attempted#:#Not attempted
+status_in_progress#:#In progress
+status_completed#:#Completed

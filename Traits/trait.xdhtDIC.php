@@ -55,8 +55,19 @@ trait xdhtDIC {
 	}
 
 
+	/**
+	 * @return ilTemplate
+	 */
 	public function tpl() {
 		return $this->dic()['tpl'];
+	}
+
+
+	/**
+	 * @return ilObjUser
+	 */
+	public function user() {
+		return $this->dic()->user();
 	}
 
 
