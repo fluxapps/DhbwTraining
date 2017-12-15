@@ -7,17 +7,17 @@
 
 class LearningProgressStatusRepresentation {
 	// User has called the training object.
-/*	const ilLPStatus_NOT_ATTEMPTED = 1;
+	const PROGR_STATUS_NOT_ATTEMPTED_NUM = 1;
 	// User has called a question from the training object.
-	const PROGR_STATUS_IN_PROGRESS = 2;
+	const PROGR_STATUS_IN_PROGRESS_NUM = 2;
 	// User has achieved the target level
-	const PROGR_STATUS_EDITED = 3;
+	const PROGR_STATUS_COMPLETED_NUM = 3;
 
-	static $ARR_PROGR_STATUS = array(
-		ilLPStatus::ilLPStatus_NOT_ATTEMPTED
-		, self::PROGR_STATUS_IN_PROGRESS
-		, self::PROGR_STATUS_EDITED
-	);*/
+	protected static $ARR_PROGR_STATUS = array(
+		self::PROGR_STATUS_NOT_ATTEMPTED_NUM => 'status_not_attempted'
+		, self::PROGR_STATUS_IN_PROGRESS_NUM => 'status_in_progress'
+		, self::PROGR_STATUS_COMPLETED_NUM => 'status_completed'
+	);
 
 	protected static $dropdown_cache;
 
@@ -28,12 +28,24 @@ class LearningProgressStatusRepresentation {
 		ilLPStatus::LP_STATUS_COMPLETED_NUM => 'status_completed'
 	);
 
-//TODO für die Filterung ist es notwendig das not attempted nicht 0 ist -> deshalb hier eigene stati nummern und funktion die zurück mapped auf nummerische werte von ilLPStatus beim eigentlichen filtern. Evtl !empty abfrage in table gui bei filtern
+	//for the filter in the participant table gui the status should begin at 1. Otherwise if not attempted is 0 the list view shows only the entries with this status even though no filter is selected.
+	public static function mappProgrStatusToLPStatus($status_num) {
+		if ($status_num == 1) {
+			return ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
+		}
+		if ($status_num == 2) {
+			return ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;
+		}
+		if ($status_num == 3) {
+			return ilLPStatus::LP_STATUS_COMPLETED_NUM;
+		}
+		return '';
+	}
 
 	/**
 	 * Get a user readable representation of a status.
 	 */
-	static public function statusToRepr($status) {
+	public static function statusToRepr($status) {
 
 		$pl = ilDhbwTrainingPlugin::getInstance();
 
@@ -70,7 +82,7 @@ class LearningProgressStatusRepresentation {
 
 	public static function getDropdownData() {
 		if(self::$dropdown_cache == null) {
-			self::$dropdown_cache = self::$status_array;
+			self::$dropdown_cache = self::$ARR_PROGR_STATUS;
 		}
 		$arr_dropdown = self::$dropdown_cache;
 

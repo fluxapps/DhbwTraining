@@ -161,7 +161,7 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 		$all_cols = $this->getSelectableColumns();
 		foreach ($this->getSelectedColumns() as $col) {
 
-			$this->addColumn($all_cols[$col]['txt'], "", $column_width);
+			$this->addColumn($all_cols[$col]['txt'], "$col", $column_width);
 
 		}
 
@@ -210,10 +210,11 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 					$collection->where(array( $filter_key => '%' . $filter_value . '%' ), 'LIKE');
 					break;
 				case 'status':
-					//if (!empty($filter_value)) {
+					if (!empty($filter_value)) {
+						$filter_value = LearningProgressStatusRepresentation::mappProgrStatusToLPStatus($filter_value);
 						$collection->where(array( $filter_key => $filter_value ), '=');
 						break;
-					//}
+					}
 			}
 		}
 		$this->setData($collection->getArray());
