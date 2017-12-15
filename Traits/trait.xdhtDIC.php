@@ -70,5 +70,9 @@ trait xdhtDIC {
 		return $this->dic()->user();
 	}
 
+	public function language() {
+		return $this->dic()->language();
+	}
+
 
 }

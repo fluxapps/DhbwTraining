@@ -147,15 +147,11 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 			$this->tpl->setVariable('LAST_ACCESS', ilDatePresentation::formatDate(new ilDateTime($xdhtParticipant->getLastAccess(),IL_CAL_DATETIME)));
 			$this->tpl->parseCurrentBlock();
 		}
-
-		$this->addActionMenu($xdhtParticipant);
 	}
 
 	protected function initColums() {
 
 		$number_of_selected_columns = count($this->getSelectedColumns());
-		//add one to the number of columns for the action
-		$number_of_selected_columns ++;
 		$column_width = 100 / $number_of_selected_columns . '%';
 
 		$all_cols = $this->getSelectableColumns();
@@ -164,26 +160,6 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 			$this->addColumn($all_cols[$col]['txt'], "$col", $column_width);
 
 		}
-
-		$this->addColumn($this->pl()->txt('common_actions'), '', $column_width);
-	}
-
-
-	/**
-	 * @param xdhtParticipant $xdhtParticipant
-	 */
-	protected function addActionMenu(xdhtParticipant $xdhtParticipant) {
-		$current_selection_list = new ilAdvancedSelectionListGUI();
-		$current_selection_list->setListTitle($this->pl()->txt('common_actions'));
-		$current_selection_list->setId('participants_actions_' . $xdhtParticipant->getId());
-		$current_selection_list->setUseImages(false);
-
-		$this->ctrl()->setParameter($this->parent_obj, xdhtParticipantGUI::PARTICIPANT_IDENTIFIER, $xdhtParticipant->getId());
-
-		if (ilObjDhbwTrainingAccess::hasWriteAccess()) {
-			$current_selection_list->addItem($this->pl()->txt('view_participant'), xdhtParticipantGUI::CMD_STANDARD, $this->ctrl()->getLinkTargetByClass(xdhtParticipantGUI::class, xdhtParticipantGUI::CMD_STANDARD));
-		}
-		$this->tpl->setVariable('ACTIONS', $current_selection_list->getHTML());
 	}
 
 	protected function parseData() {

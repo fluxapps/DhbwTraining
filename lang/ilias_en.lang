@@ -30,3 +30,11 @@ participant#:#Participant
 status_not_attempted#:#Not attempted
 status_in_progress#:#In progress
 status_completed#:#Completed
+obj_xdht#:#Training
+objs_xdht#:#Training
+obj_xdht_duplicate#:#Duplicate Training
+availability#:#Availability
+time_period#:#Time period
+xdht_start_time#:#Start date
+xdht_finish_time#:#End date
+online_info#:#If online, participants can take the assisted exercise

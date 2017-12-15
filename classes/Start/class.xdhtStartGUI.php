@@ -35,7 +35,7 @@ class xdhtStartGUI {
 	public function __construct(xdhtObjectFacadeInterface $facade) {
 		$this->facade = $facade;
 		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
-		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrId($this->user()->getId()), ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM);
+		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM);
 	}
 
 	public function executeCommand() {
@@ -122,7 +122,7 @@ class xdhtStartGUI {
 
 	public function start() {
 		$this->initQuestionForm($this->questions[0]);
-		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrId($this->user()->getId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
+		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
 	}
 
 	protected function createLogEntry($question_id, $answer_id) {

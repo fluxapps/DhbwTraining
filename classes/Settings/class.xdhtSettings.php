@@ -53,6 +53,33 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	 */
 	protected $question_pool_id;
 
+	/**
+	 * @var int
+	 *
+	 * @db_has_field  true
+	 * @db_fieldtype  integer
+	 * @db_length     1
+	 * @db_is_notnull true
+	 */
+	protected $is_online = 0;
+
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        timestamp
+	 */
+	protected $start_date;
+
+	/**
+	 * @var string
+	 *
+	 * @db_has_field        true
+	 * @db_fieldtype        timestamp
+	 */
+	protected $end_date;
+
+
 
 	/**
 	 * @return int
@@ -100,5 +127,54 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	public function setQuestionPoolId($question_pool_id) {
 		$this->question_pool_id = $question_pool_id;
 	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getisOnline() {
+		return $this->is_online;
+	}
+
+
+	/**
+	 * @param int $is_online
+	 */
+	public function setIsOnline($is_online) {
+		$this->is_online = $is_online;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getStartDate() {
+		return $this->start_date;
+	}
+
+
+	/**
+	 * @param string $start_date
+	 */
+	public function setStartDate($start_date) {
+		$this->start_date = $start_date;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getEndDate() {
+		return $this->end_date;
+	}
+
+
+	/**
+	 * @param string $end_date
+	 */
+	public function setEndDate($end_date) {
+		$this->end_date = $end_date;
+	}
+
 
 }

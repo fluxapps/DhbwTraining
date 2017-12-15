@@ -56,6 +56,26 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$ta = new ilTextAreaInputGUI($this->pl()->txt('description'), 'desc');
 		$ta->setRows(10);
 		$this->addItem($ta);
+
+		$item = new ilFormSectionHeaderGUI();
+		$item->setTitle($this->language()->txt('availability'));
+		$this->addItem($item);
+		$this->tpl()->addJavaScript('./Services/Form/js/date_duration.js');
+		include_once "Services/Form/classes/class.ilDateDurationInputGUI.php";
+
+		$item = new ilCheckboxInputGUI($this->language()->txt('online'), 'online');
+		$item->setValue("1");
+		$item->setInfo($this->pl()->txt('online_info'));
+
+		$sub_item = new ilDateDurationInputGUI($this->language()->txt("time_period"), "time_period");
+		$sub_item->setShowTime(true);
+		$sub_item->setStartText($this->pl()->txt('start_time'));
+		$sub_item->setEndText($this->pl()->txt('finish_time'));
+		$item->addSubItem($sub_item);
+
+		$this->addItem($item);
+
+
 		/*
 				$rep_sel_input = new DhbwRepositorySelectorInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
 				$rep_sel_input->setParent($this->parent_gui);

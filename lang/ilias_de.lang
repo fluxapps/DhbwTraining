@@ -30,3 +30,11 @@ participant#:#Teilnehmer
 status_not_attempted#:#Noch nicht begonnen
 status_in_progress#:#In Bearbeitung
 status_completed#:#Bearbeitet
+obj_xdht#:#Training
+objs_xdht#:#Training
+obj_xdht_duplicate#:#Training duplizieren
+availability#:#Verfügbarkeit
+time_period#:#Zeitraum
+xdht_start_time#:#Startdatum
+xdht_finish_time#:#Enddatum
+online_info#:#Wenn Online, können Teilnehmer die unterstüzte Übung absolvieren.

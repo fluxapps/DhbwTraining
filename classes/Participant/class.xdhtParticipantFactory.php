@@ -13,8 +13,8 @@ class xdhtParticipantFactory implements xdhtParticipantFactoryInterface {
 	/**
 	 * @inheritdoc
 	 */
-	public function findOrCreateParticipantByUsrId($usr_id) {
-		$xdht_participant = xdhtParticipant::where(array('usr_id' => $usr_id))->first();
+	public function findOrCreateParticipantByUsrAndTrainingObjectId($usr_id, $training_obj_id) {
+		$xdht_participant = xdhtParticipant::where(array('usr_id' => $usr_id, 'training_obj_id' => $training_obj_id))->first();
 		if(empty($xdht_participant)) {
 			$xdht_participant = new xdhtParticipant();
 			$xdht_participant->setTrainingObjId(ilObjectFactory::getInstanceByRefId($_GET['ref_id'])->getId());
@@ -31,8 +31,8 @@ class xdhtParticipantFactory implements xdhtParticipantFactoryInterface {
 		 */
 		if($new_status > $xdht_participant->getStatus()) {
 			$xdht_participant->setStatus($new_status);
-			$xdht_participant->setLastAccess(date('Y-m-d H:i:s'));
-			$xdht_participant->update();
 		}
+		$xdht_participant->setLastAccess(date('Y-m-d H:i:s'));
+		$xdht_participant->update();
 	}
 }

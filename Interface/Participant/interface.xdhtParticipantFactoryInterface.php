@@ -9,11 +9,13 @@
 interface xdhtParticipantFactoryInterface {
 
 	/**
-	 * @param $usr_id integer
+	 * @param integer $usr_id
+	 *
+	 * @param integer $training_obj_id
 	 *
 	 * @return xdhtParticipantInterface
 	 */
-	public function findOrCreateParticipantByUsrId($usr_id);
+	public function findOrCreateParticipantByUsrAndTrainingObjectId($usr_id, $training_obj_id);
 
 
 	/**
