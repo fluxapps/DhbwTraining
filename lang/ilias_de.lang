@@ -4,7 +4,7 @@ objs_xdht_import#:#Training importieren
 xdht_add#:#Training hinzufügen
 start#:#Start
 settings#:#Einstellungen
-permissions#:#Berechtigungen
+permissions#:#Rechte
 start_training#:#Training starten
 continue_training#:#Training fortsetzen
 start_new_training#:#Training neu starten
@@ -35,6 +35,17 @@ objs_xdht#:#Training
 obj_xdht_duplicate#:#Training duplizieren
 availability#:#Verfügbarkeit
 time_period#:#Zeitraum
-xdht_start_time#:#Startdatum
-xdht_finish_time#:#Enddatum
+start_time#:#Startdatum
+finish_time#:#Enddatum
 online_info#:#Wenn Online, können Teilnehmer die unterstüzte Übung absolvieren.
+availability#:#Verfügbarkeit
+question_pool#:#Fragenpool
+xdht_visible#:#Einsehbar
+xdht_read#:#Lesezugriff
+xdht_write#:#Schreibzugriff
+xdht_delete#:#Löschen
+xdht_edit_permission#:#Rechte bearbeiten
+export#:#Export
+copy#:#Kopieren
+view_learning_prog#:#Lernfortschritt von anderen Benutzern einsehen
+edit_learning_prog#:#Lernfortschrittseinstellungen bearbeiten

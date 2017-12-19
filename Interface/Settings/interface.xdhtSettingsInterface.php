@@ -39,4 +39,33 @@ interface xdhtSettingsInterface {
 	 */
 	public function setQuestionPoolId($question_pool_id);
 
+	/**
+	 * @return int
+	 */
+	public function getisOnline();
+
+	/**
+	 * @param int $is_online
+	 */
+	public function setIsOnline($is_online);
+
+	/**
+	 * @return string
+	 */
+	public function getStartDate();
+
+	/**
+	 * @param string $start_date
+	 */
+	public function setStartDate($start_date);
+
+	/**
+	 * @return string
+	 */
+	public function getEndDate();
+
+	/**
+	 * @param string $end_date
+	 */
+	public function setEndDate($end_date);
 }

@@ -16,6 +16,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Traits/trait.xdhtDIC.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipantGUI.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipantFactory.php');
+require_once("./Services/Export/classes/class.ilExportGUI.php");
 
 
 /**
@@ -41,6 +42,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtStartGUI
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtSettingsGUI
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtParticipantGUI
+ * @ilCtrl_Calls      ilObjDhbwTrainingGUI: ilExportGUI
  */
 class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
@@ -134,6 +136,14 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				$xdhtStartGUI = new xdhtStartGUI(xdhtObjectFacade::getInstance($_GET['ref_id']));
 				$this->ctrl->forwardCommand($xdhtStartGUI);
 				break;
+			case strtolower(ilExportGUI::class):
+				$exp_gui = new ilExportGUI($this); // $this is the ilObj...GUI class of the resource
+				$exp_gui->addFormat("xml");
+				$this->setLocator();
+				$this->tabs->activateTab(self::TAB_EXPORT);
+				$this->tpl->getStandardTemplate();
+				$ret = $this->ctrl()->forwardCommand($exp_gui);
+				break;
 
 			default:
 				return parent::executeCommand();
@@ -180,6 +190,11 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 			}
 			if ($this->access()->hasWriteAccess()) {
 				$this->tabs->addTab(self::TAB_SETTINGS, $this->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
+			}
+			if ($this->checkPermissionBool('write')) {
+				$this->tabs->addTab("export",
+					$this->pl()->txt("export"),
+					$this->ctrl->getLinkTargetByClass(ilExportGUI::class, ""));
 			}
 			if ($this->checkPermissionBool('edit_permission')) {
 				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->pl()->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(

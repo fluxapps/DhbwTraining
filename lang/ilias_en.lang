@@ -38,3 +38,14 @@ time_period#:#Time period
 xdht_start_time#:#Start date
 xdht_finish_time#:#End date
 online_info#:#If online, participants can take the assisted exercise
+availability#:#Availability
+question_pool#:#Question Pool
+xdht_visible#:#Visible
+xdht_read#:#Read access
+xdht_write#:#Write access
+xdht_delete#:#Delete
+xdht_edit_permission#:#Edit permissions
+export#:#Export
+copy#:#Copy
+view_learning_prog#:#View learning progress of other users
+edit_learning_prog#:#Edit learning progress settings

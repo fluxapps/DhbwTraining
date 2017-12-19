@@ -58,7 +58,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$this->addItem($ta);
 
 		$item = new ilFormSectionHeaderGUI();
-		$item->setTitle($this->language()->txt('availability'));
+		$item->setTitle($this->pl()->txt('availability'));
 		$this->addItem($item);
 		$this->tpl()->addJavaScript('./Services/Form/js/date_duration.js');
 		include_once "Services/Form/classes/class.ilDateDurationInputGUI.php";
@@ -67,7 +67,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$item->setValue("1");
 		$item->setInfo($this->pl()->txt('online_info'));
 
-		$sub_item = new ilDateDurationInputGUI($this->language()->txt("time_period"), "time_period");
+		$sub_item = new ilDateDurationInputGUI($this->pl()->txt("time_period"), "time_period");
 		$sub_item->setShowTime(true);
 		$sub_item->setStartText($this->pl()->txt('start_time'));
 		$sub_item->setEndText($this->pl()->txt('finish_time'));
@@ -90,12 +90,22 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 				$sel_qpl->setRequired(true);
 				$this->addItem($sel_qpl);*/
 
+		$item = new ilFormSectionHeaderGUI();
+		$item->setTitle($this->pl()->txt('question_pool'));
+		$this->addItem($item);
 		$rep_sel_input = new ilSelectInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection');
 		$rep_sel_input->setRequired(true);
 		$question_pools_array = $this->facade->xdhtQuestionPoolFactory()->getSelectOptionsArray();
 		$question_pools_array_2 = array(null => $this->pl()->txt('please_choose')) + $question_pools_array;
 		$rep_sel_input->setOptions($question_pools_array_2);
 		$this->addItem($rep_sel_input);
+
+		$item = new ilFormSectionHeaderGUI();
+		$item->setTitle($this->pl()->txt('proposal_system'));
+		$this->addItem($item);
+		$ti = new ilNonEditableValueGUI($this->pl()->txt('proposal_system'), 'proposal_system');
+		$ti->setValue('Example Proposal System');
+		$this->addItem($ti);
 
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_UPDATE, $this->pl()->txt('save'));
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_STANDARD, $this->pl()->txt("cancel"));
@@ -108,6 +118,10 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		/*$value_from_session = unserialize($_SESSION["form_".ilObjDhbwTrainingGUI::class]['question_pool_selection']);
 		$values['question_pool_selection'] = $value_from_session;*/
 		$values['question_pool_selection'] = $this->facade->settings()->getQuestionPoolId();
+		$values['online'] = $this->facade->settings()->getisOnline();
+		$values['time_limited'] = $this->facade->settings()->getisTimeLimited();
+		$values['time_period']['start'] = $this->facade->settings()->getStartDate();
+		$values['time_period']['end'] = $this->facade->settings()->getEndDate();
 		$this->setValuesByArray($values);
 	}
 
@@ -120,6 +134,20 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$this->facade->training_object()->setTitle($this->getInput('title'));
 		$this->facade->training_object()->setDescription($this->getInput('desc'));
 		$this->facade->settings()->setQuestionPoolId($this->getInput('question_pool_selection'));
+		$this->facade->settings()->setIsOnline($this->getInput('online'));
+		/**
+		 * @var array $time_period
+		 */
+		$time_period = $this->getInput('time_period');
+		foreach ($time_period as $key => $value) {
+
+			$date_time = new ilDateTime($value, IL_CAL_DATETIME);
+			/* $timestamp = $date_time->get(IL_CAL_UNIX);*/
+			$time_period[$key] = $date_time;
+		}
+
+		$this->facade->settings()->setStartDate($time_period['start']);
+		$this->facade->settings()->setEndDate($time_period['end']);
 
 		return true;
 	}
