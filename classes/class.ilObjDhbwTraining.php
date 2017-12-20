@@ -78,7 +78,6 @@ class ilObjDhbwTraining extends ilObjectPlugin  implements ilLPStatusPluginInter
 				$xdht_participant_clone->update();
 			}
 		}
-
 	}
 
 	public static function _lookupOnline($a_obj_id, $is_reference = FALSE)

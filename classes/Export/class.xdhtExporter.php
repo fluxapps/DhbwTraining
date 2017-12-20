@@ -1,11 +1,11 @@
 <?php
 /**
- * Class ilDhbwTrainingExporter
+ * Class xdhtExporter
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-class ilDhbwTrainingExporter extends ilXmlExporter {
+class xdhtExporter extends ilXmlExporter {
 
 	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id) {
 		$id = explode(":", $a_id);

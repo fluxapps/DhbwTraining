@@ -1,11 +1,11 @@
 <?php
 /**
- * Class ilDhbwTrainingExportGUI
+ * Class xdhtExportGUI
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-class ilDhbwTrainingExportGUI extends ilExportGUI {
+class xdhtExportGUI extends ilExportGUI {
 
 	public function __construct($a_parent_gui, $a_main_obj = null)
 	{
@@ -29,5 +29,15 @@ class ilDhbwTrainingExportGUI extends ilExportGUI {
 				'export'
 			);
 		}
+	}
+
+	/**
+	 * @return xdhtExportTableGUI
+	 */
+	protected function buildExportTableGUI()
+	{
+		require_once './Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Export/class.xdhtExportTableGUI.php';
+		$table = new xdhtExportTableGUI($this, 'listExportFiles', $this->obj);
+		return $table;
 	}
 }
