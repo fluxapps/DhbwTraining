@@ -1,11 +1,13 @@
 <?php
+
+require_once('./Services/Export/classes/class.ilXmlExporter.php');
 /**
  * Class xdhtExporter
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-class xdhtExporter extends ilXmlExporter {
+class ilDhbwTrainingExporter extends ilXmlExporter {
 
 	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id) {
 		$id = explode(":", $a_id);

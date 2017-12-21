@@ -11,6 +11,7 @@ include_once("./Services/Tracking/interfaces/interface.ilLPStatusPlugin.php");
 
 class ilObjDhbwTraining extends ilObjectPlugin  implements ilLPStatusPluginInterface {
 
+	const CMD_CLONE = 'doCloneObject';
 
 	/**
 	 * Constructor

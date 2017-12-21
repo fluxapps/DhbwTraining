@@ -7,6 +7,8 @@
 
 class xdhtExportGUI extends ilExportGUI {
 
+	const CMD_INDEX = 'buildExportTableGUI';
+
 	public function __construct($a_parent_gui, $a_main_obj = null)
 	{
 		global $ilPluginAdmin;
@@ -40,4 +42,6 @@ class xdhtExportGUI extends ilExportGUI {
 		$table = new xdhtExportTableGUI($this, 'listExportFiles', $this->obj);
 		return $table;
 	}
+
+
 }

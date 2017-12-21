@@ -6,4 +6,5 @@ $ilias_max_version = "5.2.99";
 $responsible = "Benjamin Seglias";
 $responsible_mail = "support@studer-raimann.ch";
 $learning_progress = true;
+$supports_export = true;
 ?>
