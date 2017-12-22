@@ -18,9 +18,11 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipantFactory.php');
 require_once("./Services/Export/classes/class.ilExportGUI.php");
 require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/LearningProgress/class.xdhtLearningProgressGUI.php");
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilDhbwTrainingExporter.php");
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.xdhtExportGUI.php");
+//require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Export/class.ilDhbwTrainingExporter.php");
+require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Export/class.xdhtExportGUI.php");
 require_once("./Services/AccessControl/classes/class.ilPermissionGUI.php");
+require_once("./Services/Tracking/classes/class.ilLearningProgressAccess.php");
+require_once("./Services/Tracking/classes/class.ilLearningProgressGUI.php");
 
 
 /**
@@ -48,6 +50,8 @@ require_once("./Services/AccessControl/classes/class.ilPermissionGUI.php");
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtParticipantGUI
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtExportGUI
  * @ilCtrl_Calls      ilObjDhbwTrainingGUI: xdhtLearningProgressGUI
+ * @ilCtrl_Calls      ilObjDhbwTrainingGUI: ilLearningProgressGUI
+ * @ilCtrl_Calls      ilObjDhbwTrainingGUI: ilExportGUI
  */
 class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
@@ -144,15 +148,27 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				$this->ctrl->forwardCommand($xdhtStartGUI);
 				break;
 
-			case strtolower(ilExportGUI::class):
+			case strtolower(xdhtExportGUI::class):
 				$this->setTabs();
 				$this->setLocator();
 				$this->tabs->activateTab(self::TAB_EXPORT);
 				$this->tpl->getStandardTemplate();
-				$exp_gui = new ilExportGUI($this); // $this is the ilObj...GUI class of the resource
-				$exp_gui->addFormat("xml");
+				$exp_gui = new xdhtExportGUI($this); // $this is the ilObj...GUI class of the resource
+				//$exp_gui->addFormat("xml");
 				$this->ctrl()->forwardCommand($exp_gui);
 				break;
+
+/*			case 'ilexportgui':
+				$this->setTabs();
+				$this->setLocator();
+				$this->tabs->activateTab(self::TAB_START);
+				$this->tpl->getStandardTemplate();
+				include_once './Services/Export/classes/class.ilExportGUI.php';
+				$exp = new ilExportGUI($this);
+				$exp->addFormat('xml');
+				$this->ctrl->forwardCommand($exp);
+				break;*/
+
 			default:
 				return parent::executeCommand();
 				break;
@@ -187,6 +203,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 
 
 	protected function setTabs() {
+
 		if (strtolower($_GET['baseClass']) != 'iladministrationgui') {
 			$this->tabs->addTab(self::TAB_START, $this->pl()
 				->txt('start'), $this->ctrl->getLinkTargetByClass(xdhtStartGUI::class, xdhtStartGUI::CMD_STANDARD));
@@ -196,17 +213,22 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 					strtolower(xdhtParticipantGUI::class),
 				), xdhtParticipantGUI::CMD_STANDARD));
 			}
-/*			if ($this->checkPermissionBool('rep_robj_xdht_view_learning_progress_other_users')) {
-				$this->tabs->addTab(self::TAB_LEARNING_PROGRESS, $this->pl()->txt('learning_progress'), $this->ctrl()->getLinkTarget($this, xdhtLearningProgressGUI::CMD_STANDARD));
-			}*/
+			if(ilLearningProgressAccess::checkAccess($this->object->getRefId()))
+			{
+				$this->tabs->addTab(self::TAB_LEARNING_PROGRESS,
+					$this->pl()->txt('learning_progress'),
+					$this->ctrl->getLinkTargetByClass(array('illearningprogressgui', 'illplistofobjectsgui','illplistofsettingsgui','illearningprogressgui','illplistofprogressgui'),''),
+					'');
+			}
 			if ($this->access()->hasWriteAccess()) {
 				$this->tabs->addTab(self::TAB_SETTINGS, $this->pl()->txt('settings'), $this->ctrl->getLinkTarget($this, self::CMD_EDIT));
 			}
-/*			if ($this->checkPermissionBool('write')) {
+			if ($this->checkPermissionBool('write')) {
 				$this->tabs->addTab(self::TAB_EXPORT,
 					$this->pl()->txt("export"),
-					$this->ctrl->getLinkTargetByClass(xdhtExportGUI::class, xdhtExportGUI::CMD_INDEX));
-			}*/
+					$this->ctrl()->getLinkTargetByClass(xdhtExportGUI::class, ''));
+
+			}
 			if ($this->checkPermissionBool('edit_permission')) {
 				$this->tabs->addTab(self::TAB_PERMISSIONS, $this->pl()->txt('permissions'), $this->ctrl->getLinkTargetByClass(array(
 					strtolower(ilObjDhbwTrainingGUI::class),
