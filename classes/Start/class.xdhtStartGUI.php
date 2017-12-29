@@ -121,6 +121,9 @@ class xdhtStartGUI {
 	}
 
 	public function start() {
+		//Remove the Session
+		$_SESSION['answered_questions'] = array();
+
 		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
 		$this->initQuestionForm($this->questions[0]);
 		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
@@ -154,6 +157,14 @@ class xdhtStartGUI {
 				$this->ctrl()->redirect($this, self::CMD_STANDARD);
 			}
 		}
+	}
+
+	//TODO MST added temporary function
+	public function newStart() {
+		//Remove the Session
+		$_SESSION['answered_questions'] = array();
+
+		$this->start();
 	}
 
 }
