@@ -138,16 +138,15 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		/**
 		 * @var array $time_period
 		 */
-		$time_period = $this->getInput('time_period');
-		foreach ($time_period as $key => $value) {
+		$time_period = $this->getItemByPostVar('time_period');
 
-			$date_time = new ilDateTime($value, IL_CAL_DATETIME);
-			/* $timestamp = $date_time->get(IL_CAL_UNIX);*/
-			$time_period[$key] = $date_time;
+
+		if($time_period->getStart() && $time_period->getEnd()) {
+			$this->facade->settings()->setStartDate($time_period->getStart());
+			$this->facade->settings()->setEndDate($time_period->getEnd());
 		}
 
-		$this->facade->settings()->setStartDate($time_period['start']);
-		$this->facade->settings()->setEndDate($time_period['end']);
+
 
 		return true;
 	}
