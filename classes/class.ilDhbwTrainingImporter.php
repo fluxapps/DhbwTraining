@@ -21,7 +21,7 @@ class ilDhbwTrainingImporter extends ilXmlImporter {
 
 	protected function findTrainingObjectById($dhbw_training_object_id) {
 		global $ilDB;
-		$q = "SELECT * FROM ilias.object_data WHERE obj_id = " . $ilDB->quote($dhbw_training_object_id, "integer");
+		$q = "SELECT * FROM object_data WHERE obj_id = " . $ilDB->quote($dhbw_training_object_id, "integer");
 		$obj_set = $ilDB->query($q);
 		$obj_rec = $ilDB->fetchAssoc($obj_set);
 

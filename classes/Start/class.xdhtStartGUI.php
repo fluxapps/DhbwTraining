@@ -3,6 +3,9 @@
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilObjDhbwTrainingAccess.php');
 require_once('./Modules/TestQuestionPool/classes/class.assQuestionGUI.php');
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Traits/trait.xdhtDIC.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Recommender/RecommenderCurl.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Recommender/RecommenderResponse.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/QuestionAnswer/QuestionAnswers.php');
 
 /**
  * Class xdhtStartGUI
@@ -125,8 +128,17 @@ class xdhtStartGUI {
 		$_SESSION['answered_questions'] = array();
 
 		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
-		$this->initQuestionForm($this->questions[0]);
-		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
+
+		$recommender = new RecommenderCurl();
+		$response = $recommender->start();
+
+		if($response->getStatus() == RecommenderResponse::STATUS_SUCCESS && $response->getQuestionId() > 0) {
+
+			$this->initQuestionForm($this->questions[$response->getQuestionId()]);
+			$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
+		} else {
+			throw new BadFunctionCallException('Can\'t perform start without question_id');
+		}
 	}
 
 	protected function createLogEntry($question_id, $answer_id) {
@@ -137,24 +149,42 @@ class xdhtStartGUI {
 		if($_POST['submitted'] == 'cancel') {
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
-			if(!array_key_exists('answered_questions', $_SESSION) || !in_array($_POST['question_id'], $_SESSION['answered_questions'])) {
-				$_SESSION['answered_questions'][] = $_POST['question_id'];
-			}
-			//TODO replace hard coded second argument
-			$this->createLogEntry($_POST['question_id'], 1);
-			$question_ids = $this->facade->xdhtQuestionFactory()->getQuestionIds($this->questions);
-			$session_question_ids = [];
-			foreach($_SESSION['answered_questions'] as $answered_question) {
-				$session_question_ids[] = $answered_question;
-			}
-			$not_answered_questions_ids = array_diff($question_ids, $session_question_ids);
 
-			$not_answered_questions = $this->facade->xdhtQuestionFactory()->getNotAnsweredQuestionsByIds($not_answered_questions_ids, $this->facade->settings()->getQuestionPoolId());
+			$question = $this->questions[$_POST['question_id']];
+			$question_answers = new QuestionAnswers($question['type_tag'],$_POST['question_id']);
 
-			if(!empty($not_answered_questions)) {
-				$this->initQuestionForm($not_answered_questions[0]);
-			} else {
-				$this->ctrl()->redirect($this, self::CMD_STANDARD);
+			switch($question['type_tag']) {
+				case 'assSingleChoice':
+					/**
+					 * @var QuestionAnswer $question_answer
+					 */
+					$question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result'.$_POST['question_id'].'ID']];
+					$answertext = ["answertext" => $question_answer->getAnswertext()];
+				break;
+				case 'assMultipleChoice':
+					$answertext = array();
+					foreach($_POST as $key => $value) {
+						if(strpos($key, 'multiple_choice_result') !== false) {
+							$question_answer = $question_answers->getAnswers()[$value];
+							$answertext[] = ["aorder" =>  $question_answer->getAnswertext()];
+						}
+					}
+					break;
+			}
+
+			$recommender = new RecommenderCurl();
+			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext);
+
+			if($response->getMessage()) {
+				ilUtil::sendInfo($response->getMessage());
+			}
+
+			ilUtil::sendInfo($response->getResponseType());
+
+			if($response->getStatus() == RecommenderResponse::STATUS_SUCCESS
+				&& $response->getQuestionId() > 0) {
+				$this->initQuestionForm($this->questions[$response->getQuestionId()]);
+				$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
 			}
 		}
 	}
