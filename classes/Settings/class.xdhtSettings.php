@@ -97,6 +97,25 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	 */
 	protected $secret;
 
+	/**
+	 * @con_has_field        true
+	 * @con_fieldtype        text
+	 * @con_length           255
+	 * @con_is_notnull       true
+	 * @var string
+	 */
+	protected $url;
+
+	/**
+	 * @var int
+	 *
+	 * @db_has_field  true
+	 * @db_fieldtype  integer
+	 * @db_length     1
+	 * @db_is_notnull true
+	 */
+	protected $log = 0;
+
 
 
 
@@ -231,6 +250,37 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 		$this->secret = $secret;
 	}
 
+
+	/**
+	 * @return string
+	 */
+	public function getUrl() {
+		return $this->url;
+	}
+
+
+	/**
+	 * @param string $url
+	 */
+	public function setUrl($url) {
+		$this->url = $url;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getLog() {
+		return $this->log;
+	}
+
+
+	/**
+	 * @param int $log
+	 */
+	public function setLog($log) {
+		$this->log = $log;
+	}
 
 
 

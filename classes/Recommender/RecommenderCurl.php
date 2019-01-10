@@ -100,11 +100,14 @@ class RecommenderCurl {
 	 *
 	 * @return null|RecommenderResponse
 	 */
-	protected function doRequest(string $rest_url, array $headers, $post_data = NULL)/*: ?array*/ {
+	protected function doRequest(string $rest_url, array $headers, $post_data = NULL,xdhtSettingsInterface $settings)/*: ?array*/ {
 		//Todo
-		$url = "http://172.28.128.6:5000/" . $rest_url;
+		//$url = "http://172.28.128.6:5000/" . $rest_url;
+
+		$url = $settings->getUrl().$rest_url;
 
 		$curlConnection = NULL;
+
 
 		try {
 			$curlConnection = $this->initCurlConnection($url, $headers);
@@ -115,16 +118,34 @@ class RecommenderCurl {
 				$curlConnection->setOpt(CURLOPT_POSTFIELDS, $post_data);
 			}
 
+			if($settings->getLog()) {
+				global $DIC;
+				$DIC->logger()->root()->log("xdht - POST".print_r($post_data,true));
+
+			}
+
 			$result = $curlConnection->exec();
 
 			$result = json_decode($result, true);
 
+
+			if(is_null($result['status'])) {
+				ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($result,true),true);
+				$this->ctrl()->redirectByClass("xdhtStartGUI", xdhtStartGUI::CMD_STANDARD);
+			}
+
+			if($settings->getLog()) {
+				global $DIC;
+				$DIC->logger()->root()->log("xdht - RESULT".print_r($result,true));
+			}
+
+			/*
 			if(is_null($result['status'])) {
 				$response = new RecommenderResponse();
 				$response->setStatus(RecommenderResponse::STATUS_ERROR);
 				$response->setResponseType(RecommenderResponse::RESPONSE_TYPE['TEST_IS_FINISHED']);
 				return $response;
-			}
+			}*/
 
 			$response = new RecommenderResponse();
 			$response->setStatus($result['status']);
@@ -170,7 +191,7 @@ class RecommenderCurl {
 		];
 
 
-		$response = $this->doRequest("api/v1/start", $headers, json_encode($data));
+		$response = $this->doRequest("api/v1/start", $headers, json_encode($data),$settings);
 
 		return $response;
 	}
@@ -202,143 +223,5 @@ class RecommenderCurl {
 		$response = $this->doRequest("api/v1/answer", $headers, json_encode($data,JSON_FORCE_OBJECT));
 
 		return $response;
-	}
-
-
-	/**
-	 * Add attachement to issue ticket
-	 *
-	 * @param string $issue_key
-	 * @param string $attachement_name
-	 * @param string $attachement_mime
-	 * @param string $attachement_path
-	 *
-	 * @return bool
-	 */
-	public function addAttachmentToIssue(string $issue_key, string $attachement_name, string $attachement_mime, string $attachement_path): bool {
-		$headers = [
-			"Accept" => "application/json",
-			"X-Atlassian-Token" => "nocheck"
-		];
-
-		$data = [
-			"file" => new CURLFile($attachement_path, $attachement_mime, $attachement_name)
-		];
-
-		$result = $this->doRequest("/rest/api/2/issue/" . $issue_key . "/attachments", $headers, $data);
-
-		return ($result !== NULL);
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraDomain(): string {
-		return $this->jira_domain;
-	}
-
-
-	/**
-	 * @param string $jira_domain
-	 */
-	public function setJiraDomain(string $jira_domain)/*: void*/ {
-		$this->jira_domain = $jira_domain;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraAuthorization(): string {
-		return $this->jira_authorization;
-	}
-
-
-	/**
-	 * @param string $jira_authorization
-	 */
-	public function setJiraAuthorization(string $jira_authorization)/*: void*/ {
-		$this->jira_authorization = $jira_authorization;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraUsername(): string {
-		return $this->jira_username;
-	}
-
-
-	/**
-	 * @param string $jira_username
-	 */
-	public function setJiraUsername(string $jira_username)/*: void*/ {
-		$this->jira_username = $jira_username;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraPassword(): string {
-		return $this->jira_password;
-	}
-
-
-	/**
-	 * @param string $jira_password
-	 */
-	public function setJiraPassword(string $jira_password)/*: void*/ {
-		$this->jira_password = $jira_password;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraConsumerKey(): string {
-		return $this->jira_consumer_key;
-	}
-
-
-	/**
-	 * @param string $jira_consumer_key
-	 */
-	public function setJiraConsumerKey(string $jira_consumer_key)/*: void*/ {
-		$this->jira_consumer_key = $jira_consumer_key;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraPrivateKey(): string {
-		return $this->jira_private_key;
-	}
-
-
-	/**
-	 * @param string $jira_private_key
-	 */
-	public function setJiraPrivateKey(string $jira_private_key)/*: void*/ {
-		$this->jira_private_key = $jira_private_key;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getJiraAccessToken(): string {
-		return $this->jira_access_token;
-	}
-
-
-	/**
-	 * @param string $jira_access_token
-	 */
-	public function setJiraAccessToken(string $jira_access_token)/*: void*/ {
-		$this->jira_access_token = $jira_access_token;
 	}
 }

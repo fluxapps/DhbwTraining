@@ -83,6 +83,16 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$ti->setRequired(true);
 		$this->addItem($ti);
 
+		$ti = new ilTextInputGUI("Url", 'url');
+		$ti->setRequired(true);
+		$this->addItem($ti);
+
+
+		$item = new ilCheckboxInputGUI("Log", 'log');
+		$item->setValue("1");
+		$this->addItem($item);
+
+
 
 		/*
 				$rep_sel_input = new DhbwRepositorySelectorInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
@@ -126,6 +136,8 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$values['time_period']['end'] = $this->facade->settings()->getEndDate();
 		$values['installation_key'] = $this->facade->settings()->getInstallationKey();
 		$values['secret'] = $this->facade->settings()->getSecret();
+		$values['url'] = $this->facade->settings()->getUrl();
+		$values['log'] = $this->facade->settings()->getLog();
 		$this->setValuesByArray($values);
 	}
 
@@ -152,6 +164,8 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 
 		$this->facade->settings()->setInstallationKey($this->getInput('installation_key'));
 		$this->facade->settings()->setSecret($this->getInput('secret'));
+		$this->facade->settings()->setUrl($this->getInput('url'));
+		$this->facade->settings()->setLog($this->getInput('log'));
 
 
 		return true;

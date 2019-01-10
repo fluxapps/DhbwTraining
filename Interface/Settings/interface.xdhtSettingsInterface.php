@@ -91,4 +91,29 @@ interface xdhtSettingsInterface {
 	 * @param string $secret
 	 */
 	public function setSecret($secret) ;
+
+	/**
+	 * @return string
+	 */
+	public function getUrl();
+
+
+	/**
+	 * @param string $url
+	 */
+	public function setUrl($url);
+
+	/**
+	 * @return int
+	 */
+	public function getLog();
+
+
+	/**
+	 * @param int $log
+	 */
+	public function setLog($log);
+
+
+
 }
