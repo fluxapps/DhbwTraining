@@ -119,10 +119,11 @@ class RecommenderCurl {
 
 			$result = json_decode($result, true);
 
-
 			if(is_null($result['status'])) {
-				print_r($result);
-				print_r($post_data);exit;
+				$response = new RecommenderResponse();
+				$response->setStatus(RecommenderResponse::STATUS_ERROR);
+				$response->setResponseType(RecommenderResponse::RESPONSE_TYPE['TEST_IS_FINISHED']);
+				return $response;
 			}
 
 			$response = new RecommenderResponse();
@@ -132,7 +133,6 @@ class RecommenderCurl {
 			if(!is_null($result['message'])) {
 				$response->setMessage($result['message']);
 			}
-
 
 			return $response;
 		} catch (Exception $ex) {
@@ -151,21 +151,24 @@ class RecommenderCurl {
 	/**
 	 * @return null|RecommenderResponse
 	 */
-	public function start() {
+	public function start(xdhtSettingsInterface $settings) {
+		global $DIC;
+
 		$headers = [
 			"Accept" => "application/json",
 			"Content-Type" => "application/json"
 		];
 
-		//TODO
+
 		$data = [
-			"secret" => "SDJFUWERZDHESDUDf",
-			"installation_key" => "dhbw1",
-			"user_id" => "6",
-			"lang_key" => "de",
-			"training_obj_id" => "337",
-			"question_pool_obj_id" => "333"
+			"secret" => $settings->getSecret(),
+			"installation_key" =>  $settings->getInstallationKey(),
+			"user_id" => $DIC->user()->getId(),
+			"lang_key" => $DIC->user()->getLanguage(),
+			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
+			"question_pool_obj_id" => $settings->getQuestionPoolId()
 		];
+
 
 		$response = $this->doRequest("api/v1/start", $headers, json_encode($data));
 
@@ -175,20 +178,22 @@ class RecommenderCurl {
 	/**
 	 * @return null|RecommenderResponse
 	 */
-	public function answer($question_id, $question_type, $answer) {
+	public function answer($question_id, $question_type, $answer,xdhtSettingsInterface $settings) {
+		global $DIC;
+
 		$headers = [
 			"Accept" => "application/json",
 			"Content-Type" => "application/json"
 		];
 
-		//TODO
+
 		$data = [
-			"secret" => "SDJFUWERZDHESDUDf",
-			"installation_key" => "dhbw1",
-			"user_id" => "6",
-			"lang_key" => "de",
-			"training_obj_id" => "337",
-			"question_pool_obj_id" => "333",
+			"secret" => $settings->getSecret(),
+			"installation_key" => $settings->getInstallationKey(),
+			"user_id" => $DIC->user()->getId(),
+			"lang_key" => $DIC->user()->getLanguage(),
+			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
+			"question_pool_obj_id" => $settings->getQuestionPoolId(),
 			"question_id" => $question_id,
 			"question_type" => $question_type,
 			"answer" => $answer

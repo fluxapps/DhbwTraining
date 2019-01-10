@@ -10,10 +10,15 @@ class RecommenderResponse {
 	const STATUS_SUCCESS = "success";
 	const STATUS_ERROR = "error";
 
-	const RESPONSE_TYPE = [1 => 'MESSAGE_PAGE',
-		                   2 => 'QUESTION_IN_PROGRESS',
-		                   3 => 'NEXT_QUESTION',
-		                   4 => 'TEST_IS_FINISHED'];
+	const RESPONSE_TYPE_PAGE = 1;
+	const RESPONSE_TYPE_IN_PROGRESS = 2;
+	const RESPONSE_TYPE_NEXT_QUESTION = 3;
+	const RESPONSE_TYPE_TEST_IS_FINISHED = 4;
+
+	const RESPONSE_TYPE = ['MESSAGE_PAGE' => self::RESPONSE_TYPE_PAGE ,
+		                   'QUESTION_IN_PROGRESS' => self::RESPONSE_TYPE_IN_PROGRESS,
+		                   'NEXT_QUESTION' => self::RESPONSE_TYPE_NEXT_QUESTION,
+							'TEST_IS_FINISHED' => self::RESPONSE_TYPE_TEST_IS_FINISHED];
 
 	/**
 	 * @var string

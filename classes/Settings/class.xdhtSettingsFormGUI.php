@@ -75,6 +75,14 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 
 		$this->addItem($item);
 
+		$ti = new ilTextInputGUI("Instalation Key", 'installation_key');
+		$ti->setRequired(true);
+		$this->addItem($ti);
+
+		$ti = new ilTextInputGUI("Secret", 'secret');
+		$ti->setRequired(true);
+		$this->addItem($ti);
+
 
 		/*
 				$rep_sel_input = new DhbwRepositorySelectorInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
@@ -100,12 +108,6 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$rep_sel_input->setOptions($question_pools_array_2);
 		$this->addItem($rep_sel_input);
 
-		$item = new ilFormSectionHeaderGUI();
-		$item->setTitle($this->pl()->txt('proposal_system'));
-		$this->addItem($item);
-		$ti = new ilNonEditableValueGUI($this->pl()->txt('proposal_system'), 'proposal_system');
-		$ti->setValue('Example Proposal System');
-		$this->addItem($ti);
 
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_UPDATE, $this->pl()->txt('save'));
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_STANDARD, $this->pl()->txt("cancel"));
@@ -122,6 +124,8 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$values['time_limited'] = $this->facade->settings()->getisTimeLimited();
 		$values['time_period']['start'] = $this->facade->settings()->getStartDate();
 		$values['time_period']['end'] = $this->facade->settings()->getEndDate();
+		$values['installation_key'] = $this->facade->settings()->getInstallationKey();
+		$values['secret'] = $this->facade->settings()->getSecret();
 		$this->setValuesByArray($values);
 	}
 
@@ -146,6 +150,8 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 			$this->facade->settings()->setEndDate($time_period->getEnd());
 		}
 
+		$this->facade->settings()->setInstallationKey($this->getInput('installation_key'));
+		$this->facade->settings()->setSecret($this->getInput('secret'));
 
 
 		return true;

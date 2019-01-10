@@ -23,6 +23,7 @@ class xdhtStartGUI {
 	const CMD_PROCEED = 'proceed';
 	const CMD_NEW_START = 'newStart';
 	const CMD_CANCEL = 'cancel';
+
 	//const QUESTION_IDENTIFIER = 'question_id';
 
 	/**
@@ -97,12 +98,18 @@ class xdhtStartGUI {
 	/**
 	 * @param integer $question
 	 */
-	protected function initQuestionForm($question) {
+	protected function initQuestionForm($question,$response) {
 		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
 		$tpl->setVariable("ACTION", $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED));
 		$q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
 		// $q_gui->setRenderPurpose(assQuestionGUI::RENDER_PURPOSE_PLAYBACK);
 		//$a_html = $q_gui->getPreview();
+
+		if(!is_object($q_gui)) {
+			ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($response,true),true);
+			$this->ctrl()->redirect($this, self::CMD_STANDARD);
+		}
+
 
 		$tpl->setCurrentBlock('question');
 		$tpl->setVariable('QUESTION', $q_gui->getPreview());
@@ -123,22 +130,52 @@ class xdhtStartGUI {
 		$this->tpl()->show();
 	}
 
+	/**
+	 * @param integer $question
+	 */
+	protected function initSeparatorForm() {
+		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
+		$tpl->setVariable("ACTION", $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED));
+
+
+		$tpl->setVariable('CANCEL_BTN_VALUE', 'cancel');
+		$tpl->setVariable('CANCEL_BTN_TEXT', $this->pl()->txt('cancel'));
+
+		$tpl->setVariable('NEXT_BTN_VALUE', 'next');
+		$tpl->setVariable('PROCEED_BTN_TEXT', $this->pl()->txt('next_question'));
+
+
+		//$this->ctrl()->setParameter($this, self::QUESTION_IDENTIFIER, $question['question_id']);
+
+		$this->tpl()->setContent( $tpl->get());
+
+		$this->tpl()->show();
+	}
+
 	public function start() {
 		//Remove the Session
 		$_SESSION['answered_questions'] = array();
 
 		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
 
-		$recommender = new RecommenderCurl();
-		$response = $recommender->start();
 
+		$recommender = new RecommenderCurl();
+		$response = $recommender->start($this->facade->settings());
+
+		$this->proceedWithReturnOfRecommender($response);
+
+
+
+
+		/*
 		if($response->getStatus() == RecommenderResponse::STATUS_SUCCESS && $response->getQuestionId() > 0) {
 
 			$this->initQuestionForm($this->questions[$response->getQuestionId()]);
 			$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
-		} else {
+		} else {echo "sdfsdf";
+			print_r($response);exit;
 			throw new BadFunctionCallException('Can\'t perform start without question_id');
-		}
+		}*/
 	}
 
 	protected function createLogEntry($question_id, $answer_id) {
@@ -170,24 +207,72 @@ class xdhtStartGUI {
 						}
 					}
 					break;
+				case 'assClozeTest':
+					$answertext = array();
+					foreach($_POST as $key => $value) {
+						if(strpos($key, 'gap_') !== false) {
+							$arr_splitted_gap = explode('gap_',$key);
+							$question_answer = $question_answers->getAnswers()[$arr_splitted_gap[1]];
+
+							if($question_answer->getClozeType() == xdhtQuestionFactory::CLOZE_TYPE_TEXT) {
+								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $value];
+							} else {
+
+								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $question_answer->getAnswertext()];
+							}
+
+						}
+					}
+					break;
 			}
 
 			$recommender = new RecommenderCurl();
-			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext);
+			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],base64_encode($answertext),$this->facade->settings());
 
-			if($response->getMessage()) {
-				ilUtil::sendInfo($response->getMessage());
-			}
-
-			ilUtil::sendInfo($response->getResponseType());
-
-			if($response->getStatus() == RecommenderResponse::STATUS_SUCCESS
-				&& $response->getQuestionId() > 0) {
-				$this->initQuestionForm($this->questions[$response->getQuestionId()]);
-				$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
-			}
+			$this->proceedWithReturnOfRecommender($response);
 		}
 	}
+
+
+	/**
+	 * @param RecommenderResponse $response
+	 */
+	public function proceedWithReturnOfRecommender(RecommenderResponse $response) {
+		switch($response->getStatus()) {
+			case RecommenderResponse::STATUS_SUCCESS:
+				if($response->getMessage()) {
+					ilUtil::sendInfo($response->getMessage(),true);
+				}
+
+				switch($response->getResponseType()) {
+					case RecommenderResponse::RESPONSE_TYPE_NEXT_QUESTION:
+						$this->initQuestionForm($this->questions[$response->getQuestionId()],$response);
+						$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
+						break;
+					case RecommenderResponse::RESPONSE_TYPE_IN_PROGRESS:
+						$this->initSeparatorForm();
+						break;
+					case RecommenderResponse::RESPONSE_TYPE_PAGE:
+						$this->initSeparatorForm();
+						break;
+					case RecommenderResponse::RESPONSE_TYPE_TEST_IS_FINISHED:
+						$this->ctrl()->redirect($this, self::CMD_STANDARD);
+						break;
+					default:
+						$this->initSeparatorForm();
+						break;
+				}
+				break;
+
+			case RecommenderResponse::STATUS_ERROR:
+				ilUtil::sendFailure("Das Recommender System hat einen Fehler ausgegeben".$response->getMessage(),true);
+				$this->ctrl()->redirect($this, self::CMD_STANDARD);
+				break;
+		}
+	}
+
+
+
 
 	//TODO MST added temporary function
 	public function newStart() {

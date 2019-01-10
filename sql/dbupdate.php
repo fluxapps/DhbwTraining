@@ -5,3 +5,8 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 xdhtSettings::updateDB();
 xdhtParticipant::updateDB();
 ?>
+<#2>
+<?php
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php');
+xdhtSettings::updateDB();
+?>

@@ -9,6 +9,13 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  */
 class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 
+
+	//TODO Refactor -> class for GAP_Question!
+	const CLOZE_TYPE_TEXT = 0;
+	const CLOZE_TYPE_SELECT = 1;
+	const CLOZE_TYPE_NUMERIC = 2;
+
+
 	/**
 	 * @inheritdoc
 	 */

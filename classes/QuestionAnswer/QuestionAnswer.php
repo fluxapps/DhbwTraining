@@ -22,6 +22,11 @@ class QuestionAnswer {
 	 * @var string
 	 */
 	protected $answertext;
+	/**
+	 * @var int
+	 */
+	//Todo separate Class er Question!
+	protected $cloze_type;
 
 
 	/**
@@ -85,5 +90,21 @@ class QuestionAnswer {
 	 */
 	public function setAnswertext(string $answertext) {
 		$this->answertext = $answertext;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getClozeType(): int {
+		return $this->cloze_type;
+	}
+
+
+	/**
+	 * @param int $cloze_type
+	 */
+	public function setClozeType(int $cloze_type) {
+		$this->cloze_type = $cloze_type;
 	}
 }
