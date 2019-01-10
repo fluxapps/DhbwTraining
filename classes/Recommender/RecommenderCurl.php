@@ -128,16 +128,18 @@ class RecommenderCurl {
 
 			$result = json_decode($result, true);
 
+			if($settings->getLog()) {
+				global $DIC;
+				$DIC->logger()->root()->log("xdht - RESULT".print_r($result,true));
+			}
+
 
 			if(is_null($result['status'])) {
 				ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($result,true),true);
 				$this->ctrl()->redirectByClass("xdhtStartGUI", xdhtStartGUI::CMD_STANDARD);
 			}
 
-			if($settings->getLog()) {
-				global $DIC;
-				$DIC->logger()->root()->log("xdht - RESULT".print_r($result,true));
-			}
+
 
 			/*
 			if(is_null($result['status'])) {
