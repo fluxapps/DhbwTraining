@@ -220,7 +220,7 @@ class RecommenderCurl {
 			"answer" => $answer
 		];
 
-		$response = $this->doRequest("api/v1/answer", $headers, json_encode($data,JSON_FORCE_OBJECT));
+		$response = $this->doRequest("api/v1/answer", $headers, json_encode($data,JSON_FORCE_OBJECT),$settings);
 
 		return $response;
 	}
