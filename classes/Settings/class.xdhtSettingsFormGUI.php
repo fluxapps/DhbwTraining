@@ -75,6 +75,24 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 
 		$this->addItem($item);
 
+		$ti = new ilTextInputGUI("Instalation Key", 'installation_key');
+		$ti->setRequired(true);
+		$this->addItem($ti);
+
+		$ti = new ilTextInputGUI("Secret", 'secret');
+		$ti->setRequired(true);
+		$this->addItem($ti);
+
+		$ti = new ilTextInputGUI("Url", 'url');
+		$ti->setRequired(true);
+		$this->addItem($ti);
+
+
+		$item = new ilCheckboxInputGUI("Log", 'log');
+		$item->setValue("1");
+		$this->addItem($item);
+
+
 
 		/*
 				$rep_sel_input = new DhbwRepositorySelectorInputGUI($this->pl()->txt('select_question_pool'), 'question_pool_selection', $this->facade);
@@ -100,12 +118,6 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$rep_sel_input->setOptions($question_pools_array_2);
 		$this->addItem($rep_sel_input);
 
-		$item = new ilFormSectionHeaderGUI();
-		$item->setTitle($this->pl()->txt('proposal_system'));
-		$this->addItem($item);
-		$ti = new ilNonEditableValueGUI($this->pl()->txt('proposal_system'), 'proposal_system');
-		$ti->setValue('Example Proposal System');
-		$this->addItem($ti);
 
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_UPDATE, $this->pl()->txt('save'));
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_STANDARD, $this->pl()->txt("cancel"));
@@ -122,6 +134,10 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$values['time_limited'] = $this->facade->settings()->getisTimeLimited();
 		$values['time_period']['start'] = $this->facade->settings()->getStartDate();
 		$values['time_period']['end'] = $this->facade->settings()->getEndDate();
+		$values['installation_key'] = $this->facade->settings()->getInstallationKey();
+		$values['secret'] = $this->facade->settings()->getSecret();
+		$values['url'] = $this->facade->settings()->getUrl();
+		$values['log'] = $this->facade->settings()->getLog();
 		$this->setValuesByArray($values);
 	}
 
@@ -138,16 +154,19 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		/**
 		 * @var array $time_period
 		 */
-		$time_period = $this->getInput('time_period');
-		foreach ($time_period as $key => $value) {
+		$time_period = $this->getItemByPostVar('time_period');
 
-			$date_time = new ilDateTime($value, IL_CAL_DATETIME);
-			/* $timestamp = $date_time->get(IL_CAL_UNIX);*/
-			$time_period[$key] = $date_time;
+
+		if($time_period->getStart() && $time_period->getEnd()) {
+			$this->facade->settings()->setStartDate($time_period->getStart());
+			$this->facade->settings()->setEndDate($time_period->getEnd());
 		}
 
-		$this->facade->settings()->setStartDate($time_period['start']);
-		$this->facade->settings()->setEndDate($time_period['end']);
+		$this->facade->settings()->setInstallationKey($this->getInput('installation_key'));
+		$this->facade->settings()->setSecret($this->getInput('secret'));
+		$this->facade->settings()->setUrl($this->getInput('url'));
+		$this->facade->settings()->setLog($this->getInput('log'));
+
 
 		return true;
 	}

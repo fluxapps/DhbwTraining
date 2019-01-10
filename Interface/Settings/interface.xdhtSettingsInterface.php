@@ -68,4 +68,52 @@ interface xdhtSettingsInterface {
 	 * @param string $end_date
 	 */
 	public function setEndDate($end_date);
+
+	/**
+	 * @return string
+	 */
+	public function getInstallationKey();
+
+
+	/**
+	 * @param string $installation_key
+	 */
+	public function setInstallationKey($installation_key);
+
+
+	/**
+	 * @return string
+	 */
+	public function getSecret();
+
+
+	/**
+	 * @param string $secret
+	 */
+	public function setSecret($secret) ;
+
+	/**
+	 * @return string
+	 */
+	public function getUrl();
+
+
+	/**
+	 * @param string $url
+	 */
+	public function setUrl($url);
+
+	/**
+	 * @return int
+	 */
+	public function getLog();
+
+
+	/**
+	 * @param int $log
+	 */
+	public function setLog($log);
+
+
+
 }

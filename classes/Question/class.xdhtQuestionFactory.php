@@ -9,6 +9,13 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  */
 class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 
+
+	//TODO Refactor -> class for GAP_Question!
+	const CLOZE_TYPE_TEXT = 0;
+	const CLOZE_TYPE_SELECT = 1;
+	const CLOZE_TYPE_NUMERIC = 2;
+
+
 	/**
 	 * @inheritdoc
 	 */
@@ -19,13 +26,14 @@ class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 
 		global $ilDB;
 
-		$sql = "SELECT * FROM ilias.qpl_questions where obj_fi = $question_pool_id";
+		$sql = "SELECT * FROM qpl_questions
+inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where obj_fi = $question_pool_id";
 
 		$set = $ilDB->query($sql);
 
 		$arr_questions = array();
 		while ($row = $ilDB->fetchAssoc($set)) {
-			$arr_questions[] = $row;
+			$arr_questions[$row['question_id']] = $row;
 		}
 
 		return $arr_questions;
@@ -45,7 +53,7 @@ class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 
 		$formatted_array = $this->getFormattedArray($question_ids);
 
-		$sql = "SELECT * FROM ilias.qpl_questions where obj_fi = $question_pool_id and question_id IN ($formatted_array)";
+		$sql = "SELECT * FROM qpl_questions where obj_fi = $question_pool_id and question_id IN ($formatted_array)";
 
 		$set = $ilDB->query($sql);
 

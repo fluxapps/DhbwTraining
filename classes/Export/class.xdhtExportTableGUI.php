@@ -60,10 +60,10 @@ class xdhtExportTableGUI extends ilExportTableGUI {
 	/**
 	 * Overwrite method because data is passed from outside
 	 */
-	public function getExportFiles()
+/*	public function getExportFiles()
 	{
 		return array();
-	}
+	}*/
 
 	/**
 	 *

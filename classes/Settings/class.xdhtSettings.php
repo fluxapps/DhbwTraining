@@ -79,6 +79,48 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	 */
 	protected $end_date;
 
+	/**
+	 * @con_has_field        true
+	 * @con_fieldtype        text
+	 * @con_length           255
+	 * @con_is_notnull       true
+	 * @var string
+	 */
+	protected $installation_key;
+
+	/**
+	 * @con_has_field        true
+	 * @con_fieldtype        text
+	 * @con_length           255
+	 * @con_is_notnull       true
+	 * @var string
+	 */
+	protected $secret;
+
+	/**
+	 * @con_has_field        true
+	 * @con_fieldtype        text
+	 * @con_length           255
+	 * @con_is_notnull       true
+	 * @var string
+	 */
+	protected $url;
+
+	/**
+	 * @var int
+	 *
+	 * @db_has_field  true
+	 * @db_fieldtype  integer
+	 * @db_length     1
+	 * @db_is_notnull true
+	 */
+	protected $log = 0;
+
+
+
+
+
+
 
 
 	/**
@@ -175,6 +217,71 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	public function setEndDate($end_date) {
 		$this->end_date = $end_date;
 	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getInstallationKey() {
+		return $this->installation_key;
+	}
+
+
+	/**
+	 * @param string $installation_key
+	 */
+	public function setInstallationKey($installation_key) {
+		$this->installation_key = $installation_key;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getSecret() {
+		return $this->secret;
+	}
+
+
+	/**
+	 * @param string $secret
+	 */
+	public function setSecret($secret) {
+		$this->secret = $secret;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getUrl() {
+		return $this->url;
+	}
+
+
+	/**
+	 * @param string $url
+	 */
+	public function setUrl($url) {
+		$this->url = $url;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getLog() {
+		return $this->log;
+	}
+
+
+	/**
+	 * @param int $log
+	 */
+	public function setLog($log) {
+		$this->log = $log;
+	}
+
 
 
 }

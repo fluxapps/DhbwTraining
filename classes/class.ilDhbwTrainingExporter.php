@@ -1,6 +1,7 @@
 <?php
 
 require_once('./Services/Export/classes/class.ilXmlExporter.php');
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Export/class.xdhtSettingsXmlWriter.php');
 /**
  * Class xdhtExporter
  *
@@ -9,20 +10,23 @@ require_once('./Services/Export/classes/class.ilXmlExporter.php');
 
 class ilDhbwTrainingExporter extends ilXmlExporter {
 
-	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id) {
-		$id = explode(":", $a_id);
-		$xdhtxml = new ilMD2XML($id[0], $id[1], $id[2]);
-		$xdhtxml->setExportMode();
-		$xdhtxml->startExport();
-
-		return $xdhtxml->getXml();
-	}
-
 
 	public function init() {
 		// TODO: Implement init() method.
 	}
 
+	public function getXmlRepresentation($a_entity, $a_schema_version, $a_id) {
+
+		$xml = '';
+
+		$writer = new xdhtSettingsXmlWriter();
+		//ilUtil::makeDirParents($this->getAbsoluteExportDirectory());
+		//$writer->setFileTargetDirectories($this->getRelativeExportDirectory(), $this->getAbsoluteExportDirectory());
+		$writer->start();
+		$xml .= $writer->getXml();
+
+		return $xml;
+	}
 
 	public function getValidSchemaVersions($a_entity) {
 		return array (

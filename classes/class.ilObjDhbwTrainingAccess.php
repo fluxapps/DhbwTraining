@@ -25,7 +25,7 @@ class ilObjDhbwTrainingAccess  extends ilObjectPluginAccess {
 	 *
 	 * @return    boolean        true, if everything is ok
 	 */
-	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = '') {
+	public function checkAccess($a_cmd, $a_permission, $a_ref_id = 0, $a_obj_id = 0, $a_user_id = '') {
 		/**
 		 * @var \ILIAS\DI\Container
 		 */
