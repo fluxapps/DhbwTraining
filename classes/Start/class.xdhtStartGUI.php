@@ -241,7 +241,7 @@ class xdhtStartGUI {
 		switch($response->getStatus()) {
 			case RecommenderResponse::STATUS_SUCCESS:
 				if($response->getAnswerResponse()) {
-					ilUtil::sendInfo("Rückmeldung zur Antwort: ".$response->getMessage(),true);
+					ilUtil::sendInfo("Rückmeldung zur Antwort: ".$response->getAnswerResponse(),true);
 				}
 
 				if($response->getMessage()) {
