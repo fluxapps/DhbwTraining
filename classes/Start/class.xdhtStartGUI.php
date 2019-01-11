@@ -240,9 +240,15 @@ class xdhtStartGUI {
 	public function proceedWithReturnOfRecommender(RecommenderResponse $response) {
 		switch($response->getStatus()) {
 			case RecommenderResponse::STATUS_SUCCESS:
+				if($response->getAnswerResponse()) {
+					ilUtil::sendInfo("Rückmeldung zur Antwort: ".$response->getMessage(),true);
+				}
+
 				if($response->getMessage()) {
 					ilUtil::sendInfo($response->getMessage(),true);
 				}
+
+
 
 				switch($response->getResponseType()) {
 					case RecommenderResponse::RESPONSE_TYPE_NEXT_QUESTION:
