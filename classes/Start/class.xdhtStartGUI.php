@@ -69,7 +69,7 @@ class xdhtStartGUI {
 	}
 
 	public function index() {
-		ilUtil::sendInfo($this->pl()->txt('info_start_training'));
+		//ilUtil::sendInfo($this->pl()->txt('info_start_training'));
 		$start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_START);
 		$ilLinkButton = ilLinkButton::getInstance();
 		$ilLinkButton->setCaption("Zum Training", false);
