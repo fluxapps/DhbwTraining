@@ -218,7 +218,7 @@ class xdhtStartGUI {
 								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $value];
 							} else {
 
-								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $question_answer->getAnswertext()];
+								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => base64_encode($question_answer->getAnswertext())];
 							}
 
 						}
@@ -227,7 +227,7 @@ class xdhtStartGUI {
 			}
 
 			$recommender = new RecommenderCurl();
-			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],base64_encode($answertext),$this->facade->settings());
+			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext,$this->facade->settings());
 
 			$this->proceedWithReturnOfRecommender($response);
 		}
