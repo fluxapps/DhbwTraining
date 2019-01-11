@@ -224,7 +224,7 @@ class RecommenderCurl {
 			"question_pool_obj_id" => $settings->getQuestionPoolId(),
 			"question_id" => $question_id,
 			"question_type" => $question_type,
-			"answer" => $answer
+			"answer" => base64_encode($answer)
 		];
 
 		$response = $this->doRequest("api/v1/answer", $headers, json_encode($data,JSON_FORCE_OBJECT),$settings);
