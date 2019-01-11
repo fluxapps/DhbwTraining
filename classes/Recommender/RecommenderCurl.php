@@ -153,7 +153,10 @@ class RecommenderCurl {
 			$response->setStatus($result['status']);
 			$response->setQuestionId($result['question_id']);
 			$response->setResponseType($result['response_type']);
-			$response->setAnswerResponse($result['answer_response']);
+
+			if(!is_null($result['answer_response'])) {
+				$response->setAnswerResponse($result['answer_response']);
+			}
 
 			if(!is_null($result['message'])) {
 				$response->setMessage($result['message']);
