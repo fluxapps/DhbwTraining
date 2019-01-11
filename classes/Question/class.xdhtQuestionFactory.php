@@ -56,7 +56,9 @@ inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.questio
 
 		$formatted_array = $this->getFormattedArray($question_ids);
 
-		$sql = "SELECT * FROM qpl_questions where obj_fi = $question_pool_id and question_id IN ($formatted_array)";
+		//$sql = "SELECT * FROM qpl_questions where obj_fi = $question_pool_id and question_id IN ($formatted_array)";
+
+		$sql = "SELECT * FROM qpl_questions where question_id IN ($formatted_array)";
 
 		$set = $ilDB->query($sql);
 
