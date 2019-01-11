@@ -196,14 +196,14 @@ class xdhtStartGUI {
 					 * @var QuestionAnswer $question_answer
 					 */
 					$question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result'.$_POST['question_id'].'ID']];
-					$answertext = ["answertext" => $question_answer->getAnswertext()];
+					$answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
 				break;
 				case 'assMultipleChoice':
 					$answertext = array();
 					foreach($_POST as $key => $value) {
 						if(strpos($key, 'multiple_choice_result') !== false) {
 							$question_answer = $question_answers->getAnswers()[$value];
-							$answertext[] = ["aorder" =>  $question_answer->getAnswertext()];
+							$answertext[] = ["aorder" =>  base64_encode($question_answer->getAnswertext())];
 						}
 					}
 					break;
@@ -215,10 +215,10 @@ class xdhtStartGUI {
 							$question_answer = $question_answers->getAnswers()[$arr_splitted_gap[1]];
 
 							if($question_answer->getClozeType() == xdhtQuestionFactory::CLOZE_TYPE_TEXT) {
-								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $value];
+								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => base64_encode($value)];
 							} else {
 
-								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $question_answer->getAnswertext()];
+								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => base64_encode($question_answer->getAnswertext())];
 							}
 
 						}
