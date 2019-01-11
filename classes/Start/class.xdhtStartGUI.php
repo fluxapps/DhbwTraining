@@ -72,24 +72,24 @@ class xdhtStartGUI {
 		ilUtil::sendInfo($this->pl()->txt('info_start_training'));
 		$start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_START);
 		$ilLinkButton = ilLinkButton::getInstance();
-		$ilLinkButton->setCaption($this->pl()->txt("start_training"), false);
+		$ilLinkButton->setCaption("Zum Training", false);
 		$ilLinkButton->setUrl($start_training_link);
 		/** @var $ilToolbar ilToolbarGUI */
 		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$continue_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED);
+		/*$continue_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED);
 		$ilLinkButton = ilLinkButton::getInstance();
 		$ilLinkButton->setCaption($this->pl()->txt("continue_training"), false);
-		$ilLinkButton->setUrl($continue_training_link);
+		$ilLinkButton->setUrl($continue_training_link);*/
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
+		//$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$new_start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_NEW_START);
+		/*$new_start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_NEW_START);
 		$ilLinkButton = ilLinkButton::getInstance();
 		$ilLinkButton->setCaption($this->pl()->txt("start_new_training"), false);
-		$ilLinkButton->setUrl($new_start_training_link);
+		$ilLinkButton->setUrl($new_start_training_link);*/
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
+		//$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
 		$this->tpl()->show();
 	}
