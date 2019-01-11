@@ -106,7 +106,7 @@ class xdhtStartGUI {
 		//$a_html = $q_gui->getPreview();
 
 		if(!is_object($q_gui)) {
-			ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($response,true),true);
+			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden ".print_r($response,true),true);
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		}
 
