@@ -134,8 +134,8 @@ class RecommenderCurl {
 			}
 
 
-			if(is_null($result['status'])) {
-				ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($result,true),true);
+			if(empty($result['status'])) {
+				ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Kein Status".print_r($result,true),true);
 				$this->ctrl()->redirectByClass("xdhtStartGUI", xdhtStartGUI::CMD_STANDARD);
 			}
 
