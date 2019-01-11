@@ -98,15 +98,15 @@ class xdhtStartGUI {
 	/**
 	 * @param integer $question
 	 */
-	protected function initQuestionForm($question,$response) {
+	protected function initQuestionForm($question,RecommenderResponse $response) {
 		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
 		$tpl->setVariable("ACTION", $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED));
-		$q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
+		$q_gui = assQuestionGUI::_getQuestionGUI("", $response->getQuestionId());
 		// $q_gui->setRenderPurpose(assQuestionGUI::RENDER_PURPOSE_PLAYBACK);
 		//$a_html = $q_gui->getPreview();
 
 		if(!is_object($q_gui)) {
-			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID".$question['question_id'].print_r($response,true),true);
+			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID".$response->getQuestionId().print_r($response,true),true);
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		}
 
@@ -121,7 +121,7 @@ class xdhtStartGUI {
 		$tpl->setVariable('NEXT_BTN_VALUE', 'next');
 		$tpl->setVariable('PROCEED_BTN_TEXT', $this->pl()->txt('next_question'));
 
-		$tpl->setVariable('QUESTION_ID', $question['question_id']);
+		$tpl->setVariable('QUESTION_ID', $response->getQuestionId());
 
 		//$this->ctrl()->setParameter($this, self::QUESTION_IDENTIFIER, $question['question_id']);
 
