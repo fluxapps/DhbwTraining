@@ -73,6 +73,7 @@ class QuestionAnswers {
 			case 'assClozeTest':
 				global $DIC;
 				$sql = "SELECT * FROM qpl_a_cloze where question_fi = $this->questions_id";
+
 				$set = $DIC->database()->query($sql);
 				$arr_question_answers = array();
 				while ($row = $DIC->database()->fetchAssoc($set)) {
@@ -80,9 +81,10 @@ class QuestionAnswers {
 					$question_answer->setQuestionId($row['question_fi']);
 					$question_answer->setAnswerId($row['answer_id']);
 					$question_answer->setAnswertext($row['answertext']);
-					$question_answer->setAOrder($row['gap_id']);
+					$question_answer->setAOrder($row['aorder']);
 					$question_answer->setClozeType($row['cloze_type']);
-					$arr_question_answers[$row['gap_id']] = $question_answer;
+					$arr_question_answers[$row['gap_id']]['cloze_type'] = $row['cloze_type'];
+					$arr_question_answers[$row['gap_id']][$row['aorder']] = $question_answer;
 				}
 				$this->setAnswers($arr_question_answers);
 				return;

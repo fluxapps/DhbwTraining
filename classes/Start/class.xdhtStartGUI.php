@@ -162,6 +162,8 @@ class xdhtStartGUI {
 		$recommender = new RecommenderCurl();
 		$response = $recommender->start($this->facade->settings());
 
+		//$this->initQuestionForm($this->questions[4],$response);
+
 		$this->proceedWithReturnOfRecommender($response);
 
 
@@ -188,6 +190,10 @@ class xdhtStartGUI {
 		} else {
 
 			$question = $this->questions[$_POST['question_id']];
+
+			//echo $question['type_tag'];exit;
+			//assClozeSelectGap::
+
 			$question_answers = new QuestionAnswers($question['type_tag'],$_POST['question_id']);
 
 			switch($question['type_tag']) {
@@ -209,18 +215,24 @@ class xdhtStartGUI {
 					break;
 				case 'assClozeTest':
 					$answertext = array();
+
+
+
 					foreach($_POST as $key => $value) {
 						if(strpos($key, 'gap_') !== false) {
 							$arr_splitted_gap = explode('gap_',$key);
-							$question_answer = $question_answers->getAnswers()[$arr_splitted_gap[1]];
 
-							if($question_answer->getClozeType() == xdhtQuestionFactory::CLOZE_TYPE_TEXT) {
+							$question_answer = $question_answers->getAnswers();
+							if(in_array($question_answer[$arr_splitted_gap[1]]['cloze_type'],[xdhtQuestionFactory::CLOZE_TYPE_TEXT,xdhtQuestionFactory::CLOZE_TYPE_NUMERIC])) {
 								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => base64_encode($value)];
 							} else {
 
-								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => base64_encode($question_answer->getAnswertext())];
+								if(is_object($question_answer[$arr_splitted_gap[1]][$value])) {
+									$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> $question_answer[$arr_splitted_gap[1]]['cloze_type'], 'answertext' => base64_encode($question_answer[$arr_splitted_gap[1]][$value]->getAnswertext())];
+								} else {
+									$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> $question_answer[$arr_splitted_gap[1]]['cloze_type'], 'answertext' => ""];
+								}
 							}
-
 						}
 					}
 					break;
