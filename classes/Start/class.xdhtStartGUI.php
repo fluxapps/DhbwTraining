@@ -162,7 +162,7 @@ class xdhtStartGUI {
 		$recommender = new RecommenderCurl();
 		$response = $recommender->start($this->facade->settings());
 
-		//$this->initQuestionForm($this->questions[4],$response);
+		//$this->initQuestionForm($this->questions[3],$response);
 
 		$this->proceedWithReturnOfRecommender($response);
 
@@ -188,11 +188,7 @@ class xdhtStartGUI {
 		if($_POST['submitted'] == 'cancel') {
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
-
 			$question = $this->questions[$_POST['question_id']];
-
-			//echo $question['type_tag'];exit;
-			//assClozeSelectGap::
 
 			$question_answers = new QuestionAnswers($question['type_tag'],$_POST['question_id']);
 
@@ -238,10 +234,16 @@ class xdhtStartGUI {
 					break;
 			}
 
-			$recommender = new RecommenderCurl();
-			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext,$this->facade->settings());
+			if(count($answertext) == 0) {
+				$this->initQuestionForm($this->questions[$question['question_id']],NULL);
+			} else {
+				$recommender = new RecommenderCurl();
+				$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext,$this->facade->settings());
 
-			$this->proceedWithReturnOfRecommender($response);
+				$this->proceedWithReturnOfRecommender($response);
+			}
+
+
 		}
 	}
 
