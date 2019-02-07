@@ -162,7 +162,7 @@ class xdhtStartGUI {
 		$recommender = new RecommenderCurl();
 		$response = $recommender->start($this->facade->settings());
 
-		//$this->initQuestionForm($this->questions[3],$response);
+		//$this->initQuestionForm($this->questions[2],$response);
 
 		$this->proceedWithReturnOfRecommender($response);
 
@@ -191,6 +191,7 @@ class xdhtStartGUI {
 			$question = $this->questions[$_POST['question_id']];
 
 			$question_answers = new QuestionAnswers($question['type_tag'],$_POST['question_id']);
+			$answertext = array();
 
 			switch($question['type_tag']) {
 				case 'assSingleChoice':
@@ -198,22 +199,21 @@ class xdhtStartGUI {
 					 * @var QuestionAnswer $question_answer
 					 */
 					$question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result'.$_POST['question_id'].'ID']];
-					$answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
-				break;
+					if(is_object($question_answer)) {
+						$answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
+					}
+					break;
 				case 'assMultipleChoice':
-					$answertext = array();
 					foreach($_POST as $key => $value) {
 						if(strpos($key, 'multiple_choice_result') !== false) {
 							$question_answer = $question_answers->getAnswers()[$value];
-							$answertext[] = ["aorder" =>  base64_encode($question_answer->getAnswertext())];
+							if(is_object($question_answer)) {
+								$answertext[] = [ "aorder" => base64_encode($question_answer->getAnswertext()) ];
+							}
 						}
 					}
 					break;
 				case 'assClozeTest':
-					$answertext = array();
-
-
-
 					foreach($_POST as $key => $value) {
 						if(strpos($key, 'gap_') !== false) {
 							$arr_splitted_gap = explode('gap_',$key);
@@ -234,17 +234,27 @@ class xdhtStartGUI {
 					break;
 			}
 
-			if(count($answertext) == 0) {
-				$this->initQuestionForm($this->questions[$question['question_id']],NULL);
-			} else {
+			//if(count($answertext) == 0) {
+			//	$this->initQuestionForm($this->questions[$question['question_id']],NULL);
+			//} else {
 				$recommender = new RecommenderCurl();
 				$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext,$this->facade->settings());
 
 				$this->proceedWithReturnOfRecommender($response);
-			}
+				//$this->debug();
+			//}
 
 
 		}
+	}
+
+	public function debug() {
+
+		$recommender = new RecommenderCurl();
+		$response = $recommender->start($this->facade->settings());
+
+		$this->initQuestionForm($this->questions[3],$response);
+		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
 	}
 
 
