@@ -201,7 +201,9 @@ class xdhtStartGUI {
 					$question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result'.$_POST['question_id'].'ID']];
 					if(is_object($question_answer)) {
 						$answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
-					}
+					} else {
+						$answertext = ["answertext" => ""];
+			        }
 					break;
 				case 'assMultipleChoice':
 					foreach($_POST as $key => $value) {
@@ -209,6 +211,8 @@ class xdhtStartGUI {
 							$question_answer = $question_answers->getAnswers()[$value];
 							if(is_object($question_answer)) {
 								$answertext[] = [ "aorder" => base64_encode($question_answer->getAnswertext()) ];
+							} else {
+								$answertext = ["answertext" => ""];
 							}
 						}
 					}
