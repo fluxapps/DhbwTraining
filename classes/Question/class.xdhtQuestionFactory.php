@@ -21,7 +21,9 @@ class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 	 */
 	public function getAllQuestionsByQuestionPoolId($question_pool_id) {
 		if (!$question_pool_id) {
-			throw new LogicException('Can\'t perform getAllQuestionsByQuestionPoolId without $question_pool_id');
+			return array();
+
+			/*throw new LogicException('Can\'t perform getAllQuestionsByQuestionPoolId without $question_pool_id');*/
 		}
 
 		global $ilDB;
