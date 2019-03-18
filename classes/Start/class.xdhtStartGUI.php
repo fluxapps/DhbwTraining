@@ -38,7 +38,7 @@ class xdhtStartGUI {
 
 	public function __construct(xdhtObjectFacadeInterface $facade) {
 		$this->facade = $facade;
-		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
+		//$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
 		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM);
 	}
 
@@ -69,27 +69,27 @@ class xdhtStartGUI {
 	}
 
 	public function index() {
-		ilUtil::sendInfo($this->pl()->txt('info_start_training'));
+		//ilUtil::sendInfo($this->pl()->txt('info_start_training'));
 		$start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_START);
 		$ilLinkButton = ilLinkButton::getInstance();
-		$ilLinkButton->setCaption($this->pl()->txt("start_training"), false);
+		$ilLinkButton->setCaption("Zum Training", false);
 		$ilLinkButton->setUrl($start_training_link);
 		/** @var $ilToolbar ilToolbarGUI */
 		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$continue_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED);
+		/*$continue_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED);
 		$ilLinkButton = ilLinkButton::getInstance();
 		$ilLinkButton->setCaption($this->pl()->txt("continue_training"), false);
-		$ilLinkButton->setUrl($continue_training_link);
+		$ilLinkButton->setUrl($continue_training_link);*/
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
+		//$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
-		$new_start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_NEW_START);
+		/*$new_start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_NEW_START);
 		$ilLinkButton = ilLinkButton::getInstance();
 		$ilLinkButton->setCaption($this->pl()->txt("start_new_training"), false);
-		$ilLinkButton->setUrl($new_start_training_link);
+		$ilLinkButton->setUrl($new_start_training_link);*/
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
+		//$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
 
 		$this->tpl()->show();
 	}
@@ -106,7 +106,7 @@ class xdhtStartGUI {
 		//$a_html = $q_gui->getPreview();
 
 		if(!is_object($q_gui)) {
-			ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($response,true),true);
+			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID".$question['question_id'].print_r($response,true),true);
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		}
 
@@ -156,11 +156,13 @@ class xdhtStartGUI {
 		//Remove the Session
 		$_SESSION['answered_questions'] = array();
 
-		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
+		//$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
 
 
 		$recommender = new RecommenderCurl();
 		$response = $recommender->start($this->facade->settings());
+
+		//$this->initQuestionForm($this->questions[2],$response);
 
 		$this->proceedWithReturnOfRecommender($response);
 
@@ -186,9 +188,10 @@ class xdhtStartGUI {
 		if($_POST['submitted'] == 'cancel') {
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
-
 			$question = $this->questions[$_POST['question_id']];
+
 			$question_answers = new QuestionAnswers($question['type_tag'],$_POST['question_id']);
+			$answertext = array();
 
 			switch($question['type_tag']) {
 				case 'assSingleChoice':
@@ -196,41 +199,62 @@ class xdhtStartGUI {
 					 * @var QuestionAnswer $question_answer
 					 */
 					$question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result'.$_POST['question_id'].'ID']];
-					$answertext = ["answertext" => $question_answer->getAnswertext()];
-				break;
+					if(is_object($question_answer)) {
+						$answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
+					}
+					break;
 				case 'assMultipleChoice':
-					$answertext = array();
 					foreach($_POST as $key => $value) {
 						if(strpos($key, 'multiple_choice_result') !== false) {
 							$question_answer = $question_answers->getAnswers()[$value];
-							$answertext[] = ["aorder" =>  $question_answer->getAnswertext()];
+							if(is_object($question_answer)) {
+								$answertext[] = [ "aorder" => base64_encode($question_answer->getAnswertext()) ];
+							}
 						}
 					}
 					break;
 				case 'assClozeTest':
-					$answertext = array();
 					foreach($_POST as $key => $value) {
 						if(strpos($key, 'gap_') !== false) {
 							$arr_splitted_gap = explode('gap_',$key);
-							$question_answer = $question_answers->getAnswers()[$arr_splitted_gap[1]];
 
-							if($question_answer->getClozeType() == xdhtQuestionFactory::CLOZE_TYPE_TEXT) {
-								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $value];
+							$question_answer = $question_answers->getAnswers();
+							if(in_array($question_answer[$arr_splitted_gap[1]]['cloze_type'],[xdhtQuestionFactory::CLOZE_TYPE_TEXT,xdhtQuestionFactory::CLOZE_TYPE_NUMERIC])) {
+								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => base64_encode($value)];
 							} else {
 
-								$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> 2, 'answertext' => $question_answer->getAnswertext()];
+								if(is_object($question_answer[$arr_splitted_gap[1]][$value])) {
+									$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> $question_answer[$arr_splitted_gap[1]]['cloze_type'], 'answertext' => base64_encode($question_answer[$arr_splitted_gap[1]][$value]->getAnswertext())];
+								} else {
+									$answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type'=> $question_answer[$arr_splitted_gap[1]]['cloze_type'], 'answertext' => ""];
+								}
 							}
-
 						}
 					}
 					break;
 			}
 
-			$recommender = new RecommenderCurl();
-			$response = $recommender->answer($question['question_id'],$question['question_type_fi'],base64_encode($answertext),$this->facade->settings());
+			//if(count($answertext) == 0) {
+			//	$this->initQuestionForm($this->questions[$question['question_id']],NULL);
+			//} else {
+				$recommender = new RecommenderCurl();
+				$response = $recommender->answer($question['question_id'],$question['question_type_fi'],$answertext,$this->facade->settings());
 
-			$this->proceedWithReturnOfRecommender($response);
+				$this->proceedWithReturnOfRecommender($response);
+				//$this->debug();
+			//}
+
+
 		}
+	}
+
+	public function debug() {
+
+		$recommender = new RecommenderCurl();
+		$response = $recommender->start($this->facade->settings());
+
+		$this->initQuestionForm($this->questions[3],$response);
+		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
 	}
 
 
@@ -240,9 +264,15 @@ class xdhtStartGUI {
 	public function proceedWithReturnOfRecommender(RecommenderResponse $response) {
 		switch($response->getStatus()) {
 			case RecommenderResponse::STATUS_SUCCESS:
+				if($response->getAnswerResponse()) {
+					ilUtil::sendInfo("Rückmeldung zur Antwort: ".$response->getAnswerResponse(),true);
+				}
+
 				if($response->getMessage()) {
 					ilUtil::sendInfo($response->getMessage(),true);
 				}
+
+
 
 				switch($response->getResponseType()) {
 					case RecommenderResponse::RESPONSE_TYPE_NEXT_QUESTION:

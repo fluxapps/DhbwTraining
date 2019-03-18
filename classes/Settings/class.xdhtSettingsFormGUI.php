@@ -107,7 +107,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 				$sel_qpl->setOptions(array());
 				$sel_qpl->setRequired(true);
 				$this->addItem($sel_qpl);*/
-
+/*
 		$item = new ilFormSectionHeaderGUI();
 		$item->setTitle($this->pl()->txt('question_pool'));
 		$this->addItem($item);
@@ -116,7 +116,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI {
 		$question_pools_array = $this->facade->xdhtQuestionPoolFactory()->getSelectOptionsArray();
 		$question_pools_array_2 = array(null => $this->pl()->txt('please_choose')) + $question_pools_array;
 		$rep_sel_input->setOptions($question_pools_array_2);
-		$this->addItem($rep_sel_input);
+		$this->addItem($rep_sel_input);*/
 
 
 		$this->addCommandButton(ilObjDhbwTrainingGUI::CMD_UPDATE, $this->pl()->txt('save'));

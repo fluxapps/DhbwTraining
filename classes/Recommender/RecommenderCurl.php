@@ -134,8 +134,8 @@ class RecommenderCurl {
 			}
 
 
-			if(is_null($result['status'])) {
-				ilUtil::sendFailure("Es ist ein Fehler aufgetreten ".print_r($result,true),true);
+			if(empty($result['status'])) {
+				ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Kein Status".print_r($result,true),true);
 				$this->ctrl()->redirectByClass("xdhtStartGUI", xdhtStartGUI::CMD_STANDARD);
 			}
 
@@ -153,6 +153,11 @@ class RecommenderCurl {
 			$response->setStatus($result['status']);
 			$response->setQuestionId($result['question_id']);
 			$response->setResponseType($result['response_type']);
+
+			if(!is_null($result['answer_response'])) {
+				$response->setAnswerResponse($result['answer_response']);
+			}
+
 			if(!is_null($result['message'])) {
 				$response->setMessage($result['message']);
 			}

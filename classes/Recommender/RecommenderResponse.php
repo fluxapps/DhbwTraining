@@ -36,6 +36,12 @@ class RecommenderResponse {
 	 * @var string
 	 */
 	protected $message = "";
+	/**
+	 * @var string
+	 */
+	protected $answer_response = "";
+
+
 
 
 	/**
@@ -100,6 +106,24 @@ class RecommenderResponse {
 	public function setMessage(string $message) {
 		$this->message = $message;
 	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getAnswerResponse(): string {
+		return $this->answer_response;
+	}
+
+
+	/**
+	 * @param string $answer_response
+	 */
+	public function setAnswerResponse(string $answer_response) {
+		$this->answer_response = $answer_response;
+	}
+
+
 
 
 }

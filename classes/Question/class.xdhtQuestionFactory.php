@@ -21,13 +21,18 @@ class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 	 */
 	public function getAllQuestionsByQuestionPoolId($question_pool_id) {
 		if (!$question_pool_id) {
-			throw new LogicException('Can\'t perform getAllQuestionsByQuestionPoolId without $question_pool_id');
+			return array();
+
+			/*throw new LogicException('Can\'t perform getAllQuestionsByQuestionPoolId without $question_pool_id');*/
 		}
 
 		global $ilDB;
 
+		/*$sql = "SELECT * FROM qpl_questions
+inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where obj_fi = $question_pool_id";*/
+
 		$sql = "SELECT * FROM qpl_questions
-inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where obj_fi = $question_pool_id";
+inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi";
 
 		$set = $ilDB->query($sql);
 
@@ -53,7 +58,9 @@ inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.questio
 
 		$formatted_array = $this->getFormattedArray($question_ids);
 
-		$sql = "SELECT * FROM qpl_questions where obj_fi = $question_pool_id and question_id IN ($formatted_array)";
+		//$sql = "SELECT * FROM qpl_questions where obj_fi = $question_pool_id and question_id IN ($formatted_array)";
+
+		$sql = "SELECT * FROM qpl_questions where question_id IN ($formatted_array)";
 
 		$set = $ilDB->query($sql);
 
