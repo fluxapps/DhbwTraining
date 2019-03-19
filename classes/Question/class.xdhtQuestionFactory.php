@@ -19,17 +19,9 @@ class xdhtQuestionFactory implements xdhtQuestionFactoryInterface {
 	/**
 	 * @inheritdoc
 	 */
-	public function getAllQuestionsByQuestionPoolId($question_pool_id) {
-		if (!$question_pool_id) {
-			return array();
-
-			/*throw new LogicException('Can\'t perform getAllQuestionsByQuestionPoolId without $question_pool_id');*/
-		}
+	public function getAllQuestions() {
 
 		global $ilDB;
-
-		/*$sql = "SELECT * FROM qpl_questions
-inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where obj_fi = $question_pool_id";*/
 
 		$sql = "SELECT * FROM qpl_questions
 inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi";

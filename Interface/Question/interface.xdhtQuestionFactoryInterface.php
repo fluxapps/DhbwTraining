@@ -8,11 +8,10 @@
 interface xdhtQuestionFactoryInterface {
 
 	/**
-	 * @param integer $question_pool_id
 	 *
 	 * @return array of questions
 	 */
-	public function getAllQuestionsByQuestionPoolId($question_pool_id);
+	public function getAllQuestions();
 
 
 	/**

@@ -38,7 +38,7 @@ class xdhtStartGUI {
 
 	public function __construct(xdhtObjectFacadeInterface $facade) {
 		$this->facade = $facade;
-		//$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
+		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestions();
 		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM);
 	}
 
@@ -156,7 +156,7 @@ class xdhtStartGUI {
 		//Remove the Session
 		$_SESSION['answered_questions'] = array();
 
-		//$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestionsByQuestionPoolId($this->facade->settings()->getQuestionPoolId());
+		$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestions();
 
 
 		$recommender = new RecommenderCurl();
