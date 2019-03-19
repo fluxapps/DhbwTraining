@@ -7,9 +7,14 @@ Start at your ILIAS root directory
 ```bash
 mkdir -p Customizing/global/plugins/Services/Repository/RepositoryObject
 cd Customizing/global/plugins/Services/Repository/RepositoryObject
-git clone git@git.studer-raimann.ch:https://github.com/studer-raimann/DhbwTraining.git
+git clone https://github.com/studer-raimann/DhbwTraining.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.  
+
+### Dependencies
+* ILIAS 5.3
+* PHP >=7.0
+* Recommender Phython Software
 
 ### ILIAS Plugin SLA
 
