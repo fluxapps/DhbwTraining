@@ -11,7 +11,7 @@ git clone https://github.com/studer-raimann/DhbwTraining.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.  
 
-### Dependencies
+### Requirements
 * ILIAS 5.3
 * PHP >=7.0
 * Recommender Phython Software
