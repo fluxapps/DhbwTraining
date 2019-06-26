@@ -220,9 +220,9 @@ class xdhtStartGUI {
 		if ($_POST['submitted'] == 'cancel') {
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
-			$question = $this->facade->xdhtQuestionFactory()->getQuestionById($_POST['question_id']);
+			$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
 
-			$question_answers = new QuestionAnswers($question['type_tag'], $_POST['question_id']);
+			$question_answers = new QuestionAnswers($question['type_tag'], $question['question_id']);
 			$answertext = array();
 			$this->setAnsweredForPreviewSession($question);
 
@@ -364,7 +364,7 @@ class xdhtStartGUI {
 				}
 
 				if ($response->getAnswerResponse()) {
-					$question = $this->facade->xdhtQuestionFactory()->getQuestionById($_POST['question_id']);
+					$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
 					$this->initAnsweredQuestionForm($question, $response);
 					$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
 						->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()
