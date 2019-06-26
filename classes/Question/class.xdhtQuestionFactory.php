@@ -37,6 +37,48 @@ inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.questio
 	}
 
 
+	/**
+	 * @param int $recomander_id
+	 *
+	 * @return mixed|void
+	 */
+	public function getQuestionByRecomanderId($recomander_id) {
+		global $ilDB;
+		$sql = "SELECT * FROM qpl_questions
+inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where qpl_questions.description LIKE ".$ilDB->quote("[".$recomander_id."]",'text');
+
+		$set = $ilDB->query($sql);
+
+		$arr_questions = array();
+		while ($row = $ilDB->fetchAssoc($set)) {
+			$row['recomander_id'] = $recomander_id;
+			$arr_questions = $row;
+		}
+
+		return $arr_questions;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getQuestionById($id) {
+
+		global $ilDB;
+
+		$sql = "SELECT * FROM qpl_questions
+inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where qpl_questions.question_id = ".$ilDB->quote($id,'integer');
+
+		$set = $ilDB->query($sql);
+
+		$arr_questions = array();
+		while ($row = $ilDB->fetchAssoc($set)) {
+			$arr_questions = $row;
+		}
+
+		return $arr_questions;
+	}
+
+
 	private function getFormattedArray($array) {
 		return "'" . implode("', '", $array) . "'";
 	}

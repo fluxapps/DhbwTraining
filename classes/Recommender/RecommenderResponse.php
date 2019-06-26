@@ -35,6 +35,10 @@ class RecommenderResponse {
 	/**
 	 * @var string
 	 */
+	protected $recomander_id = "";
+	/**
+	 * @var string
+	 */
 	protected $message = "";
 	/**
 	 * @var string
@@ -89,6 +93,22 @@ class RecommenderResponse {
 	 */
 	public function setQuestionId(string $question_id) {
 		$this->question_id = $question_id;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getRecomanderId(): string {
+		return $this->recomander_id;
+	}
+
+
+	/**
+	 * @param string $recomander_id
+	 */
+	public function setRecomanderId(string $recomander_id) {
+		$this->recomander_id = $recomander_id;
 	}
 
 

@@ -2,6 +2,7 @@ xdht_new#:#Neues Training anlegen
 objs_xdht_duplicate#:#Training kopieren
 objs_xdht_import#:#Training importieren
 xdht_add#:#Training hinzufügen
+xdht_start#:#Start
 start#:#Start
 settings#:#Einstellungen
 permissions#:#Rechte
@@ -51,3 +52,8 @@ view_learning_prog#:#Lernfortschritt von anderen Benutzern einsehen
 edit_learning_prog#:#Lernfortschrittseinstellungen bearbeiten
 learning_prog#:#Lernfortschritt
 proposal_system#:#Vorschlagsystem
+difficulty#:#Wie fanden Sie diese Aufgabe
+level1#:#sehr einfach
+level2#:#einfach
+level3#:#passend
+level4#:#zu anspruchsvoll
