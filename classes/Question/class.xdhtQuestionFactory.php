@@ -45,7 +45,7 @@ inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.questio
 	public function getQuestionByRecomanderId($recomander_id) {
 		global $ilDB;
 		$sql = "SELECT * FROM qpl_questions
-inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where qpl_questions.description LIKE ".$ilDB->quote("[".$recomander_id."]",'text');
+inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.question_type_fi where qpl_questions.description LIKE ".$ilDB->quote("%[[".$recomander_id."]]",'text');
 
 		$set = $ilDB->query($sql);
 
