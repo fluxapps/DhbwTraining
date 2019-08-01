@@ -118,6 +118,7 @@ class xdhtStartGUI {
 
 		$q_gui->setPreviousSolutionPrefilled(true);
 		$tpl->setCurrentBlock('question');
+		$tpl->setVariable('TITLE', $q_gui->object->getTitle());
 		$tpl->setVariable('QUESTION', $q_gui->getPreview());
 		$tpl->parseCurrentBlock();
 		$tpl->setVariable('CANCEL_BTN_VALUE', 'cancel');
@@ -126,6 +127,10 @@ class xdhtStartGUI {
 		$tpl->setVariable('PROCEED_BTN_TEXT', $this->pl()->txt('next_question'));
 		$tpl->setVariable('QUESTION_ID', $question['question_id']);
 		$tpl->setVariable('RECOMANDER_ID', $question['recomander_id']);
+
+
+
+
 
 
 		$this->tpl()->setContent($tpl->get());
@@ -158,6 +163,7 @@ class xdhtStartGUI {
 		}
 
 		$tpl->setCurrentBlock('question');
+		$tpl->setVariable('TITLE', $q_gui->object->getTitle());
 		$tpl->setVariable('QUESTION', $q_gui->getPreview());
 
 		$tpl->parseCurrentBlock();
