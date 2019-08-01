@@ -362,7 +362,8 @@ class xdhtStartGUI {
 		switch ($response->getStatus()) {
 			case RecommenderResponse::STATUS_SUCCESS:
 				if ($response->getAnswerResponse()) {
-					$send_info[] = ilMathJax::getInstance()->insertLatexImages($response->getAnswerResponse());
+					$formatter = new ilAssSelfAssessmentQuestionFormatter();
+					$send_info[] = $formatter->format($response->getAnswerResponse());
 				}
 
 				if ($response->getMessage()) {
@@ -374,6 +375,9 @@ class xdhtStartGUI {
 				}
 
 				if ($response->getAnswerResponse()) {
+					//DEBUG
+					//$_POST['recomander_id'] = "8585466cf11124c99c59ae1deb6ae0d0521d6db5";
+					//
 					$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
 					$this->initAnsweredQuestionForm($question, $response);
 					$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
