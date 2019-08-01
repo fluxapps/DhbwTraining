@@ -103,8 +103,18 @@ class xdhtStartGUI {
 		}
 
 		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
+
+
 		$previewSession->init();
 		$q_gui->setPreviewSession($previewSession);
+
+		/**
+		 * Shuffle!
+		 */
+		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
+		$shuffler = new ilArrayElementShuffler();
+		$q_gui->object->setShuffle(1);
+		$q_gui->object->setShuffler($shuffler);
 
 		$q_gui->setPreviousSolutionPrefilled(true);
 		$tpl->setCurrentBlock('question');
