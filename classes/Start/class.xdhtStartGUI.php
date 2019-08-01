@@ -113,6 +113,7 @@ class xdhtStartGUI {
 		 */
 		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
 		$shuffler = new ilArrayElementShuffler();
+		$shuffler->setSeed($q_gui->object->getId() + $this->user()->getId());
 		$q_gui->object->setShuffle(1);
 		$q_gui->object->setShuffler($shuffler);
 
@@ -156,11 +157,21 @@ class xdhtStartGUI {
 		}
 		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
 		$q_gui->setPreviewSession($previewSession);
+
 		if (!is_object($q_gui)) {
 			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID" . $question['question_id']
 				. print_r($response, true), true);
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		}
+
+		/**
+		 * shuffle like before
+		 */
+		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
+		$shuffler = new ilArrayElementShuffler();
+		$shuffler->setSeed($q_gui->object->getId() + $this->user()->getId());
+		$q_gui->object->setShuffle(1);
+		$q_gui->object->setShuffler($shuffler);
 
 		$tpl->setCurrentBlock('question');
 		$tpl->setVariable('TITLE', $q_gui->object->getTitle());
