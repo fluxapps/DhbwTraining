@@ -179,7 +179,6 @@ class RecommenderCurl {
 			"user_id" => $DIC->user()->getId(),
 			"lang_key" => $DIC->user()->getLanguage(),
 			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
-            "question_pool_obj_id" => $settings->getQuestionPoolId()
 		];
 
 		$response = $this->doRequest("api/v1/start", $headers, json_encode($data),$settings);
@@ -206,7 +205,7 @@ class RecommenderCurl {
 			"lang_key" => $DIC->user()->getLanguage(),
 			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
 			"question_pool_obj_id" => $settings->getQuestionPoolId(),
-			"recomander_id" => $recomander_id,
+			"question_id" => $recomander_id,
 			"question_type" => $question_type,
 			"answer" => $answer
 		];
@@ -234,8 +233,7 @@ class RecommenderCurl {
 			"user_id" => $DIC->user()->getId(),
 			"lang_key" => $DIC->user()->getLanguage(),
 			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
-			"question_pool_obj_id" => $settings->getQuestionPoolId(),
-			"recomander_id" => $recomander_id,
+			"question_id" => $recomander_id,
 			"rating" => $rating
 		];
 
