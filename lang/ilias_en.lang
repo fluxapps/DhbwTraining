@@ -3,6 +3,7 @@ objs_xdht_duplicate#:#Copy training
 objs_xdht_import#:#Import training
 xdht_add#:#Add Training
 xdht_start#:#Start
+start#:#Start
 settings#:#Settings
 permissions#:#Permissions
 start_training#:#Start training
@@ -51,3 +52,8 @@ view_learning_prog#:#View learning progress of other users
 edit_learning_prog#:#Edit learning progress settings
 learning_prog#:#Learning progress
 proposal_system#:#Proposal system
+difficulty#:#Wie fanden Sie diese Aufgabe
+level1#:#sehr einfach
+level2#:#einfach
+level3#:#passend
+level4#:#zu anspruchsvoll

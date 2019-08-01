@@ -15,6 +15,21 @@ interface xdhtQuestionFactoryInterface {
 
 
 	/**
+	 * @param int $id
+	 *
+	 * @return mixed
+	 */
+	public function getQuestionById($id);
+
+	/**
+	 * @param int $id
+	 *
+	 * @return mixed
+	 */
+	public function getQuestionByRecomanderId($id);
+
+
+	/**
 	 * @param array $question_ids
 	 * @param integer $question_pool_id
 	 *
