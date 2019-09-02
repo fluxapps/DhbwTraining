@@ -103,11 +103,23 @@ class xdhtStartGUI {
 		}
 
 		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
+
+
 		$previewSession->init();
 		$q_gui->setPreviewSession($previewSession);
 
+		/**
+		 * Shuffle!
+		 */
+		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
+		$shuffler = new ilArrayElementShuffler();
+		$shuffler->setSeed($q_gui->object->getId() + $this->user()->getId());
+		$q_gui->object->setShuffle(1);
+		$q_gui->object->setShuffler($shuffler);
+
 		$q_gui->setPreviousSolutionPrefilled(true);
 		$tpl->setCurrentBlock('question');
+		$tpl->setVariable('TITLE', $q_gui->object->getTitle());
 		$tpl->setVariable('QUESTION', $q_gui->getPreview());
 		$tpl->parseCurrentBlock();
 		$tpl->setVariable('CANCEL_BTN_VALUE', 'cancel');
@@ -116,6 +128,10 @@ class xdhtStartGUI {
 		$tpl->setVariable('PROCEED_BTN_TEXT', $this->pl()->txt('next_question'));
 		$tpl->setVariable('QUESTION_ID', $question['question_id']);
 		$tpl->setVariable('RECOMANDER_ID', $question['recomander_id']);
+
+
+
+
 
 
 		$this->tpl()->setContent($tpl->get());
@@ -141,13 +157,24 @@ class xdhtStartGUI {
 		}
 		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
 		$q_gui->setPreviewSession($previewSession);
+
 		if (!is_object($q_gui)) {
 			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID" . $question['question_id']
 				. print_r($response, true), true);
 			$this->ctrl()->redirect($this, self::CMD_STANDARD);
 		}
 
+		/**
+		 * shuffle like before
+		 */
+		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
+		$shuffler = new ilArrayElementShuffler();
+		$shuffler->setSeed($q_gui->object->getId() + $this->user()->getId());
+		$q_gui->object->setShuffle(1);
+		$q_gui->object->setShuffler($shuffler);
+
 		$tpl->setCurrentBlock('question');
+		$tpl->setVariable('TITLE', $q_gui->object->getTitle());
 		$tpl->setVariable('QUESTION', $q_gui->getPreview());
 
 		$tpl->parseCurrentBlock();
@@ -352,7 +379,8 @@ class xdhtStartGUI {
 		switch ($response->getStatus()) {
 			case RecommenderResponse::STATUS_SUCCESS:
 				if ($response->getAnswerResponse()) {
-					$send_info[] = ilMathJax::getInstance()->insertLatexImages($response->getAnswerResponse());
+					$formatter = new ilAssSelfAssessmentQuestionFormatter();
+					$send_info[] = $formatter->format($response->getAnswerResponse());
 				}
 
 				if ($response->getMessage()) {
@@ -364,6 +392,9 @@ class xdhtStartGUI {
 				}
 
 				if ($response->getAnswerResponse()) {
+					//DEBUG
+					//$_POST['recomander_id'] = "8585466cf11124c99c59ae1deb6ae0d0521d6db5";
+					//
 					$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
 					$this->initAnsweredQuestionForm($question, $response);
 					$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()

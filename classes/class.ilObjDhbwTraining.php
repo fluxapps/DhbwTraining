@@ -2,6 +2,7 @@
 
 include_once("./Services/Repository/classes/class.ilObjectPlugin.php");
 include_once("./Services/Tracking/interfaces/interface.ilLPStatusPlugin.php");
+include_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipant.php");
 
 /**
  * Class ilObjDhbwTraining
