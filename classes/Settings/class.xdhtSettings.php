@@ -1,6 +1,5 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Settings/interface.xdhtSettingsInterface.php');
 /**
  * Class xdhtSettings
  *
@@ -64,22 +63,6 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	protected $is_online = 0;
 
 	/**
-	 * @var string
-	 *
-	 * @db_has_field        true
-	 * @db_fieldtype        timestamp
-	 */
-	protected $start_date;
-
-	/**
-	 * @var string
-	 *
-	 * @db_has_field        true
-	 * @db_fieldtype        timestamp
-	 */
-	protected $end_date;
-
-	/**
 	 * @con_has_field        true
 	 * @con_fieldtype        text
 	 * @con_length           255
@@ -116,7 +99,15 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	 */
 	protected $log = 0;
 
-
+    /**
+     * @var int
+     *
+     * @db_has_field  true
+     * @db_fieldtype  integer
+     * @db_length     1
+     * @db_is_notnull true
+     */
+    protected $recommender_system_server = self::RECOMMENDER_SYSTEM_SERVER_EXTERNAL;
 
 
 
@@ -174,7 +165,7 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	/**
 	 * @return int
 	 */
-	public function getisOnline() {
+	public function getIsOnline() {
 		return $this->is_online;
 	}
 
@@ -184,38 +175,6 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	 */
 	public function setIsOnline($is_online) {
 		$this->is_online = $is_online;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getStartDate() {
-		return $this->start_date;
-	}
-
-
-	/**
-	 * @param string $start_date
-	 */
-	public function setStartDate($start_date) {
-		$this->start_date = $start_date;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getEndDate() {
-		return $this->end_date;
-	}
-
-
-	/**
-	 * @param string $end_date
-	 */
-	public function setEndDate($end_date) {
-		$this->end_date = $end_date;
 	}
 
 
@@ -283,5 +242,25 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
 	}
 
 
+    /**
+     * @inheritDoc
+     */
+    public function getRecommenderSystemServer() : int
+    {
+        if (empty($this->recommender_system_server) || intval(DEVMODE) !== 1) {
+           return self::RECOMMENDER_SYSTEM_SERVER_EXTERNAL;
+        }
+
+        return $this->recommender_system_server;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setRecommenderSystemServer(int $recommender_system_server)/*:void*/
+    {
+        $this->recommender_system_server = $recommender_system_server;
+    }
 
 }

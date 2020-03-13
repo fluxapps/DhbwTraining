@@ -1,11 +1,6 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilObjDhbwTrainingAccess.php');
-require_once('./Modules/TestQuestionPool/classes/class.assQuestionGUI.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Traits/trait.xdhtDIC.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Recommender/RecommenderCurl.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Recommender/RecommenderResponse.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/QuestionAnswer/QuestionAnswers.php');
+use srag\DIC\DhbwTraining\DICTrait;
 
 /**
  * Class xdhtStartGUI
@@ -16,7 +11,8 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  */
 class xdhtStartGUI {
 
-	use xdhtDIC;
+    use DICTrait;
+    const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
 	const CMD_STANDARD = "index";
 	const CMD_START = "start";
 	const CMD_ANSWER = 'answer';
@@ -24,22 +20,23 @@ class xdhtStartGUI {
 	const CMD_SENDRATING = 'sendRating';
 	const CMD_NEW_START = 'newStart';
 	const CMD_CANCEL = 'cancel';
+    const TAB_EDIT_PAGE = 'edit_page';
 	/**
 	 * @var xdhtObjectFacadeInterface
 	 */
 	protected $facade;
-	/**
-	 * @var array of questions
-	 */
-	protected $questions;
+    /**
+     * @var RecommenderResponse
+     */
+	protected $response;
 
 
 	public function __construct(xdhtObjectFacadeInterface $facade) {
 		$this->facade = $facade;
-		//$this->questions = $this->facade->xdhtQuestionFactory()->getAllQuestions();
 		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
-			->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()
+			->findOrCreateParticipantByUsrAndTrainingObjectId(self::dic()->user()
 				->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM);
+		$this->response = new RecommenderResponse();
 
 		self::dic()->ui()->mainTemplate()->addCss("./Services/COPage/css/content.css");
 
@@ -47,8 +44,17 @@ class xdhtStartGUI {
 
 
 	public function executeCommand() {
-		$nextClass = $this->ctrl()->getNextClass();
+        self::dic()->tabs()->addSubTab(ilObjDhbwTrainingGUI::TAB_START, self::plugin()->translate('start'), self::dic()->ctrl()->getLinkTarget($this, self::CMD_STANDARD));
+        if (self::dic()->access()->checkAccess("write", "", $this->facade->refId())) {
+            self::dic()->tabs()
+                ->addSubTab(self::TAB_EDIT_PAGE, self::dic()->language()->txt(self::TAB_EDIT_PAGE),
+                    self::dic()->ctrl()->getLinkTargetByClass(xdhtPageObjectGUI::class, 'edit'));
+        }
+		$nextClass = self::dic()->ctrl()->getNextClass();
 		switch ($nextClass) {
+            case strtolower(xdhtPageObjectGUI::class):
+                self::dic()->ctrl()->forwardCommand(new xdhtPageObjectGUI($this->facade));
+                break;
 			default:
 				$this->performCommand();
 		}
@@ -56,7 +62,8 @@ class xdhtStartGUI {
 
 
 	protected function performCommand() {
-		$cmd = $this->ctrl()->getCmd(self::CMD_STANDARD);
+        self::dic()->tabs()->activateSubTab(ilObjDhbwTrainingGUI::TAB_START);
+		$cmd = self::dic()->ctrl()->getCmd(self::CMD_STANDARD);
 		switch ($cmd) {
 			case self::CMD_STANDARD:
 			case self::CMD_START:
@@ -64,25 +71,28 @@ class xdhtStartGUI {
 			case self::CMD_NEW_START:
 			case self::CMD_ANSWER:
 			case self::CMD_SENDRATING:
-				if ($this->access()->hasReadAccess()) {
+				if (ilObjDhbwTrainingAccess::hasReadAccess()) {
 					$this->{$cmd}();
 					break;
 				} else {
-					ilUtil::sendFailure(ilAssistedExercisePlugin::getInstance()->txt('permission_denied'), true);
-					break;
+                    ilUtil::sendFailure(ilDhbwTrainingPlugin::getInstance()->txt('permission_denied'), true);
+                    break;
 				}
 		}
+
+        $this->response->sendMessages();
+        self::dic()->ui()->mainTemplate()->show();
 	}
 
 
 	public function index() {
-		$start_training_link = $this->ctrl()->getLinkTarget($this, self::CMD_START);
+		$start_training_link = self::dic()->ctrl()->getLinkTarget($this, self::CMD_START);
 		$ilLinkButton = ilLinkButton::getInstance();
-		$ilLinkButton->setCaption("Zum Training", false);
+		$ilLinkButton->setCaption(self::plugin()->translate("start_training"), false);
 		$ilLinkButton->setUrl($start_training_link);
 		/** @var $ilToolbar ilToolbarGUI */
-		$this->dic()->toolbar()->addButtonInstance($ilLinkButton);
-		$this->tpl()->show();
+		self::dic()->toolbar()->addButtonInstance($ilLinkButton);
+		self::dic()->ui()->mainTemplate()->setContent(self::output()->getHTML(new xdhtPageObjectGUI($this->facade)));
 	}
 
 
@@ -93,16 +103,16 @@ class xdhtStartGUI {
 	 */
 	protected function initQuestionForm($question) {
 		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
-		$tpl->setVariable("ACTION", $this->ctrl()->getLinkTarget($this, self::CMD_ANSWER));
+		$tpl->setVariable("ACTION", self::dic()->ctrl()->getLinkTarget($this, self::CMD_ANSWER));
 
 		$q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
 
 		if (!is_object($q_gui)) {
-			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID" . $question['question_id'], true);
-			$this->ctrl()->redirect($this, self::CMD_STANDARD);
+            $this->response->addSendError(self::plugin()->translate("error_no_question_id", "", [$question['question_id']]));
+			return;
 		}
 
-		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
+		$previewSession = new ilAssQuestionPreviewSession(self::dic()->user()->getId(), $question['question_id']);
 
 
 		$previewSession->init();
@@ -111,9 +121,8 @@ class xdhtStartGUI {
 		/**
 		 * Shuffle!
 		 */
-		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
 		$shuffler = new ilArrayElementShuffler();
-		$shuffler->setSeed($q_gui->object->getId() + $this->user()->getId());
+		$shuffler->setSeed($q_gui->object->getId() + self::dic()->user()->getId());
 		$q_gui->object->setShuffle(1);
 		$q_gui->object->setShuffler($shuffler);
 
@@ -123,9 +132,9 @@ class xdhtStartGUI {
 		$tpl->setVariable('QUESTION', $q_gui->getPreview());
 		$tpl->parseCurrentBlock();
 		$tpl->setVariable('CANCEL_BTN_VALUE', 'cancel');
-		$tpl->setVariable('CANCEL_BTN_TEXT', $this->pl()->txt('cancel'));
+		$tpl->setVariable('CANCEL_BTN_TEXT', self::plugin()->translate('interrupt'));
 		$tpl->setVariable('NEXT_BTN_VALUE', 'next');
-		$tpl->setVariable('PROCEED_BTN_TEXT', $this->pl()->txt('next_question'));
+		$tpl->setVariable('PROCEED_BTN_TEXT', self::plugin()->translate('submit_answer'));
 		$tpl->setVariable('QUESTION_ID', $question['question_id']);
 		$tpl->setVariable('RECOMANDER_ID', $question['recomander_id']);
 
@@ -134,42 +143,32 @@ class xdhtStartGUI {
 
 
 
-		$this->tpl()->setContent($tpl->get());
-		$this->tpl()->show();
+		self::dic()->ui()->mainTemplate()->setContent($tpl->get());
 	}
 
 
 	/**
 	 * @param array $question
-	 * @param RecommenderResponse $response
 	 *
 	 * @throws ilTemplateException
 	 */
-	protected function initAnsweredQuestionForm($question, $response) {
+	protected function initAnsweredQuestionForm($question) {
 		$tpl = new ilTemplate('tpl.questions_answered_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
-		$tpl->setVariable("ACTION", $this->ctrl()->getLinkTarget($this, self::CMD_SENDRATING));
+		$tpl->setVariable("ACTION", self::dic()->ctrl()->getLinkTarget($this, self::CMD_SENDRATING));
 		$q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
 
 		if (!is_object($q_gui)) {
-			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID" . $question['question_id']
-				. print_r($response, true), true);
-			$this->ctrl()->redirect($this, self::CMD_STANDARD);
+            $this->response->addSendError(self::plugin()->translate("error_no_question_id", "", [$question['question_id']]));
+			return;
 		}
-		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
+		$previewSession = new ilAssQuestionPreviewSession(self::dic()->user()->getId(), $question['question_id']);
 		$q_gui->setPreviewSession($previewSession);
-
-		if (!is_object($q_gui)) {
-			ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden Fragen ID" . $question['question_id']
-				. print_r($response, true), true);
-			$this->ctrl()->redirect($this, self::CMD_STANDARD);
-		}
 
 		/**
 		 * shuffle like before
 		 */
-		require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
 		$shuffler = new ilArrayElementShuffler();
-		$shuffler->setSeed($q_gui->object->getId() + $this->user()->getId());
+		$shuffler->setSeed($q_gui->object->getId() + self::dic()->user()->getId());
 		$q_gui->object->setShuffle(1);
 		$q_gui->object->setShuffler($shuffler);
 
@@ -180,23 +179,22 @@ class xdhtStartGUI {
 		$tpl->parseCurrentBlock();
 
 
-		$tpl->setVariable('DIFFICULTY', $this->pl()->txt('difficulty'));
+		$tpl->setVariable('DIFFICULTY', self::plugin()->translate('difficulty'));
 		$tpl->setVariable('CANCEL_BTN_VALUE', 'cancel');
-		$tpl->setVariable('CANCEL_BTN_TEXT', $this->pl()->txt('cancel'));
+		$tpl->setVariable('CANCEL_BTN_TEXT', self::plugin()->translate('interrupt'));
 		$tpl->setVariable('BTN_QST_LEVEL1_VALUE', '1');
-		$tpl->setVariable('BTN_QST_LEVEL1_TEXT', $this->pl()->txt('level1'));
+		$tpl->setVariable('BTN_QST_LEVEL1_TEXT', self::plugin()->translate('level1'));
 		$tpl->setVariable('BTN_QST_LEVEL2_VALUE', '2');
-		$tpl->setVariable('BTN_QST_LEVEL2_TEXT', $this->pl()->txt('level2'));	$tpl->setVariable('BTN_QST_LEVEL3_VALUE', '3');
-		$tpl->setVariable('BTN_QST_LEVEL3_TEXT', $this->pl()->txt('level3'));	$tpl->setVariable('BTN_QST_LEVEL4_VALUE', '4');
-		$tpl->setVariable('BTN_QST_LEVEL4_TEXT', $this->pl()->txt('level4'));
+		$tpl->setVariable('BTN_QST_LEVEL2_TEXT', self::plugin()->translate('level2'));	$tpl->setVariable('BTN_QST_LEVEL3_VALUE', '3');
+		$tpl->setVariable('BTN_QST_LEVEL3_TEXT', self::plugin()->translate('level3'));	$tpl->setVariable('BTN_QST_LEVEL4_VALUE', '4');
+		$tpl->setVariable('BTN_QST_LEVEL4_TEXT', self::plugin()->translate('level4'));
 
 
 		$tpl->setVariable('QUESTION_ID', $question['question_id']);
 		$tpl->setVariable('RECOMANDER_ID', $question['recomander_id']);
 
 
-		$this->tpl()->setContent($tpl->get());
-		$this->tpl()->show();
+		self::dic()->ui()->mainTemplate()->setContent($tpl->get());
 	}
 
 
@@ -205,13 +203,12 @@ class xdhtStartGUI {
 	 */
 	protected function initSeparatorForm() {
 		$tpl = new ilTemplate('tpl.questions_form.html', true, true, 'Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining');
-		$tpl->setVariable("ACTION", $this->ctrl()->getLinkTarget($this, self::CMD_PROCEED));
+		$tpl->setVariable("ACTION", self::dic()->ctrl()->getLinkTarget($this, self::CMD_PROCEED));
 		$tpl->setVariable('CANCEL_BTN_VALUE', 'cancel');
-		$tpl->setVariable('CANCEL_BTN_TEXT', $this->pl()->txt('cancel'));
+		$tpl->setVariable('CANCEL_BTN_TEXT', self::plugin()->translate('interrupt'));
 		$tpl->setVariable('NEXT_BTN_VALUE', 'next');
-		$tpl->setVariable('PROCEED_BTN_TEXT', $this->pl()->txt('next_question'));
-		$this->tpl()->setContent($tpl->get());
-		$this->tpl()->show();
+		$tpl->setVariable('PROCEED_BTN_TEXT', self::plugin()->translate('submit_answer'));
+		self::dic()->ui()->mainTemplate()->setContent($tpl->get());
 	}
 
 
@@ -220,32 +217,32 @@ class xdhtStartGUI {
 	public function start() {
 		//Remove the Session
 		$_SESSION['answered_questions'] = array();
-		$recommender = new RecommenderCurl();
-		$response = $recommender->start($this->facade->settings());
-		$this->proceedWithReturnOfRecommender($response);
+		$recommender = new RecommenderCurl($this->facade, $this->response);
+		$recommender->start();
+		$this->proceedWithReturnOfRecommender();
 	}
 
 
 	/**
-	 * @param array $question
+     * @param array $question
 	 */
 	public function showQuestion($question) {
 
 		$this->initQuestionForm($question);
 		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
-			->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()
+			->findOrCreateParticipantByUsrAndTrainingObjectId(self::dic()->user()
 				->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
 	}
 
 
 	protected function createLogEntry($question_id, $answer_id) {
-		$this->dic()->logger()->root()->info("user_id: " . $this->user()->getId() . " question_id: " . $question_id . " answer_id: " . $answer_id);
+		self::dic()->logger()->root()->info("user_id: " . self::dic()->user()->getId() . " question_id: " . $question_id . " answer_id: " . $answer_id);
 	}
 
 
 	public function answer() {
 		if ($_POST['submitted'] == 'cancel') {
-			$this->ctrl()->redirect($this, self::CMD_STANDARD);
+			self::dic()->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
 			$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
 
@@ -308,26 +305,21 @@ class xdhtStartGUI {
 					break;
 			}
 
-			//if(count($answertext) == 0) {
-			//	$this->initQuestionForm($this->questions[$question['question_id']],NULL);
-			//} else {
-			$recommender = new RecommenderCurl();
-			$response = $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $answertext, $this->facade->settings());
+			$recommender = new RecommenderCurl($this->facade, $this->response);
+			$recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $answertext);
 
-			$this->proceedWithReturnOfRecommender($response);
-			//$this->debug();
-			//}
+			$this->proceedWithReturnOfRecommender();
 
 		}
 	}
 
 	public function sendRating() {
 		if ($_POST['submitted'] == 'cancel') {
-			$this->ctrl()->redirect($this, self::CMD_STANDARD);
+			self::dic()->ctrl()->redirect($this, self::CMD_STANDARD);
 		} else {
-			$recommender = new RecommenderCurl();
-			$response = $recommender->sendRating($_POST['recomander_id'], $_POST['submitted'], $this->facade->settings());
-			$this->proceedWithReturnOfRecommender($response);
+			$recommender = new RecommenderCurl($this->facade, $this->response);
+			$recommender->sendRating($_POST['recomander_id'], $_POST['submitted']);
+			$this->proceedWithReturnOfRecommender();
 		}
 	}
 
@@ -342,7 +334,7 @@ class xdhtStartGUI {
 	 */
 	public function setAnsweredForPreviewSession($question) {
 
-		$previewSession = new ilAssQuestionPreviewSession($this->user()->getId(), $question['question_id']);
+		$previewSession = new ilAssQuestionPreviewSession(self::dic()->user()->getId(), $question['question_id']);
 
 		$q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
 		assQuestion::_includeClass($q_gui->getQuestionType(), 1);
@@ -353,60 +345,35 @@ class xdhtStartGUI {
 	}
 
 
-	public function debug() {
-
-		$recommender = new RecommenderCurl();
-		$response = $recommender->start($this->facade->settings());
-
-		$this->initQuestionForm($this->questions[3]);
-		$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
-			->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()
-				->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
-	}
-
-
 	/**
-	 * @param RecommenderResponse $response
+	 *
 	 */
-	public function proceedWithReturnOfRecommender($response) {
+	public function proceedWithReturnOfRecommender() {
 
-		if (is_null($response)) {
-			ilUtil::sendFailure("Das Recommender System konnte nicht erreicht werden", true);
-			$this->ctrl()->redirect($this, self::CMD_STANDARD);
-		}
-
-		$send_info = array();
-		switch ($response->getStatus()) {
+		switch ($this->response->getStatus()) {
 			case RecommenderResponse::STATUS_SUCCESS:
-				if ($response->getAnswerResponse()) {
+				if ($this->response->getAnswerResponse()) {
 					$formatter = new ilAssSelfAssessmentQuestionFormatter();
-					$send_info[] = $formatter->format($response->getAnswerResponse());
+                    $this->response->addSendInfo($formatter->format($this->response->getAnswerResponse()));
 				}
 
-				if ($response->getMessage()) {
-					$send_info[] = $response->getMessage();
+				if ($this->response->getMessage()) {
+                    $this->response->addSendInfo($this->response->getMessage());
 				}
 
-				if (count($send_info) > 0) {
-					ilUtil::sendInfo(implode("<br><br>", $send_info), true);
-				}
-
-				if ($response->getAnswerResponse()) {
-					//DEBUG
-					//$_POST['recomander_id'] = "8585466cf11124c99c59ae1deb6ae0d0521d6db5";
-					//
+				if ($this->response->getAnswerResponse()) {
 					$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
-					$this->initAnsweredQuestionForm($question, $response);
+					$this->initAnsweredQuestionForm($question);
 					$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
-						->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()
+						->findOrCreateParticipantByUsrAndTrainingObjectId(self::dic()->user()
 							->getId(), $this->facade->objectId()), ilLPStatus::LP_STATUS_IN_PROGRESS_NUM);
 
 					break;
 				}
 
-				switch ($response->getResponseType()) {
+				switch ($this->response->getResponseType()) {
 					case RecommenderResponse::RESPONSE_TYPE_NEXT_QUESTION:
-						$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($response->getRecomanderId());
+						$question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($this->response->getRecomanderId());
 						$this->showQuestion($question);
 						break;
 					case RecommenderResponse::RESPONSE_TYPE_IN_PROGRESS:
@@ -416,9 +383,10 @@ class xdhtStartGUI {
 						$this->initSeparatorForm();
 						break;
 					case RecommenderResponse::RESPONSE_TYPE_TEST_IS_FINISHED:
-						$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId($this->user()->getId(), $this->facade->objectId()),
+						$this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()->findOrCreateParticipantByUsrAndTrainingObjectId(self::dic()->user()->getId(), $this->facade->objectId()),
 							ilLPStatus::LP_STATUS_COMPLETED_NUM);
-						$this->ctrl()->redirect($this, self::CMD_STANDARD);
+						$this->response->sendMessages();
+						self::dic()->ctrl()->redirect($this, self::CMD_STANDARD);
 						break;
 					default:
 						$this->initSeparatorForm();
@@ -427,8 +395,9 @@ class xdhtStartGUI {
 				break;
 
 			case RecommenderResponse::STATUS_ERROR:
-				ilUtil::sendFailure("Das Recommender System hat einen Fehler ausgegeben" . $response->getMessage(), true);
-				$this->ctrl()->redirect($this, self::CMD_STANDARD);
+			    if($this->facade->settings()->getLog()) {
+                $this->response->addSendError(self::plugin()->translate("error_recommender_system", "", [$this->facade->settings()->getLog() ? $this->response->getMessage() : ""]));
+                }
 				break;
 		}
 	}

@@ -1,7 +1,5 @@
 <?php
 
-require_once('./Services/Export/classes/class.ilXmlExporter.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Export/class.xdhtSettingsXmlWriter.php');
 /**
  * Class xdhtExporter
  *

@@ -1,7 +1,5 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/QuestionPool/class.xdhtQuestionPoolFactoryInterface.php');
-
 /**
  * Class xdhtQuestionPoolFactory
  *

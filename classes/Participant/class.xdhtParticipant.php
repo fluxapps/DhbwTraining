@@ -1,9 +1,5 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Participant/interface.xdhtParticipantInterface.php');
-require_once('./Services/Tracking/classes/class.ilLPStatusWrapper.php');
-require_once('./Services/Tracking/classes/class.ilLPStatus.php');
-
 /**
  * Class xdhtParticipant
  *

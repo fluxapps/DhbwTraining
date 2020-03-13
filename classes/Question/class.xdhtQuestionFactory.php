@@ -1,7 +1,5 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Question/interface.xdhtQuestionFactoryInterface.php');
-
 /**
  * Class xdhtQuestionFactory
  *
@@ -49,13 +47,11 @@ inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.questio
 
 		$set = $ilDB->query($sql);
 
-		$arr_questions = array();
-		while ($row = $ilDB->fetchAssoc($set)) {
-			$row['recomander_id'] = $recomander_id;
-			$arr_questions = $row;
-		}
+		$row = $ilDB->fetchAssoc($set);
 
-		return $arr_questions;
+		$row['recomander_id'] = $recomander_id;
+
+		return $row;
 	}
 
 	/**

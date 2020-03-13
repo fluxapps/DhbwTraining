@@ -8,6 +8,8 @@
 interface xdhtSettingsInterface {
 
 	const TABLE_NAME = 'rep_robj_xdht_settings';
+    const RECOMMENDER_SYSTEM_SERVER_EXTERNAL = 1;
+    const RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG = 2;
 
 	/**
 	 * @return int
@@ -42,32 +44,12 @@ interface xdhtSettingsInterface {
 	/**
 	 * @return int
 	 */
-	public function getisOnline();
+	public function getIsOnline();
 
 	/**
 	 * @param int $is_online
 	 */
 	public function setIsOnline($is_online);
-
-	/**
-	 * @return string
-	 */
-	public function getStartDate();
-
-	/**
-	 * @param string $start_date
-	 */
-	public function setStartDate($start_date);
-
-	/**
-	 * @return string
-	 */
-	public function getEndDate();
-
-	/**
-	 * @param string $end_date
-	 */
-	public function setEndDate($end_date);
 
 	/**
 	 * @return string
@@ -115,5 +97,15 @@ interface xdhtSettingsInterface {
 	public function setLog($log);
 
 
+    /**
+     * @return int
+     */
+    public function getRecommenderSystemServer() : int;
+
+
+    /**
+     * @param int $recommender_system_server
+     */
+    public function setRecommenderSystemServer(int $recommender_system_server)/*:void*/ ;
 
 }
