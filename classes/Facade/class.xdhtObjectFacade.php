@@ -1,13 +1,5 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilDhbwTrainingPlugin.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilObjDhbwTraining.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Facade/interface.xdhtObjectFacadeInterface.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettingFactory.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/QuestionPool/class.xdhtQuestionPoolFactory.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Question/class.xdhtQuestionFactory.php');
-
 /**
  * Class ilObjDhbwTrainingFacade
  *

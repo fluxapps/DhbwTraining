@@ -29,10 +29,6 @@ class RecommenderResponse {
 	 */
 	protected $response_type = 0;
 	/**
-	 * @var int
-	 */
-	protected $question_id = 0;
-	/**
 	 * @var string
 	 */
 	protected $recomander_id = "";
@@ -44,6 +40,22 @@ class RecommenderResponse {
 	 * @var string
 	 */
 	protected $answer_response = "";
+    /**
+     * @var array
+     */
+    protected $send_success = [];
+    /**
+     * @var array
+     */
+    protected $send_info = [];
+    /**
+     * @var array
+     */
+    protected $send_warning = [];
+    /**
+     * @var array
+     */
+    protected $send_error = [];
 
 
 
@@ -77,22 +89,6 @@ class RecommenderResponse {
 	 */
 	public function setResponseType(int $response_type) {
 		$this->response_type = $response_type;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getQuestionId(): string {
-		return $this->question_id;
-	}
-
-
-	/**
-	 * @param string $question_id
-	 */
-	public function setQuestionId(string $question_id) {
-		$this->question_id = $question_id;
 	}
 
 
@@ -144,6 +140,134 @@ class RecommenderResponse {
 	}
 
 
+    /**
+     * @return array
+     */
+    public function getSendSuccess() : array
+    {
+        return $this->send_success;
+    }
 
+
+    /**
+     * @param array $send_success
+     */
+    public function setSendSuccess(array $send_success)/*:void*/
+    {
+        $this->send_success = $send_success;
+    }
+
+
+    /**
+     * @param string $send_success
+     */
+    public function addSendSuccess(string $send_success)/*:void*/
+    {
+        $this->send_success[] = $send_success;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getSendInfo() : array
+    {
+        return $this->send_info;
+    }
+
+
+    /**
+     * @param array $send_info
+     */
+    public function setSendInfo(array $send_info)/*:void*/
+    {
+        $this->send_info = $send_info;
+    }
+
+
+    /**
+     * @param string $send_info
+     */
+    public function addSendInfo(string $send_info)/*:void*/
+    {
+        $this->send_info[] = $send_info;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getSendWarning() : array
+    {
+        return $this->send_warning;
+    }
+
+
+    /**
+     * @param array $send_warning
+     */
+    public function setSendWarning(array $send_warning)/*:void*/
+    {
+        $this->send_warning = $send_warning;
+    }
+
+
+    /**
+     * @param string $send_warning
+     */
+    public function addSendWarning(string $send_warning)/*:void*/
+    {
+        $this->send_warning[] = $send_warning;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getSendError() : array
+    {
+        return $this->send_error;
+    }
+
+
+    /**
+     * @param array $send_error
+     */
+    public function setSendError(array $send_error)/*:void*/
+    {
+        $this->send_error = $send_error;
+    }
+
+
+    /**
+     * @param string $send_error
+     */
+    public function addSendError(string $send_error)/*:void*/
+    {
+        $this->send_error[] = $send_error;
+    }
+
+
+    /**
+     *
+     */
+    public function sendMessages()/*:void*/
+    {
+        if (!empty($this->send_success)) {
+            ilUtil::sendInfo(implode("<br><br>", $this->send_success), true);
+        }
+
+        if (!empty($this->send_info)) {
+            ilUtil::sendInfo(implode("<br><br>", $this->send_info), true);
+        }
+
+        if (!empty($this->send_warning)) {
+            ilUtil::sendQuestion(implode("<br><br>", $this->send_warning), true);
+        }
+
+        if (!empty($this->send_error)) {
+            ilUtil::sendFailure(implode("<br><br>", $this->send_error), true);
+        }
+    }
 
 }

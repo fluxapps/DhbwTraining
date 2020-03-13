@@ -1,8 +1,5 @@
 <?php
 
-require_once 'Services/Export/classes/class.ilExportTableGUI.php';
-require_once 'Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php';
-
 /**
  * Class xdhtExportTableGUI
  *

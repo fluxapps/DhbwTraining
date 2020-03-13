@@ -1,8 +1,5 @@
 <?php
 
-require_once('./Services/Form/classes/class.ilRepositorySelectorInputGUI.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Interface/Facade/interface.xdhtObjectFacadeInterface.php');
-
 /**
  * Class DhbwRepositorySelectorInputGUI
  *
@@ -94,7 +91,6 @@ class DhbwRepositorySelectorInputGUI extends ilRepositorySelectorInputGUI {
 	{
 		global $tpl, $lng, $ilCtrl, $tree, $ilUser;
 
-		include_once 'Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php';
 		$ilCtrl->setParameter($this, "postvar", $this->getPostVar());
 
 		ilUtil::sendInfo($this->getHeaderMessage());

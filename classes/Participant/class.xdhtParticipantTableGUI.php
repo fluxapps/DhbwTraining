@@ -1,10 +1,6 @@
 <?php
 
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Participant/class.xdhtParticipant.php');
-require_once('./Services/Table/classes/class.ilTable2GUI.php');
-require_once('./Services/Tracking/classes/class.ilLPStatus.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/LearningProgress/class.LearningProgressStatusRepresentation.php');
-require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php');
+use srag\DIC\DhbwTraining\DICTrait;
 
 /**
  * Class xdhtParticipantTableGUI
@@ -13,7 +9,8 @@ require_once('./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvan
  */
 
 class xdhtParticipantTableGUI extends ilTable2GUI {
-	use xdhtDIC;
+    use DICTrait;
+    const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
 
 	const TBL_ID = 'tbl_xdht_participants';
 	/**
@@ -46,13 +43,13 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 		$this->setId(self::TBL_ID);
 		$this->setPrefix(self::TBL_ID);
 		$this->setFormName(self::TBL_ID);
-		$this->ctrl()->saveParameter($a_parent_obj, $this->getNavParameter());
+		self::dic()->ctrl()->saveParameter($a_parent_obj, $this->getNavParameter());
 		$this->xdht_participant = new xdhtParticipant($_GET[xdhtParticipantGUI::PARTICIPANT_IDENTIFIER]);
 
 		parent::__construct($a_parent_obj, $a_parent_cmd);
 		$this->setRowTemplate("tpl.participants.html", "Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining");
 
-		$this->setFormAction($this->ctrl()->getFormActionByClass(xdhtParticipantGUI::class));
+		$this->setFormAction(self::dic()->ctrl()->getFormActionByClass(xdhtParticipantGUI::class));
 		$this->setExternalSorting(true);
 
 		$this->setDefaultOrderField("full_name");
@@ -67,20 +64,19 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 
 	protected function addFilterItems() {
-		$participant_name = new ilTextInputGUI($this->pl()->txt('participant_name'), 'full_name');
+		$participant_name = new ilTextInputGUI(self::plugin()->translate('participant_name'), 'full_name');
 		$this->addAndReadFilterItem($participant_name);
 
-		$usr_name = new ilTextInputGUI($this->pl()->txt('usr_name'), 'login');
+		$usr_name = new ilTextInputGUI(self::plugin()->translate('usr_name'), 'login');
 		$this->addAndReadFilterItem($usr_name);
 
-		include_once("./Services/Form/classes/class.ilSelectInputGUI.php");
-/*		$option[0] = $this->pl()->txt('not_attempted');
-		$option[1] = $this->pl()->txt('in_progress');
-		$option[2] = $this->pl()->txt('edited');*/
+/*		$option[0] = self::plugin()->translate('not_attempted');
+		$option[1] = self::plugin()->translate('in_progress');
+		$option[2] = self::plugin()->translate('edited');*/
 
-		$status = new ilSelectInputGUI($this->pl()->txt("learning_progress"), "status");
+		$status = new ilSelectInputGUI(self::plugin()->translate("learning_progress"), "status");
 		//$status->setOptions($option);
-		$status->setOptions(LearningProgressStatusRepresentation::getDropdownDataLocalized($this->pl()));
+		$status->setOptions(LearningProgressStatusRepresentation::getDropdownDataLocalized(self::plugin()->getPluginObject()));
 		$this->addAndReadFilterItem($status);
 	}
 
@@ -199,23 +195,23 @@ class xdhtParticipantTableGUI extends ilTable2GUI {
 
 	public function getSelectableColumns() {
 		$cols["full_name"] = array(
-			"txt" => $this->pl()->txt("participant_name"),
+			"txt" => self::plugin()->translate("participant_name"),
 			"default" => true
 		);
 		$cols["login"] = array(
-			"txt" => $this->pl()->txt("usr_name"),
+			"txt" => self::plugin()->translate("usr_name"),
 			"default" => true
 		);
 		$cols["status"] = array(
-			"txt" => $this->pl()->txt("learning_progress"),
+			"txt" => self::plugin()->translate("learning_progress"),
 			"default" => true
 		);
 		$cols["created"] = array(
-			"txt" => $this->pl()->txt("first_access"),
+			"txt" => self::plugin()->translate("first_access"),
 			"default" => true
 		);
 		$cols["last_access"] = array(
-			"txt" => $this->pl()->txt("last_access"),
+			"txt" => self::plugin()->translate("last_access"),
 			"default" => true
 		);
 

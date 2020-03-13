@@ -1,4 +1,3 @@
-
 <?php
 /*
 	+-----------------------------------------------------------------------------+
@@ -28,10 +27,6 @@
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
-
-include_once './Services/Xml/classes/class.ilXmlWriter.php';
-include_once './Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php';
-include_once "./Services/Xml/classes/class.ilXmlWriter.php";
 
 class xdhtSettingsXmlWriter extends ilXmlWriter {
 

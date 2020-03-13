@@ -1,17 +1,18 @@
 <?php
+
+require_once __DIR__ . "/../vendor/autoload.php";
+
+use srag\DIC\DhbwTraining\DICTrait;
+
 /**
  * Class ilObjDhbwTrainingListGUI
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
-
-require_once('./Services/Repository/classes/class.ilObjectPluginListGUI.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilObjDhbwTrainingGUI.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/Traits/trait.xdhtDIC.php');
-
 class ilObjDhbwTrainingListGUI extends ilObjectPluginListGUI {
 
-	use xdhtDIC;
+    use DICTrait;
+    const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
 
 	function getGuiClass() {
 		return ilObjDhbwTrainingGUI::class;
@@ -19,7 +20,7 @@ class ilObjDhbwTrainingListGUI extends ilObjectPluginListGUI {
 
 
 	function initCommands() {
-		$this->timings_enabled = false;
+		$this->timings_enabled = true;
 		$this->subscribe_enabled = false;
 		$this->payment_enabled = false;
 		$this->link_enabled = true;
@@ -63,7 +64,6 @@ class ilObjDhbwTrainingListGUI extends ilObjectPluginListGUI {
 
 		$props = array();
 
-		include_once "./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/class.ilObjDhbwTraining.php";
 		if (!ilObjDhbwTraining::_lookupOnline($this->obj_id))
 		{
 			$props[] = array("alert" => true, "property" => $lng->txt("status"),

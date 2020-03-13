@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . "/vendor/srag/dic/src/PHPVersionChecker.php";
+
 $id = "xdht";
 $version = "0.0.6";
 $ilias_min_version = "5.3.0";

@@ -1,7 +1,5 @@
 <?php
 
-require_once("./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php");
-
 /**
  * Class xdhtSettingFactory
  *

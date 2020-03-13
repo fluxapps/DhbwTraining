@@ -19,7 +19,7 @@ cancel#:#Abbrechen
 please_select_question_pool#:#Bitte wählen Sie einen Fragepool aus
 choose_question_pool_info#:#Bitte wählen sie einen Fragepool von welchem Fragen bezogen werden sollen.
 changes_saved_success#:#Änderungen wurden erfolgreich gespeichert.
-next_question#:#Nächste Frage
+submit_answer#:#Antwort einreichen
 please_choose#:#Bitte wählen
 participant_name#:#Name
 usr_name#:#Benutzername
@@ -52,8 +52,26 @@ view_learning_prog#:#Lernfortschritt von anderen Benutzern einsehen
 edit_learning_prog#:#Lernfortschrittseinstellungen bearbeiten
 learning_prog#:#Lernfortschritt
 proposal_system#:#Vorschlagsystem
-difficulty#:#Wie fanden Sie diese Aufgabe
+difficulty#:#Wie fanden Sie diese Aufgabe?
 level1#:#sehr einfach
 level2#:#eher einfach
 level3#:#eher schwierig
 level4#:#zu schwierig
+interrupt#:#Unterbrechen
+start_training#:#Training starten
+error_recommender_system_no_status#:#Es ist ein Fehler aufgetreten - Kein Status
+error_no_question_id#:#Es ist ein Fehler aufgetreten - Frage wurde nicht gefunden. Fragen ID: %s
+error_recommender_system#:#Das Recommender System hat einen Fehler ausgegeben: %s
+error_recommender_system_not_reached#:#Das Recommender System konnte nicht erreicht werden
+recommender_system#:#Recommender System
+recommender_system_server#:#Server
+recommender_system_server_external#:#Externer Server
+installation_key#:#Installation-Schlüssel
+secret#:#Secret
+url#:#Url
+log#:#Log
+log_info#:#Es werden zusätzliche Infos angezeigt
+recommender_system_server_built_in_debug#:#Built-in Debug-Server
+recommender_system_server_built_in_debug_info#:#Sie müssen in der Beschreibung einiger Fragen %1$s setzen.\nIn diesen Fragen, eine wird zufällig ausgewählt für %2$s.\nSiehe in %3$s um den Debug-Server anzupassen
+permission_denied#:#Zugriff verweigert
+raw_response#:#Raw Response

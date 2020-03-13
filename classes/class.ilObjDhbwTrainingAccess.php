@@ -1,13 +1,12 @@
 <?php
+
+require_once __DIR__ . "/../vendor/autoload.php";
+
 /**
  * Class ilObjDhbwTrainingAccess
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
-
-require_once('./Services/Repository/classes/class.ilObjectPluginAccess.php');
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php');
-
 class ilObjDhbwTrainingAccess  extends ilObjectPluginAccess {
 
 	/**

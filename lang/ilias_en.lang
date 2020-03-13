@@ -19,7 +19,7 @@ cancel#:#Cancel
 please_select_question_pool#:#Please select a question pool
 choose_question_pool_info#:#Please choose a question pool from which the questions will be retrieved.
 changes_saved_success#:#Changes saved successfully.
-next_question#:#Next question
+submit_answer#:#Submit answer
 please_choose#:#Please choose
 participant_name#:#Name
 usr_name#:#User name
@@ -52,8 +52,26 @@ view_learning_prog#:#View learning progress of other users
 edit_learning_prog#:#Edit learning progress settings
 learning_prog#:#Learning progress
 proposal_system#:#Proposal system
-difficulty#:#Wie fanden Sie diese Aufgabe
-level1#:#sehr einfach
-level2#:#eher einfach
-level3#:#eher schwierig
-level4#:#zu schwierig
+difficulty#:#How did you find this task?
+level1#:#very easy
+level2#:#rather easy
+level3#:#rather hard
+level4#:#too difficult
+interrupt#:#Interrupt
+start_training#:#Start training
+error_recommender_system_no_status#:#An error has occurred - No status
+error_no_question_id#:#An error occurred - Question was not found. Question ID: %s
+error_recommender_system#:#The recommender system has issued an error: %s
+error_recommender_system_not_reached#:#The recommender system could not be reached
+recommender_system#:#Recommender system
+recommender_system_server#:#Server
+recommender_system_server_external#:#External server
+installation_key#:#Installation key
+secret#:#Secret
+url#:#Url
+log#:#Log
+log_info#:#Additional infos is displayed
+recommender_system_server_built_in_debug#:#Built-in debug server
+recommender_system_server_built_in_debug_info#:#You need to set %1$s in description of some questions.\nIn these questions, one is randomly selected for %2$s.\nSee in %3$s for adjust debug server
+permission_denied#:#Permission denied
+raw_response#:#Raw response
