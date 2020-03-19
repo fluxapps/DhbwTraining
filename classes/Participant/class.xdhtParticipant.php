@@ -1,5 +1,7 @@
 <?php
 
+use srag\DIC\DhbwTraining\DICTrait;
+
 /**
  * Class xdhtParticipant
  *
@@ -8,6 +10,8 @@
 
 class xdhtParticipant extends ActiveRecord implements xdhtParticipantInterface {
 
+    use DICTrait;
+    const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
 	/**
 	 * @return string
 	 */
@@ -139,6 +143,7 @@ class xdhtParticipant extends ActiveRecord implements xdhtParticipantInterface {
 
 		if ($this->hasStatusChanged()) {
 			ilLPStatusWrapper::_updateStatus($this->training_obj_id, $this->usr_id);
+            ilChangeEvent::_recordReadEvent(ilDhbwTrainingPlugin::PLUGIN_PREFIX, intval(filter_input(INPUT_GET, 'ref_id')), $this->training_obj_id, self::dic()->user()->getId());
 		}
 	}
 

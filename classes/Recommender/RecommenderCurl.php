@@ -1,6 +1,7 @@
 <?php
 
 use srag\DIC\DhbwTraining\DICTrait;
+use srag\Plugins\DhbwTraining\Config\Config;
 
 /**
  * Class ReccomenderCurl
@@ -100,7 +101,7 @@ class RecommenderCurl {
 			$raw_response = $curlConnection->exec();
 
             if (empty($raw_response)) {
-                $this->response->addSendError(self::plugin()->translate("error_recommender_system_not_reached"));
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_not_reached"));
                 return;
             }
 
@@ -112,7 +113,7 @@ class RecommenderCurl {
 ' . $raw_response . ' </pre>');
                 }
 
-                $this->response->addSendError(self::plugin()->translate("error_recommender_system_not_reached"));
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_not_reached"));
                 return;
             }
 
@@ -120,7 +121,7 @@ class RecommenderCurl {
                 if ($this->facade->settings()->getRecommenderSystemServer() === xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG) {
                     if (!empty($result['debug_server'])) {
                         $this->response->addSendInfo('<pre>' . self::plugin()->translate("recommender_system_server_built_in_debug") . ':
-' . $result['debug_server'] . '</pre>');
+' . json_encode($result['debug_server'], JSON_PRETTY_PRINT) . '</pre>');
                     }
                     unset($result['debug_server']);
                 }
@@ -130,32 +131,52 @@ class RecommenderCurl {
             }
 
             if (!empty($result['status'])) {
-                $this->response->setStatus($result['status']);
+                $this->response->setStatus(strval($result['status']));
             } else {
-                $this->response->addSendError(self::plugin()->translate("error_recommender_system_no_status"));
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_no_status"));
                 return;
             }
 
             if (!empty($result['recomander_id'])) {
-                $this->response->setRecomanderId($result['recomander_id']);
+                $this->response->setRecomanderId(strval($result['recomander_id']));
             }
 
             if (!empty($result['response_type'])) {
-                $this->response->setResponseType($result['response_type']);
+                $this->response->setResponseType(intval($result['response_type']));
             }
 
             if (!empty($result['answer_response'])) {
-                $this->response->setAnswerResponse($result['answer_response']);
+                $this->response->setAnswerResponse(strval($result['answer_response']));
+            }
+
+            if (!empty($result['answer_response_type'])) {
+                $this->response->setAnswerResponseType(strval($result['answer_response_type']));
             }
 
             if (!empty($result['message'])) {
-                $this->response->setMessage($result['message']);
+                $this->response->setMessage(strval($result['message']));
+            }
+
+            if (!empty($result['message_type'])) {
+                $this->response->setMessageType(strval($result['message_type']));
+            }
+
+            if (isset($result['progress'])) {
+                $this->response->setProgress($result['progress'] !== null ? floatval($result['progress']) : null);
+            }
+
+            if (!empty($result['progress_type'])) {
+                $this->response->setProgressType(strval($result['progress_type']));
+            }
+
+            if (isset($result['learning_progress_status'])) {
+                $this->response->setLearningProgressStatus($result['learning_progress_status'] !== null ? intval($result['learning_progress_status']) : null);
             }
 		} catch (Exception $ex) {
             if ($this->facade->settings()->getLog()) {
-                $this->response->addSendError($ex->getMessage());
+                $this->response->addSendFailure($ex->getMessage());
             } else {
-                $this->response->addSendError(self::plugin()->translate("error_recommender_system_not_reached"));
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_not_reached"));
             }
 		} finally {
 			// Close Curl connection
@@ -180,7 +201,7 @@ class RecommenderCurl {
 		$data = [
 			"secret" => $this->facade->settings()->getSecret(),
 			"installation_key" =>  $this->facade->settings()->getInstallationKey(),
-			"user_id" => $DIC->user()->getId(),
+			"user_id" => $this->getAnonymizedUserHash(),
 			"lang_key" => $DIC->user()->getLanguage(),
 			"training_obj_id" => $this->facade->settings()->getDhbwTrainingObjectId(),
             "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId()
@@ -206,7 +227,7 @@ class RecommenderCurl {
 		$data = [
 			"secret" => $this->facade->settings()->getSecret(),
 			"installation_key" => $this->facade->settings()->getInstallationKey(),
-			"user_id" => $DIC->user()->getId(),
+			"user_id" => $this->getAnonymizedUserHash(),
 			"lang_key" => $DIC->user()->getLanguage(),
 			"training_obj_id" => $this->facade->settings()->getDhbwTrainingObjectId(),
 			"question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId(),
@@ -234,7 +255,7 @@ class RecommenderCurl {
 		$data = [
 			"secret" => $this->facade->settings()->getSecret(),
 			"installation_key" => $this->facade->settings()->getInstallationKey(),
-			"user_id" => $DIC->user()->getId(),
+			"user_id" => $this->getAnonymizedUserHash(),
 			"lang_key" => $DIC->user()->getLanguage(),
 			"training_obj_id" => $this->facade->settings()->getDhbwTrainingObjectId(),
 			"question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId(),
@@ -244,4 +265,13 @@ class RecommenderCurl {
 
 		$this->doRequest("api/v1/rating", $headers, $data);
 	}
+
+
+    /**
+     * @return string
+     */
+    protected function getAnonymizedUserHash() : string
+    {
+        return md5(Config::getField(Config::KEY_SALT) . self::dic()->user()->getLogin());
+    }
 }

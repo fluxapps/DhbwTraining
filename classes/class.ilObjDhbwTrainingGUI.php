@@ -74,8 +74,10 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 	protected function afterConstructor() {
 		global $DIC;
 
-		$this->facade = xdhtObjectFacade::getInstance($this->ref_id);
-		$this->object = $this->facade->training_object();
+        if ($this->ref_id) {
+            $this->facade = xdhtObjectFacade::getInstance($this->ref_id);
+            $this->object = $this->facade->training_object();
+        }
 		$this->dic = $DIC;
 		$this->access = new ilObjDhbwTrainingAccess();
 		$this->pl = ilDhbwTrainingPlugin::getInstance();
@@ -157,6 +159,14 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 				$this->ctrl->forwardCommand($exp);
 				break;*/
 
+            case strtolower(ilLearningProgressGUI::class):
+                if ($this->facade->settings()->getLearningProgress()) {
+                    return parent::executeCommand();
+                } else {
+                    ilUtil::sendFailure(self::plugin()->translate('permission_denied'), true);
+                }
+                break;
+
 			default:
 				return parent::executeCommand();
 				break;
@@ -200,7 +210,7 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI {
 					strtolower(xdhtParticipantGUI::class),
 				), xdhtParticipantGUI::CMD_STANDARD));
 			}
-			if(ilLearningProgressAccess::checkAccess($this->object->getRefId()))
+			if($this->facade->settings()->getLearningProgress() && ilLearningProgressAccess::checkAccess($this->object->getRefId()))
 			{
 				$this->tabs->addTab(self::TAB_LEARNING_PROGRESS,
 					self::plugin()->translate('learning_progress'),

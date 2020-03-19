@@ -74,4 +74,8 @@ log_info#:#Es werden zusätzliche Infos angezeigt
 recommender_system_server_built_in_debug#:#Built-in Debug-Server
 recommender_system_server_built_in_debug_info#:#Sie müssen in der Beschreibung einiger Fragen %1$s setzen.\nIn diesen Fragen, eine wird zufällig ausgewählt für %2$s.\nSiehe in %3$s um den Debug-Server anzupassen
 permission_denied#:#Zugriff verweigert
-raw_response#:#Raw Response
+config_configuration#:#Konfiguration
+config_configuration_saved#:#Konfiguration gespeichert
+config_save#:#Speichern
+config_salt#:#Salt
+config_salt_info#:#Wird für die Anonymisierung des Benutzers mit dem Recommender System verwendet

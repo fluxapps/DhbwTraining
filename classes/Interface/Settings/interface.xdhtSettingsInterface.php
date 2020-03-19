@@ -108,4 +108,16 @@ interface xdhtSettingsInterface {
      */
     public function setRecommenderSystemServer(int $recommender_system_server)/*:void*/ ;
 
+
+    /**
+     * @return int
+     */
+    public function getLearningProgress() : int;
+
+
+    /**
+     * @param int $learning_progress
+     */
+    public function setLearningProgress(int $learning_progress)/*:void*/;
+
 }

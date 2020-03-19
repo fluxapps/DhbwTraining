@@ -77,8 +77,6 @@ class xdhtSettingsXmlWriter extends ilXmlWriter {
 			$this->xmlElement("dhbw_training_object_id", null, (int)$row->dhbw_training_object_id);
 			$this->xmlElement("question_pool_id",  null, $row->question_pool_id);
 			$this->xmlElement("is_online",  null, $row->is_online);
-			$this->xmlElement("start_date",  null, $row->start_date);
-			$this->xmlElement("end_date",  null, $row->end_date);
 
 			$this->xmlEndTag("xdhtSettings");
 		}

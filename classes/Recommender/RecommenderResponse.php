@@ -1,4 +1,7 @@
 <?php
+
+use srag\DIC\DhbwTraining\DICTrait;
+
 /**
  * Class RecommenderResponse
  *
@@ -6,6 +9,9 @@
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
 class RecommenderResponse {
+
+    use DICTrait;
+    const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
 
 	const STATUS_SUCCESS = "success";
 	const STATUS_ERROR = "error";
@@ -19,6 +25,16 @@ class RecommenderResponse {
 		                   'QUESTION_IN_PROGRESS' => self::RESPONSE_TYPE_IN_PROGRESS,
 		                   'NEXT_QUESTION' => self::RESPONSE_TYPE_NEXT_QUESTION,
 							'TEST_IS_FINISHED' => self::RESPONSE_TYPE_TEST_IS_FINISHED];
+
+    const MESSAGE_TYPE_SUCCESS = ilTemplate::MESSAGE_TYPE_SUCCESS;
+    const MESSAGE_TYPE_INFO = ilTemplate::MESSAGE_TYPE_INFO;
+    const MESSAGE_TYPE_QUESTION = ilTemplate::MESSAGE_TYPE_QUESTION;
+    const MESSAGE_TYPE_FAILURE = ilTemplate::MESSAGE_TYPE_FAILURE;
+
+    const LEARNING_PROGRESS_STATUS_NOT_ATTEMPTED = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
+    const LEARNING_PROGRESS_STATUS_IN_PROGRESS = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;
+    const LEARNING_PROGRESS_STATUS_COMPLETED = ilLPStatus::LP_STATUS_COMPLETED_NUM;
+    const LEARNING_PROGRESS_STATUS_FAILED = ilLPStatus::LP_STATUS_FAILED_NUM;
 
 	/**
 	 * @var string
@@ -36,10 +52,30 @@ class RecommenderResponse {
 	 * @var string
 	 */
 	protected $message = "";
+    /**
+     * @var string
+     */
+	protected $message_type = self::MESSAGE_TYPE_INFO;
 	/**
 	 * @var string
 	 */
 	protected $answer_response = "";
+    /**
+     * @var string
+     */
+    protected $answer_response_type = self::MESSAGE_TYPE_INFO;
+    /**
+     * @var float|null
+     */
+    protected $progress = null;
+    /**
+     * @var string
+     */
+    protected $progress_type = self::MESSAGE_TYPE_INFO;
+    /**
+     * @var int|null
+     */
+    protected $learning_progress_status = null;
     /**
      * @var array
      */
@@ -51,11 +87,11 @@ class RecommenderResponse {
     /**
      * @var array
      */
-    protected $send_warning = [];
+    protected $send_question = [];
     /**
      * @var array
      */
-    protected $send_error = [];
+    protected $send_failure = [];
 
 
 
@@ -124,6 +160,24 @@ class RecommenderResponse {
 	}
 
 
+    /**
+     * @return string
+     */
+    public function getMessageType() : string
+    {
+        return $this->message_type;
+    }
+
+
+    /**
+     * @param string $message_type
+     */
+    public function setMessageType(string $message_type)/*:void*/
+    {
+        $this->message_type = $message_type;
+    }
+
+
 	/**
 	 * @return string
 	 */
@@ -138,6 +192,78 @@ class RecommenderResponse {
 	public function setAnswerResponse(string $answer_response) {
 		$this->answer_response = $answer_response;
 	}
+
+
+    /**
+     * @return string
+     */
+    public function getAnswerResponseType() : string
+    {
+        return $this->answer_response_type;
+    }
+
+
+    /**
+     * @param string $answer_response_type
+     */
+    public function setAnswerResponseType(string $answer_response_type)/*:void*/
+    {
+        $this->answer_response_type = $answer_response_type;
+    }
+
+
+    /**
+     * @return float|null
+     */
+    public function getProgress()/* :? float*/
+    {
+        return $this->progress;
+    }
+
+
+    /**
+     * @param float|null $progress
+     */
+    public function setProgress(/*?*/float $progress = null)/*:void*/
+    {
+        $this->progress = $progress;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getProgressType() : string
+    {
+        return $this->progress_type;
+    }
+
+
+    /**
+     * @param string $progress_type
+     */
+    public function setProgressType(string $progress_type)/*:void*/
+    {
+        $this->progress_type = $progress_type;
+    }
+
+
+    /**
+     * @return int|null
+     */
+    public function getLearningProgressStatus()/* :? int*/
+    {
+        return $this->learning_progress_status;
+    }
+
+
+    /**
+     * @param int|null $learning_progress_status
+     */
+    public function setLearningProgressStatus(/*?*/ int $learning_progress_status = null)/*:void*/
+    {
+        $this->learning_progress_status = $learning_progress_status;
+    }
 
 
     /**
@@ -197,54 +323,81 @@ class RecommenderResponse {
     /**
      * @return array
      */
-    public function getSendWarning() : array
+    public function getSendQuestion() : array
     {
-        return $this->send_warning;
+        return $this->send_question;
     }
 
 
     /**
-     * @param array $send_warning
+     * @param array $send_question
      */
-    public function setSendWarning(array $send_warning)/*:void*/
+    public function setSendQuestion(array $send_question)/*:void*/
     {
-        $this->send_warning = $send_warning;
+        $this->send_question = $send_question;
     }
 
 
     /**
-     * @param string $send_warning
+     * @param string $send_question
      */
-    public function addSendWarning(string $send_warning)/*:void*/
+    public function addSendQuestion(string $send_question)/*:void*/
     {
-        $this->send_warning[] = $send_warning;
+        $this->send_question[] = $send_question;
     }
 
 
     /**
      * @return array
      */
-    public function getSendError() : array
+    public function getSendFailure() : array
     {
-        return $this->send_error;
+        return $this->send_failure;
     }
 
 
     /**
-     * @param array $send_error
+     * @param array $send_failure
      */
-    public function setSendError(array $send_error)/*:void*/
+    public function setSendFailure(array $send_failure)/*:void*/
     {
-        $this->send_error = $send_error;
+        $this->send_failure = $send_failure;
     }
 
 
     /**
-     * @param string $send_error
+     * @param string $send_failure
      */
-    public function addSendError(string $send_error)/*:void*/
+    public function addSendFailure(string $send_failure)/*:void*/
     {
-        $this->send_error[] = $send_error;
+        $this->send_failure[] = $send_failure;
+    }
+
+
+    /**
+     * @param string $message
+     * @param string $message_type
+     */
+    public function addSendMessage(string $message, string $message_type = self::MESSAGE_TYPE_INFO)/*:void*/
+    {
+        switch ($message_type) {
+            case self::MESSAGE_TYPE_SUCCESS:
+                $this->addSendSuccess($message);
+                break;
+
+            case self::MESSAGE_TYPE_QUESTION:
+                $this->addSendQuestion($message);
+                break;
+
+            case self::MESSAGE_TYPE_FAILURE:
+                $this->addSendFailure($message);
+                break;
+
+            case self::MESSAGE_TYPE_INFO:
+            default:
+                $this->addSendInfo($message);
+                break;
+        }
     }
 
 
@@ -254,20 +407,56 @@ class RecommenderResponse {
     public function sendMessages()/*:void*/
     {
         if (!empty($this->send_success)) {
-            ilUtil::sendInfo(implode("<br><br>", $this->send_success), true);
+            ilUtil::sendSuccess(implode("<br><br>", $this->send_success), true);
         }
 
         if (!empty($this->send_info)) {
             ilUtil::sendInfo(implode("<br><br>", $this->send_info), true);
         }
 
-        if (!empty($this->send_warning)) {
-            ilUtil::sendQuestion(implode("<br><br>", $this->send_warning), true);
+        if (!empty($this->send_question)) {
+            ilUtil::sendQuestion(implode("<br><br>", $this->send_question), true);
         }
 
-        if (!empty($this->send_error)) {
-            ilUtil::sendFailure(implode("<br><br>", $this->send_error), true);
+        if (!empty($this->send_failure)) {
+            ilUtil::sendFailure(implode("<br><br>", $this->send_failure), true);
         }
+    }
+
+
+    /**
+     * @return string
+     */
+    public function renderProgressBar() : string
+    {
+        if ($this->progress === null) {
+            return "";
+        }
+
+        $progress_bar = ilProgressBar::getInstance();
+
+        $progress_bar->setCurrent($this->progress * 100);
+
+        switch ($this->progress_type) {
+            case self::MESSAGE_TYPE_SUCCESS:
+                $progress_bar->setType(ilProgressBar::TYPE_SUCCESS);
+                break;
+
+            case self::MESSAGE_TYPE_QUESTION:
+                $progress_bar->setType(ilProgressBar::TYPE_WARNING);
+                break;
+
+            case self::MESSAGE_TYPE_FAILURE:
+                $progress_bar->setType(ilProgressBar::TYPE_DANGER);
+                break;
+
+            case self::MESSAGE_TYPE_INFO:
+            default:
+                $progress_bar->setType(ilProgressBar::TYPE_INFO);
+                break;
+        }
+
+        return self::output()->getHTML($progress_bar);
     }
 
 }

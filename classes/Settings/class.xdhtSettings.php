@@ -1,5 +1,7 @@
 <?php
 
+use srag\Plugins\DhbwTraining\Config\Config;
+
 /**
  * Class xdhtSettings
  *
@@ -108,6 +110,16 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
      * @db_is_notnull true
      */
     protected $recommender_system_server = self::RECOMMENDER_SYSTEM_SERVER_EXTERNAL;
+
+    /**
+     * @var int
+     *
+     * @db_has_field  true
+     * @db_fieldtype  integer
+     * @db_length     1
+     * @db_is_notnull true
+     */
+    protected $learning_progress = 1;
 
 
 
@@ -261,6 +273,28 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface {
     public function setRecommenderSystemServer(int $recommender_system_server)/*:void*/
     {
         $this->recommender_system_server = $recommender_system_server;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getLearningProgress() : int
+    {
+        if (!Config::getField(Config::KEY_LEARNING_PROGRESS)) {
+            return false;
+        }
+
+        return $this->learning_progress;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setLearningProgress(int $learning_progress)/*:void*/
+    {
+        $this->learning_progress = $learning_progress;
     }
 
 }

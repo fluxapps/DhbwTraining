@@ -14,12 +14,12 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
     public static $prefixLengthsPsr4 = array (
         's' => 
         array (
-            'srag\\RemovePluginDataConfirm\\' => 29,
+            'srag\\RemovePluginDataConfirm\\DhbwTraining\\' => 42,
             'srag\\Plugins\\DhbwTraining\\' => 26,
             'srag\\LibrariesNamespaceChanger\\' => 31,
-            'srag\\DIC\\' => 9,
-            'srag\\CustomInputGUIs\\' => 21,
-            'srag\\ActiveRecordConfig\\' => 24,
+            'srag\\DIC\\DhbwTraining\\' => 22,
+            'srag\\CustomInputGUIs\\DhbwTraining\\' => 34,
+            'srag\\ActiveRecordConfig\\DhbwTraining\\' => 37,
         ),
         'S' => 
         array (
@@ -32,7 +32,7 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
     );
 
     public static $prefixDirsPsr4 = array (
-        'srag\\RemovePluginDataConfirm\\' => 
+        'srag\\RemovePluginDataConfirm\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src',
         ),
@@ -44,15 +44,15 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         array (
             0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
-        'srag\\DIC\\' => 
+        'srag\\DIC\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
         ),
-        'srag\\CustomInputGUIs\\' => 
+        'srag\\CustomInputGUIs\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/custominputguis/src',
         ),
-        'srag\\ActiveRecordConfig\\' => 
+        'srag\\ActiveRecordConfig\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/activerecordconfig/src',
         ),
@@ -120,6 +120,7 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'RecommenderCurl' => __DIR__ . '/../..' . '/classes/Recommender/RecommenderCurl.php',
         'RecommenderResponse' => __DIR__ . '/../..' . '/classes/Recommender/RecommenderResponse.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
+        'ilDhbwTrainingConfigGUI' => __DIR__ . '/../..' . '/classes/class.ilDhbwTrainingConfigGUI.php',
         'ilDhbwTrainingExporter' => __DIR__ . '/../..' . '/classes/class.ilDhbwTrainingExporter.php',
         'ilDhbwTrainingImporter' => __DIR__ . '/../..' . '/classes/class.ilDhbwTrainingImporter.php',
         'ilDhbwTrainingPlugin' => __DIR__ . '/../..' . '/classes/class.ilDhbwTrainingPlugin.php',
@@ -236,6 +237,8 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'srag\\LibrariesNamespaceChanger\\PHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP72Backport.php',
         'srag\\LibrariesNamespaceChanger\\PHP7Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP7Backport.php',
         'srag\\LibrariesNamespaceChanger\\RemovePHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/RemovePHP72Backport.php',
+        'srag\\Plugins\\DhbwTraining\\Config\\Config' => __DIR__ . '/../..' . '/src/Config/Config.php',
+        'srag\\Plugins\\DhbwTraining\\Config\\ConfigFormGUI' => __DIR__ . '/../..' . '/src/Config/ConfigFormGUI.php',
         'srag\\RemovePluginDataConfirm\\DhbwTraining\\BasePluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/BasePluginUninstallTrait.php',
         'srag\\RemovePluginDataConfirm\\DhbwTraining\\PluginUninstallTrait' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/PluginUninstallTrait.php',
         'srag\\RemovePluginDataConfirm\\DhbwTraining\\RemovePluginDataConfirmCtrl' => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src/class.RemovePluginDataConfirmCtrl.php',

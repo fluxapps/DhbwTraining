@@ -23,13 +23,7 @@ class xdhtParticipantFactory implements xdhtParticipantFactoryInterface {
 	}
 
 	public function updateStatus($xdht_participant, $new_status) {
-		/*
-		 * update the status only if the new status is higher than the first one
-		 * this makes sure that the status is not marked down if e.q. the user recalls the training object
-		 */
-		if($new_status > $xdht_participant->getStatus()) {
-			$xdht_participant->setStatus($new_status);
-		}
+	    $xdht_participant->setStatus($new_status);
 		$xdht_participant->setLastAccess(date('Y-m-d H:i:s'));
 		$xdht_participant->update();
 	}
