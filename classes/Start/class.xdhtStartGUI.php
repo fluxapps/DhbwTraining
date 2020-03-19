@@ -88,7 +88,8 @@ class xdhtStartGUI
         $ilLinkButton->setUrl($start_training_link);
         /** @var $ilToolbar ilToolbarGUI */
         self::dic()->toolbar()->addButtonInstance($ilLinkButton);
-        self::output()->output(new xdhtPageObjectGUI($this->facade), true);
+       // self::output()->output(new xdhtPageObjectGUI($this->facade), true);
+        self::output()->output("", true);
     }
 
 
