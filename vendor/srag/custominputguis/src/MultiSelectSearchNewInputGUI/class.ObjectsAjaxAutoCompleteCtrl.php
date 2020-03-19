@@ -59,6 +59,23 @@ AND object_reference.deleted IS NULL
 
 
     /**
+     * @param array $objects
+     *
+     * @return array
+     */
+    protected function formatObjects(array $objects) : array
+    {
+        $formatted_objects = [];
+
+        foreach ($objects as $object) {
+            $formatted_objects[$object[($this->ref_id ? 'ref_id' : 'obj_id')]] = $object["title"];
+        }
+
+        return $formatted_objects;
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function fillOptions(array $ids) : array
@@ -74,22 +91,5 @@ AND ' . self::dic()
                 ->in(($this->ref_id ? 'object_reference.ref_id' : 'object_data.obj_id'), $ids, false, ilDBConstants::T_INTEGER) . ' ORDER BY title ASC', [ilDBConstants::T_TEXT], [$this->type]);
 
         return $this->formatObjects(self::dic()->database()->fetchAll($result));
-    }
-
-
-    /**
-     * @param array $objects
-     *
-     * @return array
-     */
-    protected function formatObjects(array $objects) : array
-    {
-        $formatted_objects = [];
-
-        foreach ($objects as $object) {
-            $formatted_objects[$object[($this->ref_id ? 'ref_id' : 'obj_id')]] = $object["title"];
-        }
-
-        return $formatted_objects;
     }
 }

@@ -30,38 +30,9 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
      *
      * @deprecated
      */
-    public function getValue()/*: array*/
-    {
-        $val = parent::getValue();
-        if (is_array($val)) {
-            return $val;
-        } elseif (!$val) {
-            return array();
-        } else {
-            return explode(',', $val);
-        }
-    }
-
-
-    /**
-     * @return array
-     *
-     * @deprecated
-     */
     public function getSubItems()/*: array*/
     {
         return array();
-    }
-
-
-    /**
-     * @return string
-     *
-     * @deprecated
-     */
-    public function getContainerType()/*: string*/
-    {
-        return 'crs';
     }
 
 
@@ -135,21 +106,20 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
 
 
     /**
-     * @param string $postVar
-     *
-     * @return string
+     * @return array
      *
      * @deprecated
      */
-    protected function escapePostVar(/*string*/
-        $postVar
-    )/*: string*/
+    public function getValue()/*: array*/
     {
-        $postVar = $this->stripLastStringOccurrence($postVar, "[]");
-        $postVar = str_replace("[", '\\\\[', $postVar);
-        $postVar = str_replace("]", '\\\\]', $postVar);
-
-        return $postVar;
+        $val = parent::getValue();
+        if (is_array($val)) {
+            return $val;
+        } elseif (!$val) {
+            return array();
+        } else {
+            return explode(',', $val);
+        }
     }
 
 
@@ -176,6 +146,25 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
 
 
     /**
+     * @param string $postVar
+     *
+     * @return string
+     *
+     * @deprecated
+     */
+    protected function escapePostVar(/*string*/
+        $postVar
+    )/*: string*/
+    {
+        $postVar = $this->stripLastStringOccurrence($postVar, "[]");
+        $postVar = str_replace("[", '\\\\[', $postVar);
+        $postVar = str_replace("]", '\\\\]', $postVar);
+
+        return $postVar;
+    }
+
+
+    /**
      * @return string
      *
      * @deprecated
@@ -196,5 +185,16 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
     )/*: void*/
     {
         $this->placeholder = $placeholder;
+    }
+
+
+    /**
+     * @return string
+     *
+     * @deprecated
+     */
+    public function getContainerType()/*: string*/
+    {
+        return 'crs';
     }
 }

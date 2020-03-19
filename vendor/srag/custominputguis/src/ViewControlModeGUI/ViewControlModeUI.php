@@ -115,19 +115,6 @@ class ViewControlModeUI
 
 
     /**
-     *
-     */
-    public function handleButtons()/*: void*/
-    {
-        $active_id = filter_input(INPUT_GET, self::CMD_HANDLE_BUTTONS);
-
-        ilSession::set(self::CMD_HANDLE_BUTTONS . "_" . $this->id, $active_id);
-
-        self::dic()->ctrl()->redirectToURL(ilSession::get(self::CMD_HANDLE_BUTTONS . "_" . $this->id . "_url"));
-    }
-
-
-    /**
      * @return string
      */
     public function getActiveId() : string
@@ -139,5 +126,18 @@ class ViewControlModeUI
         }
 
         return $active_id;
+    }
+
+
+    /**
+     *
+     */
+    public function handleButtons()/*: void*/
+    {
+        $active_id = filter_input(INPUT_GET, self::CMD_HANDLE_BUTTONS);
+
+        ilSession::set(self::CMD_HANDLE_BUTTONS . "_" . $this->id, $active_id);
+
+        self::dic()->ctrl()->redirectToURL(ilSession::get(self::CMD_HANDLE_BUTTONS . "_" . $this->id . "_url"));
     }
 }

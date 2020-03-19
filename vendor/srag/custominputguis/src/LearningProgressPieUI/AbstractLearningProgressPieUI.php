@@ -99,35 +99,15 @@ abstract class AbstractLearningProgressPieUI
 
 
     /**
-     * @return array
+     * @param int $status
+     *
+     * @return string
      */
-    public function getData() : array
+    private function getText(int $status) : string
     {
-        if ($this->cache === null) {
+        self::dic()->language()->loadLanguageModule("trac");
 
-            $data = $this->parseData();
-
-            $data = array_map(function (int $status) use ($data): array {
-                return [
-                    "color" => self::LP_STATUS_COLOR[$status],
-                    "title" => $this->getText($status),
-                    "value" => ($data[$status] ?: 0)
-                ];
-            }, self::LP_STATUS);
-
-            if (!$this->show_empty) {
-                $data = array_filter($data, function (array $data) : bool {
-                    return ($data["value"] > 0);
-                });
-            }
-
-            $this->cache = [
-                "data"  => $data,
-                "count" => $this->getCount()
-            ];
-        }
-
-        return $this->cache;
+        return ilLearningProgressBaseGUI::_getStatusText($status);
     }
 
 
@@ -158,15 +138,35 @@ abstract class AbstractLearningProgressPieUI
 
 
     /**
-     * @param int $status
-     *
-     * @return string
+     * @return array
      */
-    private function getText(int $status) : string
+    public function getData() : array
     {
-        self::dic()->language()->loadLanguageModule("trac");
+        if ($this->cache === null) {
 
-        return ilLearningProgressBaseGUI::_getStatusText($status);
+            $data = $this->parseData();
+
+            $data = array_map(function (int $status) use ($data): array {
+                return [
+                    "color" => self::LP_STATUS_COLOR[$status],
+                    "title" => $this->getText($status),
+                    "value" => ($data[$status] ?: 0)
+                ];
+            }, self::LP_STATUS);
+
+            if (!$this->show_empty) {
+                $data = array_filter($data, function (array $data) : bool {
+                    return ($data["value"] > 0);
+                });
+            }
+
+            $this->cache = [
+                "data"  => $data,
+                "count" => $this->getCount()
+            ];
+        }
+
+        return $this->cache;
     }
 
 

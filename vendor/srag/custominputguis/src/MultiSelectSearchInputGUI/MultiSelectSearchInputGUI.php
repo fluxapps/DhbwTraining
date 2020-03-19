@@ -124,6 +124,71 @@ class MultiSelectSearchInputGUI extends ilMultiSelectInputGUI implements ilTable
 
 
     /**
+     * @param array $array
+     *
+     * @deprecated
+     */
+    public function setValueByArray(/*array*/ $array)/*: void*/
+    {
+        //		print_r($array);
+
+        $val = $array[$this->searchPostVar()];
+        if (is_array($val)) {
+            $val;
+        } elseif (!$val) {
+            $val = array();
+        } else {
+            $val = explode(",", $val);
+        }
+        $this->setValue($val);
+    }
+
+
+    /**
+     * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do this stupid "trick". Shame on select2 project ;)
+     *
+     * @return string the real postvar.
+     *
+     * @deprecated
+     */
+    protected function searchPostVar()/*: string*/
+    {
+        if (substr($this->getPostVar(), -2) == "[]") {
+            return substr($this->getPostVar(), 0, -2);
+        } else {
+            return $this->getPostVar();
+        }
+    }
+
+
+    /**
+     * @param string $a_postvar
+     *
+     * @deprecated
+     */
+    public function setPostVar(/*string*/
+        $a_postvar
+    )/*: void*/
+    {
+        if (substr($a_postvar, -2) != "[]") {
+            $a_postvar = $a_postvar . "[]";
+        }
+        parent::setPostVar($a_postvar);
+    }
+
+
+    /**
+     * @inheritDoc
+     *
+     * @deprecated
+     */
+    public function getTableFilterHTML()/*: string*/
+    {
+        return $this->render();
+    }
+
+
+    /**
      * @return string
      *
      * @deprecated
@@ -188,17 +253,26 @@ class MultiSelectSearchInputGUI extends ilMultiSelectInputGUI implements ilTable
 
 
     /**
-     * @param string $height
-     *
-     * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
+     * @return ilTemplate
      *
      * @deprecated
      */
-    public function setHeight(/*string*/
-        $height
+    public function getInputTemplate()/*ilTemplate*/
+    {
+        return $this->input_template;
+    }
+
+
+    /**
+     * @param ilTemplate $input_template
+     *
+     * @deprecated
+     */
+    public function setInputTemplate(/*ilTemplate*/
+        $input_template
     )/*: void*/
     {
-        $this->height = $height;
+        $this->input_template = $input_template;
     }
 
 
@@ -209,9 +283,9 @@ class MultiSelectSearchInputGUI extends ilMultiSelectInputGUI implements ilTable
      *
      * @deprecated
      */
-    public function getHeight()/*: string*/
+    public function getWidth()/*: string*/
     {
-        return $this->height;
+        return $this->width;
     }
 
 
@@ -237,44 +311,24 @@ class MultiSelectSearchInputGUI extends ilMultiSelectInputGUI implements ilTable
      *
      * @deprecated
      */
-    public function getWidth()/*: string*/
+    public function getHeight()/*: string*/
     {
-        return $this->width;
+        return $this->height;
     }
 
 
     /**
-     * @param string $css_class
+     * @param string $height
+     *
+     * @deprecated setting inline style items from the controller is bad practice. please use the setClass together with an appropriate css class.
      *
      * @deprecated
      */
-    public function setCssClass(/*string*/
-        $css_class
+    public function setHeight(/*string*/
+        $height
     )/*: void*/
     {
-        $this->css_class = $css_class;
-    }
-
-
-    /**
-     * @return string
-     *
-     * @deprecated
-     */
-    public function getCssClass()/*: string*/
-    {
-        return $this->css_class;
-    }
-
-
-    /**
-     * @param int|null $minimum_input_length
-     *
-     * @deprecated
-     */
-    public function setMinimumInputLength(/*?int*/ $minimum_input_length = null)/*: void*/
-    {
-        $this->minimum_input_length = $minimum_input_length;
+        $this->height = $height;
     }
 
 
@@ -290,6 +344,28 @@ class MultiSelectSearchInputGUI extends ilMultiSelectInputGUI implements ilTable
         } else {
             return (!empty($this->getAjaxLink()) ? 1 : 0);
         }
+    }
+
+
+    /**
+     * @param int|null $minimum_input_length
+     *
+     * @deprecated
+     */
+    public function setMinimumInputLength(/*?int*/ $minimum_input_length = null)/*: void*/
+    {
+        $this->minimum_input_length = $minimum_input_length;
+    }
+
+
+    /**
+     * @return string
+     *
+     * @deprecated
+     */
+    public function getAjaxLink()/*: string*/
+    {
+        return $this->ajax_link;
     }
 
 
@@ -311,98 +387,22 @@ class MultiSelectSearchInputGUI extends ilMultiSelectInputGUI implements ilTable
      *
      * @deprecated
      */
-    public function getAjaxLink()/*: string*/
+    public function getCssClass()/*: string*/
     {
-        return $this->ajax_link;
+        return $this->css_class;
     }
 
 
     /**
-     * @param ilTemplate $input_template
+     * @param string $css_class
      *
      * @deprecated
      */
-    public function setInputTemplate(/*ilTemplate*/
-        $input_template
+    public function setCssClass(/*string*/
+        $css_class
     )/*: void*/
     {
-        $this->input_template = $input_template;
-    }
-
-
-    /**
-     * @return ilTemplate
-     *
-     * @deprecated
-     */
-    public function getInputTemplate()/*ilTemplate*/
-    {
-        return $this->input_template;
-    }
-
-
-    /**
-     * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do this stupid "trick". Shame on select2 project ;)
-     *
-     * @return string the real postvar.
-     *
-     * @deprecated
-     */
-    protected function searchPostVar()/*: string*/
-    {
-        if (substr($this->getPostVar(), -2) == "[]") {
-            return substr($this->getPostVar(), 0, -2);
-        } else {
-            return $this->getPostVar();
-        }
-    }
-
-
-    /**
-     * @param array $array
-     *
-     * @deprecated
-     */
-    public function setValueByArray(/*array*/ $array)/*: void*/
-    {
-        //		print_r($array);
-
-        $val = $array[$this->searchPostVar()];
-        if (is_array($val)) {
-            $val;
-        } elseif (!$val) {
-            $val = array();
-        } else {
-            $val = explode(",", $val);
-        }
-        $this->setValue($val);
-    }
-
-
-    /**
-     * @param string $a_postvar
-     *
-     * @deprecated
-     */
-    public function setPostVar(/*string*/
-        $a_postvar
-    )/*: void*/
-    {
-        if (substr($a_postvar, -2) != "[]") {
-            $a_postvar = $a_postvar . "[]";
-        }
-        parent::setPostVar($a_postvar);
-    }
-
-
-    /**
-     * @inheritDoc
-     *
-     * @deprecated
-     */
-    public function getTableFilterHTML()/*: string*/
-    {
-        return $this->render();
+        $this->css_class = $css_class;
     }
 
 

@@ -65,6 +65,19 @@ class PieChart implements PieChartInterface
     /**
      * @param PieChartItemInterface[] $pieChartItems
      */
+    protected function calcTotalValue(array $pieChartItems)/*: void*/
+    {
+        $total = 0;
+        foreach ($pieChartItems as $item) {
+            $total += $item->getValue();
+        }
+        $this->totalValue = $total;
+    }
+
+
+    /**
+     * @param PieChartItemInterface[] $pieChartItems
+     */
     protected function createSections(array $pieChartItems)/*: void*/
     {
         $currentOffset = 0;
@@ -76,19 +89,6 @@ class PieChart implements PieChartInterface
             $currentOffset += $section->getStrokeLength();
             $index++;
         }
-    }
-
-
-    /**
-     * @param PieChartItemInterface[] $pieChartItems
-     */
-    protected function calcTotalValue(array $pieChartItems)/*: void*/
-    {
-        $total = 0;
-        foreach ($pieChartItems as $item) {
-            $total += $item->getValue();
-        }
-        $this->totalValue = $total;
     }
 
 

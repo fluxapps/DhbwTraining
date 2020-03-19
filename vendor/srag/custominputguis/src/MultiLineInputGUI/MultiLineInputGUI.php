@@ -153,17 +153,28 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
 
 
     /**
-     * @return string
+     * @param bool $a_multi
+     * @param bool $a_sortable
+     * @param bool $a_addremove
      *
      * @deprecated
      */
-    public function getHook(/*string*/ $key)/*: string*/
+    public function setMulti(/*bool*/ $a_multi, /*bool*/ $a_sortable = false, /*bool*/ $a_addremove = true)/*: void*/
     {
-        if (isset($this->hooks[$key])) {
-            return $this->hooks[$key];
-        }
+        $this->multi = $a_multi;
+    }
 
-        return false;
+
+    /**
+     * @deprecated
+     */
+    public function initCSSandJS()/*: void*/
+    {
+        $dir = __DIR__;
+        $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+        self::dic()->ui()->mainTemplate()->addCss($dir . '/css/multi_line_input.css');
+        self::dic()->ui()->mainTemplate()->addJavascript($dir . '/js/multi_line_input.min.js');
     }
 
 
@@ -236,28 +247,6 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
 
 
     /**
-     * @return boolean
-     *
-     * @deprecated
-     */
-    public function isShowLabel()/*: bool*/
-    {
-        return $this->show_label;
-    }
-
-
-    /**
-     * @param boolean $show_label
-     *
-     * @deprecated
-     */
-    public function setShowLabel(/*bool*/ $show_label)/*: void*/
-    {
-        $this->show_label = $show_label;
-    }
-
-
-    /**
      * Get Options.
      *
      * @return array Options. Array ("value" => "option_text")
@@ -267,61 +256,6 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
     public function getInputs()/*: array*/
     {
         return $this->inputs;
-    }
-
-
-    /**
-     * @param bool $a_multi
-     * @param bool $a_sortable
-     * @param bool $a_addremove
-     *
-     * @deprecated
-     */
-    public function setMulti(/*bool*/ $a_multi, /*bool*/ $a_sortable = false, /*bool*/ $a_addremove = true)/*: void*/
-    {
-        $this->multi = $a_multi;
-    }
-
-
-    /**
-     * Set Value.
-     *
-     * @param string $a_value Value
-     *
-     * @deprecated
-     */
-    public function setValue(/*string*/ $a_value)/*: void*/
-    {
-        foreach ($this->inputs as $key => $item) {
-            if (method_exists($item, 'setValue')) {
-                $item->setValue($a_value[$key]);
-            } elseif ($item instanceof ilDateTimeInputGUI) {
-                $item->setDate(new ilDate($a_value[$key], IL_CAL_DATE));
-            }
-
-            if (method_exists($item, 'setChecked')) {
-                $item->setChecked($a_value[$key . '_checked']);
-            }
-        }
-        $this->value = $a_value;
-    }
-
-
-    /**
-     * Get Value.
-     *
-     * @return string|array Value
-     *
-     * @deprecated
-     */
-    public function getValue()
-    {
-        $out = array();
-        foreach ($this->inputs as $key => $item) {
-            $out[$key] = $item->getValue();
-        }
-
-        return $out;
     }
 
 
@@ -408,48 +342,51 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
 
 
     /**
-     * @param string     $key
-     * @param string     $value
-     * @param bool|false $override
+     * @param ilTemplate $tpl
      *
      * @deprecated
      */
-    public function addCustomAttribute(/*string*/ $key, /*string*/ $value, /*bool*/ $override = false)/*: void*/
+    public function insert(ilTemplate $tpl) /*: void*/
     {
-        if (isset($this->cust_attr[$key]) && !$override) {
-            $this->cust_attr[$key] .= ' ' . $value;
+        $options = [
+            // Services/Calendar/classes/class.ilCalendarUtil.php::addDateTimePicker
+            "date_config" => [
+                'locale'           => self::dic()->user()->getLanguage(),
+                'stepping'         => 5,
+                'useCurrent'       => false,
+                'calendarWeeks'    => true,
+                'toolbarPlacement' => 'top',
+                //'showTodayButton' => true,
+                'showClear'        => true,
+                //'showClose' => true
+                'keepInvalid'      => true,
+                'sideBySide'       => true,
+                //'collapse' => false,
+                'format'           => !empty(self::dic()->user()->getId())
+                && intval(self::dic()->user()->getId()) !== ANONYMOUS_USER_ID ? ilCalendarUtil::getUserDateFormat(false) : "DD.MM.YYYY"
+            ]
+        ];
+
+        $output = "";
+
+        $output .= $this->render(0, true);
+        if ($this->getMulti() && is_array($this->line_values) && count($this->line_values) > 0) {
+            foreach ($this->line_values as $run => $data) {
+                $object = $this;
+                $object->setValue($data);
+                $output .= $object->render($run);
+            }
         } else {
-            $this->cust_attr[$key] = $value;
+            $output .= $this->render(0, true);
         }
-    }
-
-
-    /**
-     * @return array
-     *
-     * @deprecated
-     */
-    public function getCustomAttributes()/*: array*/
-    {
-        return (array) $this->cust_attr;
-    }
-
-
-    /**
-     * @param string            $iterator_id
-     * @param ilFormPropertyGUI $input
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    protected function createInputPostVar(/*string*/ $iterator_id, ilFormPropertyGUI $input)/*: string*/
-    {
         if ($this->getMulti()) {
-            return $this->getPostVar() . '[' . $iterator_id . '][' . $input->getPostVar() . ']';
-        } else {
-            return $this->getPostVar() . '[' . $input->getPostVar() . ']';
+            $output = '<div id="' . $this->getFieldId() . '" class="multi_line_input">' . $output . '</div>';
+            $output .= '<script type="text/javascript">$("#' . $this->getFieldId() . '").multi_line_input(' . json_encode($this->input_options) . ', '
+                . json_encode($options) . ')</script>';
         }
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $output);
+        $tpl->parseCurrentBlock();
     }
 
 
@@ -591,86 +528,105 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
 
 
     /**
-     * @deprecated
-     */
-    public function initCSSandJS()/*: void*/
-    {
-        $dir = __DIR__;
-        $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-        self::dic()->ui()->mainTemplate()->addCss($dir . '/css/multi_line_input.css');
-        self::dic()->ui()->mainTemplate()->addJavascript($dir . '/js/multi_line_input.min.js');
-    }
-
-
-    /**
-     * @param ilTemplate $tpl
+     * @param string     $key
+     * @param string     $value
+     * @param bool|false $override
      *
      * @deprecated
      */
-    public function insert(ilTemplate $tpl) /*: void*/
+    public function addCustomAttribute(/*string*/ $key, /*string*/ $value, /*bool*/ $override = false)/*: void*/
     {
-        $options = [
-            // Services/Calendar/classes/class.ilCalendarUtil.php::addDateTimePicker
-            "date_config" => [
-                'locale'           => self::dic()->user()->getLanguage(),
-                'stepping'         => 5,
-                'useCurrent'       => false,
-                'calendarWeeks'    => true,
-                'toolbarPlacement' => 'top',
-                //'showTodayButton' => true,
-                'showClear'        => true,
-                //'showClose' => true
-                'keepInvalid'      => true,
-                'sideBySide'       => true,
-                //'collapse' => false,
-                'format'           => !empty(self::dic()->user()->getId())
-                && intval(self::dic()->user()->getId()) !== ANONYMOUS_USER_ID ? ilCalendarUtil::getUserDateFormat(false) : "DD.MM.YYYY"
-            ]
-        ];
-
-        $output = "";
-
-        $output .= $this->render(0, true);
-        if ($this->getMulti() && is_array($this->line_values) && count($this->line_values) > 0) {
-            foreach ($this->line_values as $run => $data) {
-                $object = $this;
-                $object->setValue($data);
-                $output .= $object->render($run);
-            }
+        if (isset($this->cust_attr[$key]) && !$override) {
+            $this->cust_attr[$key] .= ' ' . $value;
         } else {
-            $output .= $this->render(0, true);
+            $this->cust_attr[$key] = $value;
         }
+    }
+
+
+    /**
+     * @return array
+     *
+     * @deprecated
+     */
+    public function getCustomAttributes()/*: array*/
+    {
+        return (array) $this->cust_attr;
+    }
+
+
+    /**
+     * @return string
+     *
+     * @deprecated
+     */
+    public function getHook(/*string*/ $key)/*: string*/
+    {
+        if (isset($this->hooks[$key])) {
+            return $this->hooks[$key];
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Get Value.
+     *
+     * @return string|array Value
+     *
+     * @deprecated
+     */
+    public function getValue()
+    {
+        $out = array();
+        foreach ($this->inputs as $key => $item) {
+            $out[$key] = $item->getValue();
+        }
+
+        return $out;
+    }
+
+
+    /**
+     * Set Value.
+     *
+     * @param string $a_value Value
+     *
+     * @deprecated
+     */
+    public function setValue(/*string*/ $a_value)/*: void*/
+    {
+        foreach ($this->inputs as $key => $item) {
+            if (method_exists($item, 'setValue')) {
+                $item->setValue($a_value[$key]);
+            } elseif ($item instanceof ilDateTimeInputGUI) {
+                $item->setDate(new ilDate($a_value[$key], IL_CAL_DATE));
+            }
+
+            if (method_exists($item, 'setChecked')) {
+                $item->setChecked($a_value[$key . '_checked']);
+            }
+        }
+        $this->value = $a_value;
+    }
+
+
+    /**
+     * @param string            $iterator_id
+     * @param ilFormPropertyGUI $input
+     *
+     * @return string
+     *
+     * @deprecated
+     */
+    protected function createInputPostVar(/*string*/ $iterator_id, ilFormPropertyGUI $input)/*: string*/
+    {
         if ($this->getMulti()) {
-            $output = '<div id="' . $this->getFieldId() . '" class="multi_line_input">' . $output . '</div>';
-            $output .= '<script type="text/javascript">$("#' . $this->getFieldId() . '").multi_line_input(' . json_encode($this->input_options) . ', '
-                . json_encode($options) . ')</script>';
+            return $this->getPostVar() . '[' . $iterator_id . '][' . $input->getPostVar() . ']';
+        } else {
+            return $this->getPostVar() . '[' . $input->getPostVar() . ']';
         }
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $output);
-        $tpl->parseCurrentBlock();
-    }
-
-
-    /**
-     * @inheritDoc
-     *
-     * @deprecated
-     */
-    public function getTableFilterHTML()/*: string*/
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * @inheritDoc
-     *
-     * @deprecated
-     */
-    public function getToolbarHTML()/*: string*/
-    {
-        return $this->render("toolbar");
     }
 
 
@@ -679,20 +635,20 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
      *
      * @deprecated
      */
-    public function isPositionMovable()/*: bool*/
+    public function isShowLabel()/*: bool*/
     {
-        return $this->position_movable;
+        return $this->show_label;
     }
 
 
     /**
-     * @param boolean $position_movable
+     * @param boolean $show_label
      *
      * @deprecated
      */
-    public function setPositionMovable(/*bool*/ $position_movable)/*: void*/
+    public function setShowLabel(/*bool*/ $show_label)/*: void*/
     {
-        $this->position_movable = $position_movable;
+        $this->show_label = $show_label;
     }
 
 
@@ -738,5 +694,49 @@ class MultiLineInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, 
     public function setShowInfo(/*bool*/ $show_info)/*: void*/
     {
         $this->show_info = $show_info;
+    }
+
+
+    /**
+     * @return boolean
+     *
+     * @deprecated
+     */
+    public function isPositionMovable()/*: bool*/
+    {
+        return $this->position_movable;
+    }
+
+
+    /**
+     * @param boolean $position_movable
+     *
+     * @deprecated
+     */
+    public function setPositionMovable(/*bool*/ $position_movable)/*: void*/
+    {
+        $this->position_movable = $position_movable;
+    }
+
+
+    /**
+     * @inheritDoc
+     *
+     * @deprecated
+     */
+    public function getTableFilterHTML()/*: string*/
+    {
+        return $this->render();
+    }
+
+
+    /**
+     * @inheritDoc
+     *
+     * @deprecated
+     */
+    public function getToolbarHTML()/*: string*/
+    {
+        return $this->render("toolbar");
     }
 }

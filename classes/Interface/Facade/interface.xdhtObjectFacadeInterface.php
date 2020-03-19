@@ -5,61 +5,62 @@
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-interface xdhtObjectFacadeInterface {
+interface xdhtObjectFacadeInterface
+{
 
-	/**
-	 * @param $ref_id
-	 *
-	 * @return xdhtObjectFacadeInterface
-	 */
-	public static function getInstance($ref_id);
-
-
-	/**
-	 * @return xdhtSettingsInterface
-	 */
-	public function settings();
+    /**
+     * @param $ref_id
+     *
+     * @return xdhtObjectFacadeInterface
+     */
+    public static function getInstance($ref_id);
 
 
-	/**
-	 * @return int
-	 */
-
-	public function objectId();
-
-
-	/**
-	 * @return int
-	 */
-	public function refId();
+    /**
+     * @return xdhtSettingsInterface
+     */
+    public function settings();
 
 
-	/**
-	 * @return ilObjDhbwTraining
-	 */
-	public function training_object();
+    /**
+     * @return int
+     */
+
+    public function objectId();
 
 
-	/**
-	 * @return xdhtSettingFactoryInterface
-	 */
-	public function xdhtSettingsFactory();
+    /**
+     * @return int
+     */
+    public function refId();
 
 
-	/**
-	 * @return xdhtQuestionPoolFactoryInterface
-	 */
-	public function xdhtQuestionPoolFactory();
+    /**
+     * @return ilObjDhbwTraining
+     */
+    public function training_object();
 
 
-	/**
-	 * @return xdhtQuestionFactoryInterface
-	 */
-	public function xdhtQuestionFactory();
+    /**
+     * @return xdhtSettingFactoryInterface
+     */
+    public function xdhtSettingsFactory();
 
 
-	/**
-	 * @return xdhtParticipantFactoryInterface
-	 */
-	public function xdhtParticipantFactory();
+    /**
+     * @return xdhtQuestionPoolFactoryInterface
+     */
+    public function xdhtQuestionPoolFactory();
+
+
+    /**
+     * @return xdhtQuestionFactoryInterface
+     */
+    public function xdhtQuestionFactory();
+
+
+    /**
+     * @return xdhtParticipantFactoryInterface
+     */
+    public function xdhtParticipantFactory();
 }

@@ -67,17 +67,6 @@ trait DICTrait
 
 
     /**
-     * Get version interface
-     *
-     * @return VersionInterface Version interface
-     */
-    protected static final function version() : VersionInterface
-    {
-        return DICStatic::version();
-    }
-
-
-    /**
      * @throws DICException Your class needs to implement the PLUGIN_CLASS_NAME constant!
      */
     private static final function checkPluginClassNameConst()/*: void*/
@@ -85,5 +74,16 @@ trait DICTrait
         if (!defined("static::PLUGIN_CLASS_NAME") || empty(static::PLUGIN_CLASS_NAME)) {
             throw new DICException("Your class needs to implement the PLUGIN_CLASS_NAME constant!", DICException::CODE_MISSING_CONST_PLUGIN_CLASS_NAME);
         }
+    }
+
+
+    /**
+     * Get version interface
+     *
+     * @return VersionInterface Version interface
+     */
+    protected static final function version() : VersionInterface
+    {
+        return DICStatic::version();
     }
 }

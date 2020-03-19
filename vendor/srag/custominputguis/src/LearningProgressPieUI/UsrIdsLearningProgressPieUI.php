@@ -76,15 +76,6 @@ class UsrIdsLearningProgressPieUI extends AbstractLearningProgressPieUI
 
 
     /**
-     * @inheritDoc
-     */
-    protected function getCount() : int
-    {
-        return count($this->usr_ids);
-    }
-
-
-    /**
      * @param int $usr_id
      *
      * @return int
@@ -99,5 +90,14 @@ class UsrIdsLearningProgressPieUI extends AbstractLearningProgressPieUI
         }
 
         return $status;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    protected function getCount() : int
+    {
+        return count($this->usr_ids);
     }
 }

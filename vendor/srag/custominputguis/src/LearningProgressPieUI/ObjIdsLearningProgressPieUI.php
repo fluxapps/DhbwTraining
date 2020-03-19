@@ -76,15 +76,6 @@ class ObjIdsLearningProgressPieUI extends AbstractLearningProgressPieUI
 
 
     /**
-     * @inheritDoc
-     */
-    protected function getCount() : int
-    {
-        return count($this->obj_ids);
-    }
-
-
-    /**
      * @param int $obj_id
      *
      * @return int
@@ -99,5 +90,14 @@ class ObjIdsLearningProgressPieUI extends AbstractLearningProgressPieUI
         }
 
         return $status;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    protected function getCount() : int
+    {
+        return count($this->obj_ids);
     }
 }

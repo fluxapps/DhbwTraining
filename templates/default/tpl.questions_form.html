@@ -1,19 +1,13 @@
 <!-- BEGIN form -->
-
-		<div class="il_ass_question_preview_container ilc_page_cont_PageContainer">
-			<h1>{TITLE}</h1>
-		<form action="{ACTION}" method="post">
-			<div class="form-group">
-				<!-- BEGIN question -->
-				{QUESTION}
-				<!-- END question -->
-			</div>
-			<button type="submit" class="btn btn-default" name="submitted" value="{CANCEL_BTN_VALUE}">{CANCEL_BTN_TEXT}</button>
-			<button autofocus type="submit" class="btn btn-primary" name="submitted" value="{NEXT_BTN_VALUE}">{PROCEED_BTN_TEXT}</button>
-			<input type="hidden" name="question_id" value="{QUESTION_ID}" />
-			<input type="hidden" name="recomander_id" value="{RECOMANDER_ID}" />
-		</form>
-
+<div class="il_ass_question_preview_container ilc_page_cont_PageContainer">
+	<h1>{TITLE}</h1>
+	<form action="{ACTION}" method="post">
+		<div class="form-group">
+			<!-- BEGIN question -->				{QUESTION}
+			<!-- END question -->
 		</div>
-
-<!-- END form -->
+		<button class="btn btn-default" name="submitted" type="submit" value="{CANCEL_BTN_VALUE}">{CANCEL_BTN_TEXT}</button>
+		<button autofocus class="btn btn-primary" name="submitted" type="submit" value="{NEXT_BTN_VALUE}">{PROCEED_BTN_TEXT}</button>
+		<input name="question_id" type="hidden" value="{QUESTION_ID}"/> <input name="recomander_id" type="hidden" value="{RECOMANDER_ID}"/>
+	</form>
+</div><!-- END form -->

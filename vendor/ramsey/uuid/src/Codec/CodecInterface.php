@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
- * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link https://packagist.org/packages/ramsey/uuid Packagist
- * @link https://github.com/ramsey/uuid GitHub
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link      https://packagist.org/packages/ramsey/uuid Packagist
+ * @link      https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Codec;
@@ -23,35 +23,43 @@ use Ramsey\Uuid\UuidInterface;
  */
 interface CodecInterface
 {
+
     /**
      * Encodes a UuidInterface as a string representation of a UUID
      *
      * @param UuidInterface $uuid
+     *
      * @return string Hexadecimal string representation of a UUID
      */
     public function encode(UuidInterface $uuid);
+
 
     /**
      * Encodes a UuidInterface as a binary representation of a UUID
      *
      * @param UuidInterface $uuid
+     *
      * @return string Binary string representation of a UUID
      */
     public function encodeBinary(UuidInterface $uuid);
+
 
     /**
      * Decodes a string representation of a UUID into a UuidInterface object instance
      *
      * @param string $encodedUuid
+     *
      * @return UuidInterface
      * @throws InvalidUuidStringException
      */
     public function decode($encodedUuid);
 
+
     /**
      * Decodes a binary representation of a UUID into a UuidInterface object instance
      *
      * @param string $bytes
+     *
      * @return UuidInterface
      * @throws InvalidUuidStringException
      * @throws InvalidArgumentException if string has not 16 characters

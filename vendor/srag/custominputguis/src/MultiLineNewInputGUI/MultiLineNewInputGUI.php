@@ -32,26 +32,6 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
      * @var int
      */
     protected static $counter = 0;
-
-
-    /**
-     *
-     */
-    public static function init()/*: void*/
-    {
-        if (self::$init === false) {
-            self::$init = true;
-
-            $dir = __DIR__;
-            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/multi_line_new_input_gui.css");
-
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/js/multi_line_new_input_gui.min.js");
-        }
-    }
-
-
     /**
      * @var ilFormPropertyGUI[]
      */
@@ -85,6 +65,24 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
         parent::__construct($title, $post_var);
 
         self::init();
+    }
+
+
+    /**
+     *
+     */
+    public static function init()/*: void*/
+    {
+        if (self::$init === false) {
+            self::$init = true;
+
+            $dir = __DIR__;
+            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/multi_line_new_input_gui.css");
+
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/js/multi_line_new_input_gui.min.js");
+        }
     }
 
 
@@ -175,29 +173,12 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
 
 
     /**
-     * @return int
+     * @param ilFormPropertyGUI[] $inputs
      */
-    public function getShowInputLabel() : int
+    public function setInputs(array $inputs) /*: void*/
     {
-        return $this->show_input_label;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getTableFilterHTML() : string
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getToolbarHTML() : string
-    {
-        return $this->render();
+        $this->inputs = $inputs;
+        $this->inputs_generated = null;
     }
 
 
@@ -219,24 +200,24 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
 
 
     /**
-     * @param ilTemplate $tpl
+     * @param array $value
      */
-    public function insert(ilTemplate $tpl) /*: void*/
+    public function setValue(/*array*/ $value)/*: void*/
     {
-        $html = $this->render();
-
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
+        if (is_array($value)) {
+            $this->value = $value;
+        } else {
+            $this->value = [];
+        }
     }
 
 
     /**
-     * @return bool
+     * @inheritDoc
      */
-    public function isShowSort() : bool
+    public function getTableFilterHTML() : string
     {
-        return $this->show_sort;
+        return $this->render();
     }
 
 
@@ -315,12 +296,11 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
 
 
     /**
-     * @param ilFormPropertyGUI[] $inputs
+     * @return int
      */
-    public function setInputs(array $inputs) /*: void*/
+    public function getShowInputLabel() : int
     {
-        $this->inputs = $inputs;
-        $this->inputs_generated = null;
+        return $this->show_input_label;
     }
 
 
@@ -334,6 +314,15 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
 
 
     /**
+     * @return bool
+     */
+    public function isShowSort() : bool
+    {
+        return $this->show_sort;
+    }
+
+
+    /**
      * @param bool $show_sort
      */
     public function setShowSort(bool $show_sort)/* : void*/
@@ -343,15 +332,24 @@ class MultiLineNewInputGUI extends ilFormPropertyGUI implements ilTableFilterIte
 
 
     /**
-     * @param array $value
+     * @inheritDoc
      */
-    public function setValue(/*array*/ $value)/*: void*/
+    public function getToolbarHTML() : string
     {
-        if (is_array($value)) {
-            $this->value = $value;
-        } else {
-            $this->value = [];
-        }
+        return $this->render();
+    }
+
+
+    /**
+     * @param ilTemplate $tpl
+     */
+    public function insert(ilTemplate $tpl) /*: void*/
+    {
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
     }
 
 

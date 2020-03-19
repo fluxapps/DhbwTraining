@@ -24,18 +24,18 @@ final class Version implements VersionInterface
     /**
      * @inheritDoc
      */
-    public function getILIASVersion() : string
+    public function isEqual(string $version) : bool
     {
-        return ILIAS_VERSION_NUMERIC;
+        return (version_compare($this->getILIASVersion(), $version) === 0);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function isEqual(string $version) : bool
+    public function getILIASVersion() : string
     {
-        return (version_compare($this->getILIASVersion(), $version) === 0);
+        return ILIAS_VERSION_NUMERIC;
     }
 
 
@@ -69,18 +69,18 @@ final class Version implements VersionInterface
     /**
      * @inheritDoc
      */
-    public function isMinVersion(string $version) : bool
+    public function is53() : bool
     {
-        return (version_compare($this->getILIASVersion(), $version) >= 0);
+        return $this->isMinVersion(self::ILIAS_VERSION_5_3);
     }
 
 
     /**
      * @inheritDoc
      */
-    public function is53() : bool
+    public function isMinVersion(string $version) : bool
     {
-        return $this->isMinVersion(self::ILIAS_VERSION_5_3);
+        return (version_compare($this->getILIASVersion(), $version) >= 0);
     }
 
 

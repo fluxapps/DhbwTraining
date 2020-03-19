@@ -36,6 +36,41 @@ final class Output implements OutputInterface
     /**
      * @inheritDoc
      */
+    public function output($value, bool $show = false, bool $main_template = true)/*: void*/
+    {
+        $html = $this->getHTML($value);
+
+        if (self::dic()->ctrl()->isAsynch()) {
+            echo $html;
+
+            exit;
+        } else {
+            if ($main_template) {
+                if (self::version()->is60()) {
+                    self::dic()->ui()->mainTemplate()->loadStandardTemplate();
+                } else {
+                    self::dic()->ui()->mainTemplate()->getStandardTemplate();
+                }
+            }
+
+            self::dic()->ui()->mainTemplate()->setLocator();
+
+            self::dic()->ui()->mainTemplate()->setContent($html);
+
+            if ($show) {
+                if (self::version()->is60()) {
+                    self::dic()->ui()->mainTemplate()->printToStdout();
+                } else {
+                    self::dic()->ui()->mainTemplate()->show();
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function getHTML($value) : string
     {
         if (is_array($value)) {
@@ -83,41 +118,6 @@ final class Output implements OutputInterface
         }
 
         return strval($html);
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function output($value, bool $show = false, bool $main_template = true)/*: void*/
-    {
-        $html = $this->getHTML($value);
-
-        if (self::dic()->ctrl()->isAsynch()) {
-            echo $html;
-
-            exit;
-        } else {
-            if ($main_template) {
-                if (self::version()->is60()) {
-                    self::dic()->ui()->mainTemplate()->loadStandardTemplate();
-                } else {
-                    self::dic()->ui()->mainTemplate()->getStandardTemplate();
-                }
-            }
-
-            self::dic()->ui()->mainTemplate()->setLocator();
-
-            self::dic()->ui()->mainTemplate()->setContent($html);
-
-            if ($show) {
-                if (self::version()->is60()) {
-                    self::dic()->ui()->mainTemplate()->printToStdout();
-                } else {
-                    self::dic()->ui()->mainTemplate()->show();
-                }
-            }
-        }
     }
 
 

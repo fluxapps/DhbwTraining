@@ -24,31 +24,6 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
      * @var bool
      */
     protected static $init = false;
-
-
-    /**
-     *
-     */
-    public static function init()/*: void*/
-    {
-        if (self::$init === false) {
-            self::$init = true;
-
-            $dir = __DIR__;
-            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-            self::dic()->ui()->mainTemplate()->addCss($dir . "/../../node_modules/select2/dist/css/select2.min.css");
-
-            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/multi_select_search_new_input_gui.css");
-
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/select2/dist/js/select2.full.min.js");
-
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/select2/dist/js/i18n/" . self::dic()->user()->getCurrentLanguage()
-                . ".js");
-        }
-    }
-
-
     /**
      * @var AbstractAjaxAutoCompleteCtrl|null
      */
@@ -82,6 +57,29 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
         parent::__construct($title, $post_var);
 
         self::init();
+    }
+
+
+    /**
+     *
+     */
+    public static function init()/*: void*/
+    {
+        if (self::$init === false) {
+            self::$init = true;
+
+            $dir = __DIR__;
+            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+            self::dic()->ui()->mainTemplate()->addCss($dir . "/../../node_modules/select2/dist/css/select2.min.css");
+
+            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/multi_select_search_new_input_gui.css");
+
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/select2/dist/js/select2.full.min.js");
+
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/select2/dist/js/i18n/" . self::dic()->user()->getCurrentLanguage()
+                . ".js");
+        }
     }
 
 
@@ -138,15 +136,6 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
-     * @return AbstractAjaxAutoCompleteCtrl|null
-     */
-    public function getAjaxAutoCompleteCtrl()/*: ?AbstractAjaxAutoCompleteCtrl*/
-    {
-        return $this->ajax_auto_complete_ctrl;
-    }
-
-
-    /**
      * @return int|null
      */
     public function getLimitCount()/* : ?int*/
@@ -156,15 +145,29 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
-     * @return int
+     * @param int|null $limit_count
      */
-    public function getMinimumInputLength() : int
+    public function setLimitCount(/*?*/ int $limit_count = null)/* : void*/
     {
-        if ($this->minimum_input_length !== null) {
-            return $this->minimum_input_length;
-        } else {
-            return ($this->getAjaxAutoCompleteCtrl() !== null ? 3 : 0);
-        }
+        $this->limit_count = $limit_count;
+    }
+
+
+    /**
+     * @return AbstractAjaxAutoCompleteCtrl|null
+     */
+    public function getAjaxAutoCompleteCtrl()/*: ?AbstractAjaxAutoCompleteCtrl*/
+    {
+        return $this->ajax_auto_complete_ctrl;
+    }
+
+
+    /**
+     * @param AbstractAjaxAutoCompleteCtrl|null $ajax_auto_complete_ctrl
+     */
+    public function setAjaxAutoCompleteCtrl(/*?*/ AbstractAjaxAutoCompleteCtrl $ajax_auto_complete_ctrl = null)/*: void*/
+    {
+        $this->ajax_auto_complete_ctrl = $ajax_auto_complete_ctrl;
     }
 
 
@@ -178,42 +181,20 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
+     * @param array $options
+     */
+    public function setOptions(array $options)/* : void*/
+    {
+        $this->options = $options;
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function getTableFilterHTML() : string
     {
         return $this->render();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getToolbarHTML() : string
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getValue() : array
-    {
-        return $this->value;
-    }
-
-
-    /**
-     * @param ilTemplate $tpl
-     */
-    public function insert(ilTemplate $tpl) /*: void*/
-    {
-        $html = $this->render();
-
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
     }
 
 
@@ -268,20 +249,15 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
-     * @param AbstractAjaxAutoCompleteCtrl|null $ajax_auto_complete_ctrl
+     * @return int
      */
-    public function setAjaxAutoCompleteCtrl(/*?*/ AbstractAjaxAutoCompleteCtrl $ajax_auto_complete_ctrl = null)/*: void*/
+    public function getMinimumInputLength() : int
     {
-        $this->ajax_auto_complete_ctrl = $ajax_auto_complete_ctrl;
-    }
-
-
-    /**
-     * @param int|null $limit_count
-     */
-    public function setLimitCount(/*?*/ int $limit_count = null)/* : void*/
-    {
-        $this->limit_count = $limit_count;
+        if ($this->minimum_input_length !== null) {
+            return $this->minimum_input_length;
+        } else {
+            return ($this->getAjaxAutoCompleteCtrl() !== null ? 3 : 0);
+        }
     }
 
 
@@ -295,11 +271,11 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
-     * @param array $options
+     * @return array
      */
-    public function setOptions(array $options)/* : void*/
+    public function getValue() : array
     {
-        $this->options = $options;
+        return $this->value;
     }
 
 
@@ -313,6 +289,28 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
         } else {
             $this->value = [];
         }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getToolbarHTML() : string
+    {
+        return $this->render();
+    }
+
+
+    /**
+     * @param ilTemplate $tpl
+     */
+    public function insert(ilTemplate $tpl) /*: void*/
+    {
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
     }
 
 

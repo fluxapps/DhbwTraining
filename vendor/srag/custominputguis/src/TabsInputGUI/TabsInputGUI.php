@@ -28,24 +28,6 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
      * @var bool
      */
     protected static $init = false;
-
-
-    /**
-     *
-     */
-    public static function init()/*: void*/
-    {
-        if (self::$init === false) {
-            self::$init = true;
-
-            $dir = __DIR__;
-            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/tabs_input_gui.css");
-        }
-    }
-
-
     /**
      * @var int
      */
@@ -71,6 +53,22 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
         parent::__construct($title, $post_var);
 
         self::init();
+    }
+
+
+    /**
+     *
+     */
+    public static function init()/*: void*/
+    {
+        if (self::$init === false) {
+            self::$init = true;
+
+            $dir = __DIR__;
+            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/tabs_input_gui.css");
+        }
     }
 
 
@@ -119,42 +117,6 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
-     * @return int
-     */
-    public function getShowInputLabel() : int
-    {
-        return $this->show_input_label;
-    }
-
-
-    /**
-     * @return TabsInputGUITab[]
-     */
-    public function getTabs() : array
-    {
-        return $this->tabs;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getTableFilterHTML() : string
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getToolbarHTML() : string
-    {
-        return $this->render();
-    }
-
-
-    /**
      * @return array
      */
     public function getValue() : array
@@ -164,15 +126,24 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
-     * @param ilTemplate $tpl
+     * @param array $value
      */
-    public function insert(ilTemplate $tpl) /*: void*/
+    public function setValue(/*array*/ $value)/*: void*/
     {
-        $html = $this->render();
+        if (is_array($value)) {
+            $this->value = $value;
+        } else {
+            $this->value = [];
+        }
+    }
 
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
+
+    /**
+     * @inheritDoc
+     */
+    public function getTableFilterHTML() : string
+    {
+        return $this->render();
     }
 
 
@@ -236,11 +207,11 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
-     * @param int $show_input_label
+     * @return TabsInputGUITab[]
      */
-    public function setShowInputLabel(int $show_input_label)/* : void*/
+    public function getTabs() : array
     {
-        $this->show_input_label = $show_input_label;
+        return $this->tabs;
     }
 
 
@@ -254,15 +225,42 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
-     * @param array $value
+     * @return int
      */
-    public function setValue(/*array*/ $value)/*: void*/
+    public function getShowInputLabel() : int
     {
-        if (is_array($value)) {
-            $this->value = $value;
-        } else {
-            $this->value = [];
-        }
+        return $this->show_input_label;
+    }
+
+
+    /**
+     * @param int $show_input_label
+     */
+    public function setShowInputLabel(int $show_input_label)/* : void*/
+    {
+        $this->show_input_label = $show_input_label;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getToolbarHTML() : string
+    {
+        return $this->render();
+    }
+
+
+    /**
+     * @param ilTemplate $tpl
+     */
+    public function insert(ilTemplate $tpl) /*: void*/
+    {
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
     }
 
 

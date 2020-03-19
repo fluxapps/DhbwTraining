@@ -44,15 +44,6 @@ final class Plugin implements PluginInterface
     /**
      * @inheritDoc
      */
-    public function directory() : string
-    {
-        return $this->plugin_object->getDirectory();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     public function template(string $template_file, bool $remove_unknown_variables = true, bool $remove_empty_blocks = true, bool $plugin = true) : Template
     {
         if ($plugin) {
@@ -60,6 +51,15 @@ final class Plugin implements PluginInterface
         } else {
             return new Template($template_file, $remove_unknown_variables, $remove_empty_blocks);
         }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function directory() : string
+    {
+        return $this->plugin_object->getDirectory();
     }
 
 
@@ -123,15 +123,6 @@ final class Plugin implements PluginInterface
 
 
     /**
-     * @inheritDoc
-     */
-    public function getPluginObject() : ilPlugin
-    {
-        return $this->plugin_object;
-    }
-
-
-    /**
      * @param string $lang
      *
      * @return ilLanguage
@@ -143,5 +134,14 @@ final class Plugin implements PluginInterface
         }
 
         return self::$languages[$lang];
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getPluginObject() : ilPlugin
+    {
+        return $this->plugin_object;
     }
 }

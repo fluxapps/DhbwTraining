@@ -36,6 +36,15 @@ final class CustomInputGUIs
 
 
     /**
+     * CustomInputGUIs constructor
+     */
+    private function __construct()
+    {
+
+    }
+
+
+    /**
      * @return self
      */
     public static function getInstance()/*: self*/
@@ -45,15 +54,6 @@ final class CustomInputGUIs
         }
 
         return self::$instance;
-    }
-
-
-    /**
-     * CustomInputGUIs constructor
-     */
-    private function __construct()
-    {
-
     }
 
 

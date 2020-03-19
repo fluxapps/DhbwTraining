@@ -30,15 +30,15 @@ class ProgressMeter implements ProgressMeterComponent
     /**
      * @var int
      */
-    private $required;
-    /**
-     * @var int
-     */
     protected $main;
     /**
      * @var int
      */
     protected $comparison;
+    /**
+     * @var int
+     */
+    private $required;
 
 
     /**
@@ -64,6 +64,19 @@ class ProgressMeter implements ProgressMeterComponent
         } else {
             $this->comparison = 0;
         }
+    }
+
+
+    /**
+     * Get integer value "1" if a value is negative or "maximum" if value is more then maximum
+     *
+     * @param int $a_int
+     *
+     * @return int
+     */
+    protected function getSafe($a_int)
+    {
+        return (($a_int < 0) ? 0 : ($a_int > $this->getMaximum() ? $this->getMaximum() : $a_int));
     }
 
 
@@ -97,6 +110,19 @@ class ProgressMeter implements ProgressMeterComponent
 
 
     /**
+     * get an integer value as percent value
+     *
+     * @param int $a_int
+     *
+     * @return int
+     */
+    protected function getAsPercentage($a_int)
+    {
+        return round(100 / $this->getMaximum() * $this->getSafe($a_int), 0, PHP_ROUND_HALF_UP);
+    }
+
+
+    /**
      * @inheritDoc
      */
     public function getMainValue()
@@ -113,31 +139,5 @@ class ProgressMeter implements ProgressMeterComponent
     public function getMainValueAsPercent()
     {
         return $this->getAsPercentage($this->main);
-    }
-
-
-    /**
-     * Get integer value "1" if a value is negative or "maximum" if value is more then maximum
-     *
-     * @param int $a_int
-     *
-     * @return int
-     */
-    protected function getSafe($a_int)
-    {
-        return (($a_int < 0) ? 0 : ($a_int > $this->getMaximum() ? $this->getMaximum() : $a_int));
-    }
-
-
-    /**
-     * get an integer value as percent value
-     *
-     * @param int $a_int
-     *
-     * @return int
-     */
-    protected function getAsPercentage($a_int)
-    {
-        return round(100 / $this->getMaximum() * $this->getSafe($a_int), 0, PHP_ROUND_HALF_UP);
     }
 }

@@ -97,8 +97,10 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $recommender_system_server->addOption($recommender_system_server_external);
 
         if (intval(DEVMODE) === 1) {
-            $recommender_system_server_built_in_debug = new ilRadioOption(self::plugin()->translate("recommender_system_server_built_in_debug"), xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG);
-            $recommender_system_server_built_in_debug->setInfo(nl2br(str_replace("\\n", "\n", self::plugin()->translate("recommender_system_server_built_in_debug_info", "", ["[[question_id]]", "recomander_id", self::plugin()->directory() . "/classes/Recommender/debug/api/v1"])), false));
+            $recommender_system_server_built_in_debug = new ilRadioOption(self::plugin()->translate("recommender_system_server_built_in_debug"),
+                xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG);
+            $recommender_system_server_built_in_debug->setInfo(nl2br(str_replace("\\n", "\n", self::plugin()
+                ->translate("recommender_system_server_built_in_debug_info", "", ["[[question_id]]", "recomander_id", self::plugin()->directory() . "/classes/Recommender/debug/api/v1"])), false));
             $recommender_system_server->addOption($recommender_system_server_built_in_debug);
         }
 
@@ -160,6 +162,21 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
     }
 
 
+    /**
+     * @return bool|string
+     */
+    public function updateObject()
+    {
+        if (!$this->fillObject()) {
+            return false;
+        }
+        //$this->facade->training_object()->store();
+        $this->facade->settings()->store();
+
+        return true;
+    }
+
+
     public function fillObject()
     {
         if (!$this->checkInput()) {
@@ -179,21 +196,6 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
             $this->facade->settings()->setLearningProgress(intval($this->getInput('learning_progress')));
         }
-
-        return true;
-    }
-
-
-    /**
-     * @return bool|string
-     */
-    public function updateObject()
-    {
-        if (!$this->fillObject()) {
-            return false;
-        }
-        //$this->facade->training_object()->store();
-        $this->facade->settings()->store();
 
         return true;
     }

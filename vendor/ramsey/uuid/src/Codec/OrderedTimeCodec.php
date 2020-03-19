@@ -6,11 +6,12 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
- * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link https://packagist.org/packages/ramsey/uuid Packagist
- * @link https://github.com/ramsey/uuid GitHub
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link      https://packagist.org/packages/ramsey/uuid Packagist
+ * @link      https://github.com/ramsey/uuid GitHub
  */
+
 namespace Ramsey\Uuid\Codec;
 
 use InvalidArgumentException;
@@ -27,6 +28,7 @@ class OrderedTimeCodec extends StringCodec
      * Encodes a UuidInterface as an optimized binary representation of a UUID
      *
      * @param UuidInterface $uuid
+     *
      * @return string Binary string representation of a UUID
      */
     public function encodeBinary(UuidInterface $uuid)
@@ -45,10 +47,12 @@ class OrderedTimeCodec extends StringCodec
         return hex2bin(implode('', $optimized));
     }
 
+
     /**
      * Decodes an optimized binary representation of a UUID into a UuidInterface object instance
      *
      * @param string $bytes
+     *
      * @return UuidInterface
      * @throws InvalidArgumentException if string has not 16 characters
      */

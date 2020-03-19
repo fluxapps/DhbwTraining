@@ -27,15 +27,6 @@ class Renderer extends AbstractComponentRenderer
     /**
      * @inheritDoc
      */
-    protected function getComponentInterfaceName() : array
-    {
-        return [PieChartInterface::class];
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     public function render(Component $component, RendererInterface $default_renderer) : string
     {
         $this->checkComponent($component);
@@ -115,6 +106,15 @@ class Renderer extends AbstractComponentRenderer
         $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1) . "/..";
 
         $registry->register($dir . "/css/piechart.css");
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    protected function getComponentInterfaceName() : array
+    {
+        return [PieChartInterface::class];
     }
 
 

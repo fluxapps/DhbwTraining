@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
- * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link https://packagist.org/packages/ramsey/uuid Packagist
- * @link https://github.com/ramsey/uuid GitHub
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link      https://packagist.org/packages/ramsey/uuid Packagist
+ * @link      https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Codec;
@@ -27,10 +27,12 @@ use Ramsey\Uuid\UuidInterface;
  */
 class StringCodec implements CodecInterface
 {
+
     /**
      * @var UuidBuilderInterface
      */
     private $builder;
+
 
     /**
      * Constructs a StringCodec for use encoding and decoding UUIDs
@@ -42,10 +44,12 @@ class StringCodec implements CodecInterface
         $this->builder = $builder;
     }
 
+
     /**
      * Encodes a UuidInterface as a string representation of a UUID
      *
      * @param UuidInterface $uuid
+     *
      * @return string Hexadecimal string representation of a UUID
      */
     public function encode(UuidInterface $uuid)
@@ -58,10 +62,12 @@ class StringCodec implements CodecInterface
         );
     }
 
+
     /**
      * Encodes a UuidInterface as a binary representation of a UUID
      *
      * @param UuidInterface $uuid
+     *
      * @return string Binary string representation of a UUID
      */
     public function encodeBinary(UuidInterface $uuid)
@@ -69,25 +75,12 @@ class StringCodec implements CodecInterface
         return hex2bin($uuid->getHex());
     }
 
-    /**
-     * Decodes a string representation of a UUID into a UuidInterface object instance
-     *
-     * @param string $encodedUuid
-     * @return UuidInterface
-     * @throws InvalidUuidStringException
-     */
-    public function decode($encodedUuid)
-    {
-        $components = $this->extractComponents($encodedUuid);
-        $fields = $this->getFields($components);
-
-        return $this->builder->build($this, $fields);
-    }
 
     /**
      * Decodes a binary representation of a UUID into a UuidInterface object instance
      *
      * @param string $bytes
+     *
      * @return UuidInterface
      * @throws InvalidArgumentException if string has not 16 characters
      */
@@ -102,20 +95,29 @@ class StringCodec implements CodecInterface
         return $this->decode($hexUuid[1]);
     }
 
+
     /**
-     * Returns the UUID builder
+     * Decodes a string representation of a UUID into a UuidInterface object instance
      *
-     * @return UuidBuilderInterface
+     * @param string $encodedUuid
+     *
+     * @return UuidInterface
+     * @throws InvalidUuidStringException
      */
-    protected function getBuilder()
+    public function decode($encodedUuid)
     {
-        return $this->builder;
+        $components = $this->extractComponents($encodedUuid);
+        $fields = $this->getFields($components);
+
+        return $this->builder->build($this, $fields);
     }
+
 
     /**
      * Returns an array of UUID components (the UUID exploded on its dashes)
      *
      * @param string $encodedUuid
+     *
      * @return array
      * @throws InvalidUuidStringException
      */
@@ -149,22 +151,35 @@ class StringCodec implements CodecInterface
         return $components;
     }
 
+
     /**
      * Returns the fields that make up this UUID
      *
-     * @see \Ramsey\Uuid\UuidInterface::getFieldsHex()
      * @param array $components
+     *
      * @return array
+     * @see \Ramsey\Uuid\UuidInterface::getFieldsHex()
      */
     protected function getFields(array $components)
     {
         return [
-            'time_low' => str_pad($components[0], 8, '0', STR_PAD_LEFT),
-            'time_mid' => str_pad($components[1], 4, '0', STR_PAD_LEFT),
-            'time_hi_and_version' => str_pad($components[2], 4, '0', STR_PAD_LEFT),
+            'time_low'                  => str_pad($components[0], 8, '0', STR_PAD_LEFT),
+            'time_mid'                  => str_pad($components[1], 4, '0', STR_PAD_LEFT),
+            'time_hi_and_version'       => str_pad($components[2], 4, '0', STR_PAD_LEFT),
             'clock_seq_hi_and_reserved' => str_pad(substr($components[3], 0, 2), 2, '0', STR_PAD_LEFT),
-            'clock_seq_low' => str_pad(substr($components[3], 2), 2, '0', STR_PAD_LEFT),
-            'node' => str_pad($components[4], 12, '0', STR_PAD_LEFT)
+            'clock_seq_low'             => str_pad(substr($components[3], 2), 2, '0', STR_PAD_LEFT),
+            'node'                      => str_pad($components[4], 12, '0', STR_PAD_LEFT)
         ];
+    }
+
+
+    /**
+     * Returns the UUID builder
+     *
+     * @return UuidBuilderInterface
+     */
+    protected function getBuilder()
+    {
+        return $this->builder;
     }
 }

@@ -48,18 +48,22 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
     /**
      * @return string
      */
-    protected function getDataUrl() : string
+    public function getHtml() : string
     {
-        return "data:text/html;charset=UTF-8;base64," . base64_encode($this->html);
+        return $this->html;
     }
 
 
     /**
-     * @return string
+     * @param string $html
+     *
+     * @return self
      */
-    public function getHtml() : string
+    public function setHtml(string $html) : self
     {
-        return $this->html;
+        $this->html = $html;
+
+        return $this;
     }
 
 
@@ -99,15 +103,11 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
 
 
     /**
-     * @param string $html
-     *
-     * @return self
+     * @return string
      */
-    public function setHtml(string $html) : self
+    protected function getDataUrl() : string
     {
-        $this->html = $html;
-
-        return $this;
+        return "data:text/html;charset=UTF-8;base64," . base64_encode($this->html);
     }
 
 

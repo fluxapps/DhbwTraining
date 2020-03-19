@@ -54,50 +54,6 @@ class Config extends ActiveRecord
      * @var string
      */
     protected static $table_name;
-
-
-    /**
-     * @return string
-     */
-    public static function getTableName() : string
-    {
-        if (empty(self::$table_name)) {
-            throw new LogicException("table name is empty - please call repository earlier!");
-        }
-
-        return self::$table_name;
-    }
-
-
-    /**
-     * @param string $table_name
-     */
-    public static function setTableName(string $table_name)/* : void*/
-    {
-        self::$table_name = $table_name;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getConnectorContainerName() : string
-    {
-        return self::getTableName();
-    }
-
-
-    /**
-     * @inheritDoc
-     *
-     * @deprecated
-     */
-    public static function returnDbTableName() : string
-    {
-        return self::getTableName();
-    }
-
-
     /**
      * @var string
      *
@@ -127,6 +83,48 @@ class Config extends ActiveRecord
     public function __construct(/*?string*/ $primary_name_value = null, /*?*/ arConnector $connector = null)
     {
         parent::__construct($primary_name_value, $connector);
+    }
+
+
+    /**
+     * @inheritDoc
+     *
+     * @deprecated
+     */
+    public static function returnDbTableName() : string
+    {
+        return self::getTableName();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getConnectorContainerName() : string
+    {
+        return self::getTableName();
+    }
+
+
+    /**
+     * @return string
+     */
+    public static function getTableName() : string
+    {
+        if (empty(self::$table_name)) {
+            throw new LogicException("table name is empty - please call repository earlier!");
+        }
+
+        return self::$table_name;
+    }
+
+
+    /**
+     * @param string $table_name
+     */
+    public static function setTableName(string $table_name)/* : void*/
+    {
+        self::$table_name = $table_name;
     }
 
 

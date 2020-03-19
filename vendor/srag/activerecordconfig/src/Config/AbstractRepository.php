@@ -30,12 +30,39 @@ abstract class AbstractRepository
 
 
     /**
+     * @return string
+     */
+    protected abstract function getTableName() : string;
+
+
+    /**
      *
      */
     public function dropTables()/*: void*/
     {
         self::dic()->database()->dropTable(Config::getTableName(), false);
     }
+
+
+    /**
+     * @return array
+     */
+    public function getValues() : array
+    {
+        $values = [];
+
+        foreach ($this->getFields() as $name) {
+            $values[$name] = $this->getValue($name);
+        }
+
+        return $values;
+    }
+
+
+    /**
+     * @return array
+     */
+    protected abstract function getFields() : array;
 
 
     /**
@@ -90,17 +117,170 @@ abstract class AbstractRepository
 
 
     /**
-     * @return array
+     * @param string $name
+     * @param mixed  $default_value
+     *
+     * @return string
      */
-    public function getValues() : array
+    protected function getStringValue(string $name, $default_value = "") : string
     {
-        $values = [];
+        return strval($this->getXValue($name, $default_value));
+    }
 
-        foreach ($this->getFields() as $name) {
-            $values[$name] = $this->getValue($name);
+
+    /**
+     * @param string $name
+     * @param mixed  $default_value
+     *
+     * @return mixed
+     */
+    protected function getXValue(string $name, $default_value = null)
+    {
+        $config = $this->getConfig($name);
+
+        $value = $config->getValue();
+
+        if ($value === null) {
+            $value = $default_value;
         }
 
-        return $values;
+        return $value;
+    }
+
+
+    /**
+     * @param string $name
+     * @param bool   $store_new
+     *
+     * @return Config
+     */
+    protected function getConfig(string $name, bool $store_new = true) : Config
+    {
+        /**
+         * @var Config $config
+         */
+
+        $config = Config::where([
+            "name" => $name
+        ])->first();
+
+        if ($config === null) {
+            $config = $this->factory()->newInstance();
+
+            $config->setName($name);
+
+            if ($store_new) {
+                $this->storeConfig($config);
+            }
+        }
+
+        return $config;
+    }
+
+
+    /**
+     * @return AbstractFactory
+     */
+    public abstract function factory() : AbstractFactory;
+
+
+    /**
+     * @param Config $config
+     */
+    protected function storeConfig(Config $config)/*:void*/
+    {
+        $config->store();
+    }
+
+
+    /**
+     * @param string $name
+     * @param mixed  $default_value
+     *
+     * @return int
+     */
+    protected function getIntegerValue(string $name, $default_value = 0) : int
+    {
+        return intval($this->getXValue($name, $default_value));
+    }
+
+
+    /**
+     * @param string $name
+     * @param mixed  $default_value
+     *
+     * @return float
+     */
+    protected function getFloatValue(string $name, $default_value = 0.0) : float
+    {
+        return floatval($this->getXValue($name, $default_value));
+    }
+
+
+    /**
+     * @param string $name
+     * @param mixed  $default_value
+     *
+     * @return bool
+     */
+    protected function getBooleanValue(string $name, $default_value = false) : bool
+    {
+        return boolval(filter_var($this->getXValue($name, $default_value), FILTER_VALIDATE_BOOLEAN));
+    }
+
+
+    /**
+     * @param string $name
+     * @param int    $default_value
+     *
+     * @return int
+     */
+    protected function getTimestampValue(string $name, int $default_value = 0) : int
+    {
+        $value = $this->getDateTimeValue($name);
+
+        if ($value !== null) {
+            return $value->getUnixTime();
+        } else {
+            return $default_value;
+        }
+    }
+
+
+    /**
+     * @param string          $name
+     * @param ilDateTime|null $default_value
+     *
+     * @return ilDateTime|null
+     */
+    protected function getDateTimeValue(string $name, /*?*/ ilDateTime $default_value = null)/*:?ilDateTime*/
+    {
+        $value = $this->getXValue($name);
+
+        if ($value !== null) {
+            try {
+                $value = new ilDateTime(IL_CAL_DATETIME, $value);
+            } catch (ilDateTimeException $ex) {
+                $value = $default_value;
+            }
+        } else {
+            $value = $default_value;
+        }
+
+        return $value;
+    }
+
+
+    /**
+     * @param string $name
+     * @param bool   $assoc
+     * @param mixed  $default_value
+     *
+     * @return mixed
+     */
+    protected function getJsonValue(string $name, bool $assoc = false, $default_value = null)
+    {
+        return json_decode($this->getXValue($name, json_encode($default_value)), $assoc);
     }
 
 
@@ -121,6 +301,31 @@ abstract class AbstractRepository
         $config = $this->getConfig($name, false);
 
         $this->deleteConfig($config);
+    }
+
+
+    /**
+     * @param Config $config
+     */
+    protected function deleteConfig(Config $config)/*:void*/
+    {
+        $config->delete();
+    }
+
+
+    /**
+     * @param array $values
+     * @param bool  $remove_exists
+     */
+    public function setValues(array $values, bool $remove_exists = false)/*: void*/
+    {
+        if ($remove_exists) {
+            Config::truncateDB();
+        }
+
+        foreach ($values as $name => $value) {
+            $this->setValue($name, $value);
+        }
     }
 
 
@@ -185,86 +390,12 @@ abstract class AbstractRepository
 
 
     /**
-     * @param array $values
-     * @param bool  $remove_exists
-     */
-    public function setValues(array $values, bool $remove_exists = false)/*: void*/
-    {
-        if ($remove_exists) {
-            Config::truncateDB();
-        }
-
-        foreach ($values as $name => $value) {
-            $this->setValue($name, $value);
-        }
-    }
-
-
-    /**
-     * @param Config $config
-     */
-    protected function deleteConfig(Config $config)/*:void*/
-    {
-        $config->delete();
-    }
-
-
-    /**
-     * @param Config $config
-     */
-    protected function storeConfig(Config $config)/*:void*/
-    {
-        $config->store();
-    }
-
-
-    /**
      * @param string $name
-     * @param bool   $store_new
-     *
-     * @return Config
+     * @param mixed  $value
      */
-    protected function getConfig(string $name, bool $store_new = true) : Config
+    protected function setStringValue(string $name, $value)/*: void*/
     {
-        /**
-         * @var Config $config
-         */
-
-        $config = Config::where([
-            "name" => $name
-        ])->first();
-
-        if ($config === null) {
-            $config = $this->factory()->newInstance();
-
-            $config->setName($name);
-
-            if ($store_new) {
-                $this->storeConfig($config);
-            }
-        }
-
-        return $config;
-    }
-
-
-    /**
-     * @param string $name
-     * @param mixed  $default_value
-     *
-     * @return mixed
-     */
-    protected function getXValue(string $name, $default_value = null)
-    {
-        $config = $this->getConfig($name);
-
-        $value = $config->getValue();
-
-        if ($value === null) {
-            $value = $default_value;
-        }
-
-        return $value;
+        $this->setXValue($name, strval($value));
     }
 
 
@@ -284,57 +415,11 @@ abstract class AbstractRepository
 
     /**
      * @param string $name
-     * @param mixed  $default_value
-     *
-     * @return string
-     */
-    protected function getStringValue(string $name, $default_value = "") : string
-    {
-        return strval($this->getXValue($name, $default_value));
-    }
-
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     */
-    protected function setStringValue(string $name, $value)/*: void*/
-    {
-        $this->setXValue($name, strval($value));
-    }
-
-
-    /**
-     * @param string $name
-     * @param mixed  $default_value
-     *
-     * @return int
-     */
-    protected function getIntegerValue(string $name, $default_value = 0) : int
-    {
-        return intval($this->getXValue($name, $default_value));
-    }
-
-
-    /**
-     * @param string $name
      * @param mixed  $value
      */
     protected function setIntegerValue(string $name, $value)/*: void*/
     {
         $this->setXValue($name, intval($value));
-    }
-
-
-    /**
-     * @param string $name
-     * @param mixed  $default_value
-     *
-     * @return float
-     */
-    protected function getFloatValue(string $name, $default_value = 0.0) : float
-    {
-        return floatval($this->getXValue($name, $default_value));
     }
 
 
@@ -350,41 +435,11 @@ abstract class AbstractRepository
 
     /**
      * @param string $name
-     * @param mixed  $default_value
-     *
-     * @return bool
-     */
-    protected function getBooleanValue(string $name, $default_value = false) : bool
-    {
-        return boolval(filter_var($this->getXValue($name, $default_value), FILTER_VALIDATE_BOOLEAN));
-    }
-
-
-    /**
-     * @param string $name
      * @param mixed  $value
      */
     protected function setBooleanValue(string $name, $value)/*: void*/
     {
         $this->setXValue($name, json_encode(boolval(filter_var($value, FILTER_VALIDATE_BOOLEAN))));
-    }
-
-
-    /**
-     * @param string $name
-     * @param int    $default_value
-     *
-     * @return int
-     */
-    protected function getTimestampValue(string $name, int $default_value = 0) : int
-    {
-        $value = $this->getDateTimeValue($name);
-
-        if ($value !== null) {
-            return $value->getUnixTime();
-        } else {
-            return $default_value;
-        }
     }
 
 
@@ -408,30 +463,6 @@ abstract class AbstractRepository
 
     /**
      * @param string          $name
-     * @param ilDateTime|null $default_value
-     *
-     * @return ilDateTime|null
-     */
-    protected function getDateTimeValue(string $name, /*?*/ ilDateTime $default_value = null)/*:?ilDateTime*/
-    {
-        $value = $this->getXValue($name);
-
-        if ($value !== null) {
-            try {
-                $value = new ilDateTime(IL_CAL_DATETIME, $value);
-            } catch (ilDateTimeException $ex) {
-                $value = $default_value;
-            }
-        } else {
-            $value = $default_value;
-        }
-
-        return $value;
-    }
-
-
-    /**
-     * @param string          $name
      * @param ilDateTime|null $value
      */
     protected function setDateTimeValue(string $name, /*?*/ ilDateTime $value = null)/*: void*/
@@ -446,14 +477,10 @@ abstract class AbstractRepository
 
     /**
      * @param string $name
-     * @param bool   $assoc
-     * @param mixed  $default_value
-     *
-     * @return mixed
      */
-    protected function getJsonValue(string $name, bool $assoc = false, $default_value = null)
+    protected function setNullValue(string $name)/*: void*/
     {
-        return json_decode($this->getXValue($name, json_encode($default_value)), $assoc);
+        $this->setXValue($name, null);
     }
 
 
@@ -476,31 +503,4 @@ abstract class AbstractRepository
     {
         return ($this->getXValue($name) === null);
     }
-
-
-    /**
-     * @param string $name
-     */
-    protected function setNullValue(string $name)/*: void*/
-    {
-        $this->setXValue($name, null);
-    }
-
-
-    /**
-     * @return AbstractFactory
-     */
-    public abstract function factory() : AbstractFactory;
-
-
-    /**
-     * @return string
-     */
-    protected abstract function getTableName() : string;
-
-
-    /**
-     * @return array
-     */
-    protected abstract function getFields() : array;
 }

@@ -30,6 +30,15 @@ final class Waiter
 
 
     /**
+     * Waiter constructor
+     */
+    private function __construct()
+    {
+
+    }
+
+
+    /**
      * @param string $type
      */
     public static final function init(/*string*/ $type)/*: void*/
@@ -46,14 +55,5 @@ final class Waiter
         }
 
         self::dic()->ui()->mainTemplate()->addOnLoadCode('il.waiter.init("' . $type . '");');
-    }
-
-
-    /**
-     * Waiter constructor
-     */
-    private function __construct()
-    {
-
     }
 }

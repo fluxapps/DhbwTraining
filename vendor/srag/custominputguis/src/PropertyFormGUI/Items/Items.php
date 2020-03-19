@@ -39,18 +39,11 @@ final class Items
 
 
     /**
-     *
+     * Items constructor
      */
-    public static function init()/*: void*/
+    private function __construct()
     {
-        if (self::$init === false) {
-            self::$init = true;
 
-            $dir = __DIR__;
-            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/input_gui_input.css");
-        }
     }
 
 
@@ -125,6 +118,97 @@ final class Items
         }
 
         return $item;
+    }
+
+
+    /**
+     * @param ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item
+     * @param array                                                  $properties
+     */
+    private static function setPropertiesToItem($item, array $properties)/*: void*/
+    {
+        foreach ($properties as $property_key => $property_value) {
+            $property = "";
+
+            switch ($property_key) {
+                case PropertyFormGUI::PROPERTY_DISABLED:
+                    $property = "setDisabled";
+                    break;
+
+                case PropertyFormGUI::PROPERTY_MULTI:
+                    $property = "setMulti";
+                    break;
+
+                case PropertyFormGUI::PROPERTY_OPTIONS:
+                    $property = "setOptions";
+                    $property_value = [$property_value];
+                    break;
+
+                case PropertyFormGUI::PROPERTY_REQUIRED:
+                    $property = "setRequired";
+                    break;
+
+                case PropertyFormGUI::PROPERTY_CLASS:
+                case PropertyFormGUI::PROPERTY_NOT_ADD:
+                case PropertyFormGUI::PROPERTY_SUBITEMS:
+                case PropertyFormGUI::PROPERTY_VALUE:
+                    break;
+
+                default:
+                    $property = $property_key;
+                    break;
+            }
+
+            if (!empty($property)) {
+                if (!is_array($property_value)) {
+                    $property_value = [$property_value];
+                }
+
+                call_user_func_array([$item, $property], $property_value);
+            }
+        }
+    }
+
+
+    /**
+     * @param ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item
+     * @param mixed                                                  $value
+     */
+    public static function setValueToItem($item, $value)/*: void*/
+    {
+        if ($item instanceof MultiLineInputGUI) {
+            $item->setValueByArray([
+                $item->getPostVar() => $value
+            ]);
+
+            return;
+        }
+
+        if (method_exists($item, "setChecked")) {
+            $item->setChecked($value);
+
+            return;
+        }
+
+        if (method_exists($item, "setDate")) {
+            if (is_string($value)) {
+                $value = new ilDateTime($value, IL_CAL_DATE);
+            }
+
+            $item->setDate($value);
+
+            return;
+        }
+
+        if (method_exists($item, "setImage")) {
+            $item->setImage($value);
+
+            return;
+        }
+
+        if (method_exists($item, "setValue") && !($item instanceof ilRadioOption)) {
+            $item->setValue($value);
+        }
     }
 
 
@@ -222,92 +306,17 @@ final class Items
 
 
     /**
-     * @param ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item
-     * @param array                                                  $properties
+     *
      */
-    private static function setPropertiesToItem($item, array $properties)/*: void*/
+    public static function init()/*: void*/
     {
-        foreach ($properties as $property_key => $property_value) {
-            $property = "";
+        if (self::$init === false) {
+            self::$init = true;
 
-            switch ($property_key) {
-                case PropertyFormGUI::PROPERTY_DISABLED:
-                    $property = "setDisabled";
-                    break;
+            $dir = __DIR__;
+            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
 
-                case PropertyFormGUI::PROPERTY_MULTI:
-                    $property = "setMulti";
-                    break;
-
-                case PropertyFormGUI::PROPERTY_OPTIONS:
-                    $property = "setOptions";
-                    $property_value = [$property_value];
-                    break;
-
-                case PropertyFormGUI::PROPERTY_REQUIRED:
-                    $property = "setRequired";
-                    break;
-
-                case PropertyFormGUI::PROPERTY_CLASS:
-                case PropertyFormGUI::PROPERTY_NOT_ADD:
-                case PropertyFormGUI::PROPERTY_SUBITEMS:
-                case PropertyFormGUI::PROPERTY_VALUE:
-                    break;
-
-                default:
-                    $property = $property_key;
-                    break;
-            }
-
-            if (!empty($property)) {
-                if (!is_array($property_value)) {
-                    $property_value = [$property_value];
-                }
-
-                call_user_func_array([$item, $property], $property_value);
-            }
-        }
-    }
-
-
-    /**
-     * @param ilFormPropertyGUI|ilFormSectionHeaderGUI|ilRadioOption $item
-     * @param mixed                                                  $value
-     */
-    public static function setValueToItem($item, $value)/*: void*/
-    {
-        if ($item instanceof MultiLineInputGUI) {
-            $item->setValueByArray([
-                $item->getPostVar() => $value
-            ]);
-
-            return;
-        }
-
-        if (method_exists($item, "setChecked")) {
-            $item->setChecked($value);
-
-            return;
-        }
-
-        if (method_exists($item, "setDate")) {
-            if (is_string($value)) {
-                $value = new ilDateTime($value, IL_CAL_DATE);
-            }
-
-            $item->setDate($value);
-
-            return;
-        }
-
-        if (method_exists($item, "setImage")) {
-            $item->setImage($value);
-
-            return;
-        }
-
-        if (method_exists($item, "setValue") && !($item instanceof ilRadioOption)) {
-            $item->setValue($value);
+            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/input_gui_input.css");
         }
     }
 
@@ -333,6 +342,17 @@ final class Items
 
 
     /**
+     * @param string $string
+     *
+     * @return string
+     */
+    public static function strToCamelCase($string)
+    {
+        return str_replace("_", "", ucwords($string, "_"));
+    }
+
+
+    /**
      * @param object $object
      * @param string $property
      * @param mixed  $value
@@ -350,25 +370,5 @@ final class Items
                 }
             }
         }
-    }
-
-
-    /**
-     * @param string $string
-     *
-     * @return string
-     */
-    public static function strToCamelCase($string)
-    {
-        return str_replace("_", "", ucwords($string, "_"));
-    }
-
-
-    /**
-     * Items constructor
-     */
-    private function __construct()
-    {
-
     }
 }

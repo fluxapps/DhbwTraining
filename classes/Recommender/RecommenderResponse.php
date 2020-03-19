@@ -8,58 +8,56 @@ use srag\DIC\DhbwTraining\DICTrait;
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
-class RecommenderResponse {
+class RecommenderResponse
+{
 
     use DICTrait;
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
-
-	const STATUS_SUCCESS = "success";
-	const STATUS_ERROR = "error";
-
-	const RESPONSE_TYPE_PAGE = 1;
-	const RESPONSE_TYPE_IN_PROGRESS = 2;
-	const RESPONSE_TYPE_NEXT_QUESTION = 3;
-	const RESPONSE_TYPE_TEST_IS_FINISHED = 4;
-
-	const RESPONSE_TYPE = ['MESSAGE_PAGE' => self::RESPONSE_TYPE_PAGE ,
-		                   'QUESTION_IN_PROGRESS' => self::RESPONSE_TYPE_IN_PROGRESS,
-		                   'NEXT_QUESTION' => self::RESPONSE_TYPE_NEXT_QUESTION,
-							'TEST_IS_FINISHED' => self::RESPONSE_TYPE_TEST_IS_FINISHED];
-
+    const STATUS_SUCCESS = "success";
+    const STATUS_ERROR = "error";
+    const RESPONSE_TYPE_PAGE = 1;
+    const RESPONSE_TYPE_IN_PROGRESS = 2;
+    const RESPONSE_TYPE_NEXT_QUESTION = 3;
+    const RESPONSE_TYPE_TEST_IS_FINISHED = 4;
+    const RESPONSE_TYPE
+        = [
+            'MESSAGE_PAGE'         => self::RESPONSE_TYPE_PAGE,
+            'QUESTION_IN_PROGRESS' => self::RESPONSE_TYPE_IN_PROGRESS,
+            'NEXT_QUESTION'        => self::RESPONSE_TYPE_NEXT_QUESTION,
+            'TEST_IS_FINISHED'     => self::RESPONSE_TYPE_TEST_IS_FINISHED
+        ];
     const MESSAGE_TYPE_SUCCESS = ilTemplate::MESSAGE_TYPE_SUCCESS;
     const MESSAGE_TYPE_INFO = ilTemplate::MESSAGE_TYPE_INFO;
     const MESSAGE_TYPE_QUESTION = ilTemplate::MESSAGE_TYPE_QUESTION;
     const MESSAGE_TYPE_FAILURE = ilTemplate::MESSAGE_TYPE_FAILURE;
-
     const LEARNING_PROGRESS_STATUS_NOT_ATTEMPTED = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
     const LEARNING_PROGRESS_STATUS_IN_PROGRESS = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;
     const LEARNING_PROGRESS_STATUS_COMPLETED = ilLPStatus::LP_STATUS_COMPLETED_NUM;
     const LEARNING_PROGRESS_STATUS_FAILED = ilLPStatus::LP_STATUS_FAILED_NUM;
-
-	/**
-	 * @var string
-	 */
-	protected $status = "";
-	/**
-	 * @var int
-	 */
-	protected $response_type = 0;
-	/**
-	 * @var string
-	 */
-	protected $recomander_id = "";
-	/**
-	 * @var string
-	 */
-	protected $message = "";
     /**
      * @var string
      */
-	protected $message_type = self::MESSAGE_TYPE_INFO;
-	/**
-	 * @var string
-	 */
-	protected $answer_response = "";
+    protected $status = "";
+    /**
+     * @var int
+     */
+    protected $response_type = 0;
+    /**
+     * @var string
+     */
+    protected $recomander_id = "";
+    /**
+     * @var string
+     */
+    protected $message = "";
+    /**
+     * @var string
+     */
+    protected $message_type = self::MESSAGE_TYPE_INFO;
+    /**
+     * @var string
+     */
+    protected $answer_response = "";
     /**
      * @var string
      */
@@ -94,70 +92,76 @@ class RecommenderResponse {
     protected $send_failure = [];
 
 
+    /**
+     * @return string
+     */
+    public function getStatus() : string
+    {
+        return $this->status;
+    }
 
 
-	/**
-	 * @return string
-	 */
-	public function getStatus(): string {
-		return $this->status;
-	}
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+    }
 
 
-	/**
-	 * @param string $status
-	 */
-	public function setStatus(string $status) {
-		$this->status = $status;
-	}
+    /**
+     * @return int
+     */
+    public function getResponseType() : int
+    {
+        return $this->response_type;
+    }
 
 
-	/**
-	 * @return int
-	 */
-	public function getResponseType(): int {
-		return $this->response_type;
-	}
+    /**
+     * @param int $response_type
+     */
+    public function setResponseType(int $response_type)
+    {
+        $this->response_type = $response_type;
+    }
 
 
-	/**
-	 * @param int $response_type
-	 */
-	public function setResponseType(int $response_type) {
-		$this->response_type = $response_type;
-	}
+    /**
+     * @return string
+     */
+    public function getRecomanderId() : string
+    {
+        return $this->recomander_id;
+    }
 
 
-	/**
-	 * @return string
-	 */
-	public function getRecomanderId(): string {
-		return $this->recomander_id;
-	}
+    /**
+     * @param string $recomander_id
+     */
+    public function setRecomanderId(string $recomander_id)
+    {
+        $this->recomander_id = $recomander_id;
+    }
 
 
-	/**
-	 * @param string $recomander_id
-	 */
-	public function setRecomanderId(string $recomander_id) {
-		$this->recomander_id = $recomander_id;
-	}
+    /**
+     * @return string
+     */
+    public function getMessage() : string
+    {
+        return $this->message;
+    }
 
 
-	/**
-	 * @return string
-	 */
-	public function getMessage(): string {
-		return $this->message;
-	}
-
-
-	/**
-	 * @param string $message
-	 */
-	public function setMessage(string $message) {
-		$this->message = $message;
-	}
+    /**
+     * @param string $message
+     */
+    public function setMessage(string $message)
+    {
+        $this->message = $message;
+    }
 
 
     /**
@@ -178,20 +182,22 @@ class RecommenderResponse {
     }
 
 
-	/**
-	 * @return string
-	 */
-	public function getAnswerResponse(): string {
-		return $this->answer_response;
-	}
+    /**
+     * @return string
+     */
+    public function getAnswerResponse() : string
+    {
+        return $this->answer_response;
+    }
 
 
-	/**
-	 * @param string $answer_response
-	 */
-	public function setAnswerResponse(string $answer_response) {
-		$this->answer_response = $answer_response;
-	}
+    /**
+     * @param string $answer_response
+     */
+    public function setAnswerResponse(string $answer_response)
+    {
+        $this->answer_response = $answer_response;
+    }
 
 
     /**
@@ -224,7 +230,7 @@ class RecommenderResponse {
     /**
      * @param float|null $progress
      */
-    public function setProgress(/*?*/float $progress = null)/*:void*/
+    public function setProgress(/*?*/ float $progress = null)/*:void*/
     {
         $this->progress = $progress;
     }
@@ -285,15 +291,6 @@ class RecommenderResponse {
 
 
     /**
-     * @param string $send_success
-     */
-    public function addSendSuccess(string $send_success)/*:void*/
-    {
-        $this->send_success[] = $send_success;
-    }
-
-
-    /**
      * @return array
      */
     public function getSendInfo() : array
@@ -308,15 +305,6 @@ class RecommenderResponse {
     public function setSendInfo(array $send_info)/*:void*/
     {
         $this->send_info = $send_info;
-    }
-
-
-    /**
-     * @param string $send_info
-     */
-    public function addSendInfo(string $send_info)/*:void*/
-    {
-        $this->send_info[] = $send_info;
     }
 
 
@@ -339,15 +327,6 @@ class RecommenderResponse {
 
 
     /**
-     * @param string $send_question
-     */
-    public function addSendQuestion(string $send_question)/*:void*/
-    {
-        $this->send_question[] = $send_question;
-    }
-
-
-    /**
      * @return array
      */
     public function getSendFailure() : array
@@ -362,15 +341,6 @@ class RecommenderResponse {
     public function setSendFailure(array $send_failure)/*:void*/
     {
         $this->send_failure = $send_failure;
-    }
-
-
-    /**
-     * @param string $send_failure
-     */
-    public function addSendFailure(string $send_failure)/*:void*/
-    {
-        $this->send_failure[] = $send_failure;
     }
 
 
@@ -398,6 +368,42 @@ class RecommenderResponse {
                 $this->addSendInfo($message);
                 break;
         }
+    }
+
+
+    /**
+     * @param string $send_success
+     */
+    public function addSendSuccess(string $send_success)/*:void*/
+    {
+        $this->send_success[] = $send_success;
+    }
+
+
+    /**
+     * @param string $send_question
+     */
+    public function addSendQuestion(string $send_question)/*:void*/
+    {
+        $this->send_question[] = $send_question;
+    }
+
+
+    /**
+     * @param string $send_failure
+     */
+    public function addSendFailure(string $send_failure)/*:void*/
+    {
+        $this->send_failure[] = $send_failure;
+    }
+
+
+    /**
+     * @param string $send_info
+     */
+    public function addSendInfo(string $send_info)/*:void*/
+    {
+        $this->send_info[] = $send_info;
     }
 
 
@@ -458,5 +464,4 @@ class RecommenderResponse {
 
         return self::output()->getHTML($progress_bar);
     }
-
 }

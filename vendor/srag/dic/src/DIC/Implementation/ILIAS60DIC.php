@@ -414,21 +414,21 @@ final class ILIAS60DIC extends AbstractDIC
 
     /**
      * @inheritDoc
-     */
-    public function rbac() : RBACServices
-    {
-        return $this->dic->rbac();
-    }
-
-
-    /**
-     * @inheritDoc
      *
      * @deprecated Please use `self::dic()->rba()->admin()`
      */
     public function rbacadmin() : ilRbacAdmin
     {
         return $this->rbac()->admin();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function rbac() : RBACServices
+    {
+        return $this->dic->rbac();
     }
 
 

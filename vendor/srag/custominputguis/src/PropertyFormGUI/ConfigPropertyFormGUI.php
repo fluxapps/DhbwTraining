@@ -42,6 +42,19 @@ abstract class ConfigPropertyFormGUI extends PropertyFormGUI
 
 
     /**
+     * @throws PropertyFormGUIException Your class needs to implement the CONFIG_CLASS_NAME constant!
+     *
+     * @deprecated
+     */
+    private final function checkConfigClassNameConst()/*: void*/
+    {
+        if (!defined("static::CONFIG_CLASS_NAME") || empty(static::CONFIG_CLASS_NAME) || !class_exists(static::CONFIG_CLASS_NAME)) {
+            throw new PropertyFormGUIException("Your class needs to implement the CONFIG_CLASS_NAME constant!", PropertyFormGUIException::CODE_MISSING_CONST_CONFIG_CLASS_NAME);
+        }
+    }
+
+
+    /**
      * @inheritDoc
      *
      * @deprecated
@@ -62,18 +75,5 @@ abstract class ConfigPropertyFormGUI extends PropertyFormGUI
     {
         //(static::CONFIG_CLASS_NAME)::setField($key, $value);
         call_user_func(static::CONFIG_CLASS_NAME . "::setField", $key, $value);
-    }
-
-
-    /**
-     * @throws PropertyFormGUIException Your class needs to implement the CONFIG_CLASS_NAME constant!
-     *
-     * @deprecated
-     */
-    private final function checkConfigClassNameConst()/*: void*/
-    {
-        if (!defined("static::CONFIG_CLASS_NAME") || empty(static::CONFIG_CLASS_NAME) || !class_exists(static::CONFIG_CLASS_NAME)) {
-            throw new PropertyFormGUIException("Your class needs to implement the CONFIG_CLASS_NAME constant!", PropertyFormGUIException::CODE_MISSING_CONST_CONFIG_CLASS_NAME);
-        }
     }
 }

@@ -39,42 +39,6 @@ class xdhtPageObjectGUI extends ilPageObjectGUI
 
 
     /**
-     * @inheritDoc
-     */
-    public function executeCommand()/*:void*/
-    {
-        self::dic()->tabs()->activateSubTab(xdhtStartGUI::TAB_EDIT_PAGE);
-
-        if (!self::dic()->access()->checkAccess("write", "", $this->facade->refId())) {
-            ilUtil::sendFailure(self::plugin()->translate('permission_denied'));
-
-            self::output()->output("", true);
-
-            return;
-        }
-
-        $html = strval(parent::executeCommand());
-
-        $this->fixTabs();
-
-        self::output()->output($html, true);
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getHTML() : string
-    {
-        $html = strval(parent::getHTML());
-
-        $this->fixTabs();
-
-        return $html;
-    }
-
-
-    /**
      *
      */
     protected function checkAndAddCOPageDefinition()/*:void*/
@@ -101,6 +65,29 @@ class xdhtPageObjectGUI extends ilPageObjectGUI
 
 
     /**
+     * @inheritDoc
+     */
+    public function executeCommand()/*:void*/
+    {
+        self::dic()->tabs()->activateSubTab(xdhtStartGUI::TAB_EDIT_PAGE);
+
+        if (!self::dic()->access()->checkAccess("write", "", $this->facade->refId())) {
+            ilUtil::sendFailure(self::plugin()->translate('permission_denied'));
+
+            self::output()->output("", true);
+
+            return;
+        }
+
+        $html = strval(parent::executeCommand());
+
+        $this->fixTabs();
+
+        self::output()->output($html, true);
+    }
+
+
+    /**
      *
      */
     protected function fixTabs()/*:void*/
@@ -110,5 +97,18 @@ class xdhtPageObjectGUI extends ilPageObjectGUI
         self::dic()->tabs()->removeTab('history');
         self::dic()->tabs()->removeTab('clipboard');
         self::dic()->tabs()->removeTab('pg');
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getHTML() : string
+    {
+        $html = strval(parent::getHTML());
+
+        $this->fixTabs();
+
+        return $html;
     }
 }

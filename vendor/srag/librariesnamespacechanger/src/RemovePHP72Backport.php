@@ -28,34 +28,6 @@ final class RemovePHP72Backport
             "md",
             "php"
         ];
-
-
-    /**
-     * @param Event $event
-     *
-     * @return self
-     */
-    private static function getInstance(Event $event) : self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self($event);
-        }
-
-        return self::$instance;
-    }
-
-
-    /**
-     * @param Event $event
-     *
-     * @internal
-     */
-    public static function RemovePHP72Backport(Event $event)/*: void*/
-    {
-        self::getInstance($event)->doRemovePHP72Backport();
-    }
-
-
     /**
      * @var Event
      */
@@ -74,6 +46,17 @@ final class RemovePHP72Backport
 
 
     /**
+     * @param Event $event
+     *
+     * @internal
+     */
+    public static function RemovePHP72Backport(Event $event)/*: void*/
+    {
+        self::getInstance($event)->doRemovePHP72Backport();
+    }
+
+
+    /**
      *
      */
     private function doRemovePHP72Backport()/*: void*/
@@ -88,6 +71,31 @@ final class RemovePHP72Backport
             $code = $this->removeConvertPHP72To70($code);
 
             file_put_contents($file, $code);
+        }
+    }
+
+
+    /**
+     * @param string $folder
+     * @param array  $files
+     */
+    private function getFiles(string $folder, array &$files = [])/*: void*/
+    {
+        $paths = scandir($folder);
+
+        foreach ($paths as $file) {
+            if ($file !== "." && $file !== "..") {
+                $path = $folder . "/" . $file;
+
+                if (is_dir($path)) {
+                    $this->getFiles($path, $files);
+                } else {
+                    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                    if (in_array($ext, self::$exts)) {
+                        array_push($files, $path);
+                    }
+                }
+            }
         }
     }
 
@@ -131,26 +139,16 @@ final class RemovePHP72Backport
 
 
     /**
-     * @param string $folder
-     * @param array  $files
+     * @param Event $event
+     *
+     * @return self
      */
-    private function getFiles(string $folder, array &$files = [])/*: void*/
+    private static function getInstance(Event $event) : self
     {
-        $paths = scandir($folder);
-
-        foreach ($paths as $file) {
-            if ($file !== "." && $file !== "..") {
-                $path = $folder . "/" . $file;
-
-                if (is_dir($path)) {
-                    $this->getFiles($path, $files);
-                } else {
-                    $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
-                    if (in_array($ext, self::$exts)) {
-                        array_push($files, $path);
-                    }
-                }
-            }
+        if (self::$instance === null) {
+            self::$instance = new self($event);
         }
+
+        return self::$instance;
     }
 }

@@ -39,31 +39,18 @@ class ActiveRecordConfig extends Config
 
 
     /**
-     * @return ActiveRecordConfigRepository
+     * ActiveRecordConfig constructor
+     *
+     * @param string|null      $primary_name_value
+     * @param arConnector|null $connector
      *
      * @deprecated
      */
-    protected static function config() : ActiveRecordConfigRepository
+    public function __construct(/*?string*/ $primary_name_value = null, /*?*/ arConnector $connector = null)
     {
-        return ActiveRecordConfigRepository::getInstance(static::TABLE_NAME, static::$fields);
-    }
+        self::config();
 
-
-    /**
-     * @param string $name
-     * @param int    $type
-     * @param mixed  $default_value
-     *
-     * @return mixed
-     *
-     * @throws ActiveRecordConfigException
-     *
-     * @deprecated
-     */
-    protected static final function getDefaultValue(string $name, int $type, $default_value)
-    {
-        throw new ActiveRecordConfigException("getDefaultValue is not supported anymore - please try to use the second parameter in the fields array instead!",
-            ActiveRecordConfigException::CODE_INVALID_FIELD);
+        parent::__construct($primary_name_value, $connector);
     }
 
 
@@ -81,6 +68,17 @@ class ActiveRecordConfig extends Config
 
 
     /**
+     * @return ActiveRecordConfigRepository
+     *
+     * @deprecated
+     */
+    protected static function config() : ActiveRecordConfigRepository
+    {
+        return ActiveRecordConfigRepository::getInstance(static::TABLE_NAME, static::$fields);
+    }
+
+
+    /**
      * Get all values
      *
      * @return array [ [ "name" => value ], ... ]
@@ -90,6 +88,20 @@ class ActiveRecordConfig extends Config
     public static function getFields() : array
     {
         return self::config()->getValues();
+    }
+
+
+    /**
+     * Set all values
+     *
+     * @param array $fields        [ [ "name" => value ], ... ]
+     * @param bool  $remove_exists Delete all exists name before
+     *
+     * @deprecated
+     */
+    public static function setFields(array $fields, bool $remove_exists = false)/*: void*/
+    {
+        self::config()->setValues($fields, $remove_exists);
     }
 
 
@@ -119,32 +131,20 @@ class ActiveRecordConfig extends Config
 
 
     /**
-     * Set all values
+     * @param string $name
+     * @param int    $type
+     * @param mixed  $default_value
      *
-     * @param array $fields        [ [ "name" => value ], ... ]
-     * @param bool  $remove_exists Delete all exists name before
+     * @return mixed
      *
-     * @deprecated
-     */
-    public static function setFields(array $fields, bool $remove_exists = false)/*: void*/
-    {
-        self::config()->setValues($fields, $remove_exists);
-    }
-
-
-    /**
-     * ActiveRecordConfig constructor
-     *
-     * @param string|null      $primary_name_value
-     * @param arConnector|null $connector
+     * @throws ActiveRecordConfigException
      *
      * @deprecated
      */
-    public function __construct(/*?string*/ $primary_name_value = null, /*?*/ arConnector $connector = null)
+    protected static final function getDefaultValue(string $name, int $type, $default_value)
     {
-        self::config();
-
-        parent::__construct($primary_name_value, $connector);
+        throw new ActiveRecordConfigException("getDefaultValue is not supported anymore - please try to use the second parameter in the fields array instead!",
+            ActiveRecordConfigException::CODE_INVALID_FIELD);
     }
 }
 
@@ -166,26 +166,6 @@ final class ActiveRecordConfigRepository extends AbstractRepository
      * @deprecated
      */
     protected static $instance = null;
-
-
-    /**
-     * @param string $table_name
-     * @param array  $fields
-     *
-     * @return self
-     *
-     * @deprecated
-     */
-    public static function getInstance(string $table_name, array $fields) : self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self($table_name, $fields);
-        }
-
-        return self::$instance;
-    }
-
-
     /**
      * @var string
      *
@@ -214,6 +194,24 @@ final class ActiveRecordConfigRepository extends AbstractRepository
         $this->fields = $fields;
 
         parent::__construct();
+    }
+
+
+    /**
+     * @param string $table_name
+     * @param array  $fields
+     *
+     * @return self
+     *
+     * @deprecated
+     */
+    public static function getInstance(string $table_name, array $fields) : self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self($table_name, $fields);
+        }
+
+        return self::$instance;
     }
 
 
@@ -273,6 +271,17 @@ final class ActiveRecordConfigFactory extends AbstractFactory
 
 
     /**
+     * ActiveRecordConfigFactory constructor
+     *
+     * @deprecated
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    /**
      * @return self
      *
      * @deprecated
@@ -284,16 +293,5 @@ final class ActiveRecordConfigFactory extends AbstractFactory
         }
 
         return self::$instance;
-    }
-
-
-    /**
-     * ActiveRecordConfigFactory constructor
-     *
-     * @deprecated
-     */
-    protected function __construct()
-    {
-        parent::__construct();
     }
 }

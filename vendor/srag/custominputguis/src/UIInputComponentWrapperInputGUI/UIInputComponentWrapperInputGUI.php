@@ -28,24 +28,6 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
      * @var bool
      */
     protected static $init = false;
-
-
-    /**
-     *
-     */
-    public static function init()/*: void*/
-    {
-        if (self::$init === false) {
-            self::$init = true;
-
-            $dir = __DIR__;
-            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/UIInputComponentWrapperInputGUI.css");
-        }
-    }
-
-
     /**
      * @var Input
      */
@@ -67,6 +49,31 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
         //parent::__construct($title, $post_var);
 
         self::init();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setPostVar(/*string*/ $post_var)/*: void*/
+    {
+        $this->input = $this->input->withNameFrom(new UIInputComponentWrapperNameSource($post_var));
+    }
+
+
+    /**
+     *
+     */
+    public static function init()/*: void*/
+    {
+        if (self::$init === false) {
+            self::$init = true;
+
+            $dir = __DIR__;
+            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+            self::dic()->ui()->mainTemplate()->addCss($dir . "/css/UIInputComponentWrapperInputGUI.css");
+        }
     }
 
 
@@ -128,11 +135,11 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
 
 
     /**
-     * @inheritDoc
+     * @param Input $input
      */
-    public function getPostVar()/*:string*/
+    public function setInput(Input $input)/*: void*/
     {
-        return $this->input->getName();
+        $this->input = $input;
     }
 
 
@@ -151,6 +158,19 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
     public function getTableFilterHTML() : string
     {
         return $this->render();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function render() : string
+    {
+        $tpl = new Template(__DIR__ . "/templates/input.html");
+
+        $tpl->setVariable("INPUT", self::output()->getHTML($this->input));
+
+        return self::output()->getHTML($tpl);
     }
 
 
@@ -195,19 +215,6 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
 
 
     /**
-     * @return string
-     */
-    public function render() : string
-    {
-        $tpl = new Template(__DIR__ . "/templates/input.html");
-
-        $tpl->setVariable("INPUT", self::output()->getHTML($this->input));
-
-        return self::output()->getHTML($tpl);
-    }
-
-
-    /**
      * @inheritDoc
      */
     public function setAlert(/*string*/ $error)/*: void*/
@@ -241,24 +248,6 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
 
 
     /**
-     * @param Input $input
-     */
-    public function setInput(Input $input)/*: void*/
-    {
-        $this->input = $input;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function setPostVar(/*string*/ $post_var)/*: void*/
-    {
-        $this->input = $this->input->withNameFrom(new UIInputComponentWrapperNameSource($post_var));
-    }
-
-
-    /**
      * @inheritDoc
      */
     public function setRequired(/*bool*/ $required)/*: void*/
@@ -277,15 +266,6 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
 
 
     /**
-     * @param mixed $value
-     */
-    public function setValue($value)/*: void*/
-    {
-        $this->input = $this->input->withValue($value);
-    }
-
-
-    /**
      * @param array $values
      */
     public function setValueByArray(/*array*/ $values)/*: void*/
@@ -293,5 +273,23 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
         if (isset($values[$this->getPostVar()])) {
             $this->setValue($values[$this->getPostVar()]);
         }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getPostVar()/*:string*/
+    {
+        return $this->input->getName();
+    }
+
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)/*: void*/
+    {
+        $this->input = $this->input->withValue($value);
     }
 }

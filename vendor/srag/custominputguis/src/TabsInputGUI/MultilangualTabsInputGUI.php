@@ -20,6 +20,15 @@ class MultilangualTabsInputGUI
 
 
     /**
+     * MultilangualTabsInputGUI constructor
+     */
+    private function __construct()
+    {
+
+    }
+
+
+    /**
      * @param array $items
      * @param bool  $default_language
      * @param bool  $default_required
@@ -56,6 +65,23 @@ class MultilangualTabsInputGUI
 
 
     /**
+     * @param bool $default
+     *
+     * @return array
+     */
+    public static function getLanguages(bool $default = false) : array
+    {
+        $lang_keys = self::dic()->language()->getInstalledLanguages();
+
+        if ($default) {
+            array_unshift($lang_keys, "default");
+        }
+
+        return array_combine($lang_keys, array_map("strtoupper", $lang_keys));
+    }
+
+
+    /**
      * @param TabsInputGUI        $tabs
      * @param ilFormPropertyGUI[] $inputs
      * @param bool                $default_language
@@ -79,23 +105,6 @@ class MultilangualTabsInputGUI
 
             $tabs->addTab($tab);
         }
-    }
-
-
-    /**
-     * @param bool $default
-     *
-     * @return array
-     */
-    public static function getLanguages(bool $default = false) : array
-    {
-        $lang_keys = self::dic()->language()->getInstalledLanguages();
-
-        if ($default) {
-            array_unshift($lang_keys, "default");
-        }
-
-        return array_combine($lang_keys, array_map("strtoupper", $lang_keys));
     }
 
 
@@ -161,15 +170,6 @@ class MultilangualTabsInputGUI
         } else {
             $values[$lang_key] = $value;
         }
-    }
-
-
-    /**
-     * MultilangualTabsInputGUI constructor
-     */
-    private function __construct()
-    {
-
     }
 }
 

@@ -17,6 +17,12 @@ final class LibrariesNamespaceChanger
 {
 
     /**
+     * @var string
+     *
+     * @internal
+     */
+    const PLUGIN_NAME_REG_EXP = "/\/([A-Za-z0-9_]+)\/vendor\//";
+    /**
      * @var self|null
      */
     private static $instance = null;
@@ -31,40 +37,6 @@ final class LibrariesNamespaceChanger
             "xml"
         ];
     /**
-     * @var string
-     *
-     * @internal
-     */
-    const PLUGIN_NAME_REG_EXP = "/\/([A-Za-z0-9_]+)\/vendor\//";
-
-
-    /**
-     * @param Event $event
-     *
-     * @return self
-     */
-    private static function getInstance(Event $event) : self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self($event);
-        }
-
-        return self::$instance;
-    }
-
-
-    /**
-     * @param Event $event
-     *
-     * @internal
-     */
-    public static function rewriteLibrariesNamespaces(Event $event)/*: void*/
-    {
-        self::getInstance($event)->doRewriteLibrariesNamespaces();
-    }
-
-
-    /**
      * @var Event
      */
     private $event;
@@ -78,6 +50,17 @@ final class LibrariesNamespaceChanger
     private function __construct(Event $event)
     {
         $this->event = $event;
+    }
+
+
+    /**
+     * @param Event $event
+     *
+     * @internal
+     */
+    public static function rewriteLibrariesNamespaces(Event $event)/*: void*/
+    {
+        self::getInstance($event)->doRewriteLibrariesNamespaces();
     }
 
 
@@ -194,5 +177,20 @@ final class LibrariesNamespaceChanger
                 }
             }
         }
+    }
+
+
+    /**
+     * @param Event $event
+     *
+     * @return self
+     */
+    private static function getInstance(Event $event) : self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self($event);
+        }
+
+        return self::$instance;
     }
 }

@@ -5,133 +5,134 @@
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
 
-interface xdhtParticipantInterface {
+interface xdhtParticipantInterface
+{
 
-	const TABLE_NAME = 'rep_robj_xdht_partic';
-
-
-	/**
-	 * @return int
-	 */
-	public function getId();
+    const TABLE_NAME = 'rep_robj_xdht_partic';
 
 
-	/**
-	 * @param int $id
-	 */
-	public function setId($id);
+    /**
+     * @return int
+     */
+    public function getId();
 
 
-	/**
-	 * @return int
-	 */
-	public function getTrainingObjId();
+    /**
+     * @param int $id
+     */
+    public function setId($id);
 
 
-	/**
-	 * @param int $training_obj_id
-	 */
-	public function setTrainingObjId($training_obj_id);
+    /**
+     * @return int
+     */
+    public function getTrainingObjId();
 
 
-	/**
-	 * @return int
-	 */
-	public function getUsrId();
+    /**
+     * @param int $training_obj_id
+     */
+    public function setTrainingObjId($training_obj_id);
 
 
-	/**
-	 * @param int $usr_id
-	 */
-	public function setUsrId($usr_id);
+    /**
+     * @return int
+     */
+    public function getUsrId();
 
 
-	/**
-	 * @return int
-	 */
-	public function getStatus();
+    /**
+     * @param int $usr_id
+     */
+    public function setUsrId($usr_id);
 
 
-	/**
-	 * @param int $status
-	 */
-	public function setStatus($status);
+    /**
+     * @return int
+     */
+    public function getStatus();
 
 
-	/**
-	 * @return bool
-	 */
-	public function hasStatusChanged();
+    /**
+     * @param int $status
+     */
+    public function setStatus($status);
 
 
-	/**
-	 * @return string
-	 */
-	public function getCreated();
+    /**
+     * @return bool
+     */
+    public function hasStatusChanged();
 
 
-	/**
-	 * @param string $created
-	 */
-	public function setCreated($created);
+    /**
+     * @return string
+     */
+    public function getCreated();
 
 
-	/**
-	 * @return string
-	 */
-	public function getUpdatedStatus();
+    /**
+     * @param string $created
+     */
+    public function setCreated($created);
 
 
-	/**
-	 * @param string $updated
-	 */
-	public function setUpdatedStatus($updated);
+    /**
+     * @return string
+     */
+    public function getUpdatedStatus();
 
 
-	/**
-	 * @return int
-	 */
-	public function getCreatedUsrId();
+    /**
+     * @param string $updated
+     */
+    public function setUpdatedStatus($updated);
 
 
-	/**
-	 * @param int $created_usr_id
-	 */
-	public function setCreatedUsrId($created_usr_id);
+    /**
+     * @return int
+     */
+    public function getCreatedUsrId();
 
 
-	/**
-	 * @return int
-	 */
-	public function getUpdatedUsrId();
+    /**
+     * @param int $created_usr_id
+     */
+    public function setCreatedUsrId($created_usr_id);
 
 
-	/**
-	 * @param int $updated_usr_id
-	 */
-	public function setUpdatedUsrId($updated_usr_id);
+    /**
+     * @return int
+     */
+    public function getUpdatedUsrId();
 
 
-	/**
-	 * @return bool
-	 */
-	public function isStatusChanged();
+    /**
+     * @param int $updated_usr_id
+     */
+    public function setUpdatedUsrId($updated_usr_id);
 
 
-	/**
-	 * @param bool $status_changed
-	 */
-	public function setStatusChanged($status_changed);
+    /**
+     * @return bool
+     */
+    public function isStatusChanged();
 
 
-	/**
-	 * @return int
-	 */
-	public function getOldStatus();
+    /**
+     * @param bool $status_changed
+     */
+    public function setStatusChanged($status_changed);
 
-	/**
-	 * @param int $old_status
-	 */
-	public function setOldStatus($old_status);
 
+    /**
+     * @return int
+     */
+    public function getOldStatus();
+
+
+    /**
+     * @param int $old_status
+     */
+    public function setOldStatus($old_status);
 }

@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
- * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link https://packagist.org/packages/ramsey/uuid Packagist
- * @link https://github.com/ramsey/uuid GitHub
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link      https://packagist.org/packages/ramsey/uuid Packagist
+ * @link      https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Converter\Number;
@@ -23,10 +23,12 @@ use Ramsey\Uuid\Converter\NumberConverterInterface;
  */
 class BigNumberConverter implements NumberConverterInterface
 {
+
     /**
      * Converts a hexadecimal number into a `Moontoast\Math\BigNumber` representation
      *
      * @param string $hex The hexadecimal string representation to convert
+     *
      * @return BigNumber
      */
     public function fromHex($hex)
@@ -36,11 +38,13 @@ class BigNumberConverter implements NumberConverterInterface
         return new BigNumber($number);
     }
 
+
     /**
      * Converts an integer or `Moontoast\Math\BigNumber` integer representation
      * into a hexadecimal string representation
      *
      * @param int|string|BigNumber $integer An integer or `Moontoast\Math\BigNumber`
+     *
      * @return string Hexadecimal string
      */
     public function toHex($integer)

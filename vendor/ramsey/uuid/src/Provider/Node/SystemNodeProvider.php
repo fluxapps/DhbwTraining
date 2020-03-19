@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
- * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link https://packagist.org/packages/ramsey/uuid Packagist
- * @link https://github.com/ramsey/uuid GitHub
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link      https://packagist.org/packages/ramsey/uuid Packagist
+ * @link      https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Provider\Node;
@@ -22,6 +22,7 @@ use Ramsey\Uuid\Provider\NodeProviderInterface;
  */
 class SystemNodeProvider implements NodeProviderInterface
 {
+
     /**
      * Returns the system node ID
      *
@@ -51,8 +52,51 @@ class SystemNodeProvider implements NodeProviderInterface
         if ($node !== false) {
             $node = str_replace([':', '-'], '', $node);
         }
+
         return $node;
     }
+
+
+    /**
+     * Returns mac address from the first system interface via the sysfs interface
+     *
+     * @return string|bool
+     */
+    protected function getSysfs()
+    {
+        $mac = false;
+
+        if (strtoupper(constant('PHP_OS')) === 'LINUX') {
+            $addressPaths = glob('/sys/class/net/*/address', GLOB_NOSORT);
+
+            if (empty($addressPaths)) {
+                return false;
+            }
+
+            $macs = [];
+            array_walk($addressPaths, function ($addressPath) use (&$macs) {
+                if (is_readable($addressPath)) {
+                    $macs[] = file_get_contents($addressPath);
+                }
+            });
+
+            $macs = array_map('trim', $macs);
+
+            // remove invalid entries
+            $macs = array_filter($macs, function ($mac) {
+                return
+                    // localhost adapter
+                    $mac !== '00:00:00:00:00:00'
+                    && // must match  mac adress
+                    preg_match('/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i', $mac);
+            });
+
+            $mac = reset($macs);
+        }
+
+        return $mac;
+    }
+
 
     /**
      * Returns the network interface configuration for the system
@@ -84,45 +128,5 @@ class SystemNodeProvider implements NodeProviderInterface
         }
 
         return ob_get_clean();
-    }
-
-    /**
-     * Returns mac address from the first system interface via the sysfs interface
-     *
-     * @return string|bool
-     */
-    protected function getSysfs()
-    {
-        $mac = false;
-
-        if (strtoupper(constant('PHP_OS')) === 'LINUX') {
-            $addressPaths = glob('/sys/class/net/*/address', GLOB_NOSORT);
-
-            if (empty($addressPaths)) {
-                return false;
-            }
-
-            $macs = [];
-            array_walk($addressPaths, function ($addressPath) use (&$macs) {
-                if (is_readable($addressPath)) {
-                    $macs[] = file_get_contents($addressPath);
-                }
-            });
-
-            $macs = array_map('trim', $macs);
-
-            // remove invalid entries
-            $macs = array_filter($macs, function ($mac) {
-                return
-                    // localhost adapter
-                    $mac !== '00:00:00:00:00:00' &&
-                    // must match  mac adress
-                    preg_match('/^([0-9a-f]{2}:){5}[0-9a-f]{2}$/i', $mac);
-            });
-
-            $mac = reset($macs);
-        }
-
-        return $mac;
     }
 }

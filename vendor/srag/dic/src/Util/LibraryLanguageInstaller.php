@@ -23,15 +23,6 @@ final class LibraryLanguageInstaller implements Pluginable
 
 
     /**
-     * @return self
-     */
-    public static function getInstance() : self
-    {
-        return new self();
-    }
-
-
-    /**
      * @var PluginInterface|null
      */
     protected $plugin = null;
@@ -51,11 +42,11 @@ final class LibraryLanguageInstaller implements Pluginable
 
 
     /**
-     * @inheritDoc
+     * @return self
      */
-    public function getPlugin() : PluginInterface
+    public static function getInstance() : self
     {
-        return $this->plugin;
+        return new self();
     }
 
 
@@ -179,5 +170,14 @@ final class LibraryLanguageInstaller implements Pluginable
         }
 
         return $langs;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getPlugin() : PluginInterface
+    {
+        return $this->plugin;
     }
 }

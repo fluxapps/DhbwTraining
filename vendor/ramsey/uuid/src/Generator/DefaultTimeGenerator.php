@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license http://opensource.org/licenses/MIT MIT
- * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link https://packagist.org/packages/ramsey/uuid Packagist
- * @link https://github.com/ramsey/uuid GitHub
+ * @license   http://opensource.org/licenses/MIT MIT
+ * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link      https://packagist.org/packages/ramsey/uuid Packagist
+ * @link      https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Generator;
@@ -29,28 +29,28 @@ use Ramsey\Uuid\Provider\TimeProviderInterface;
  */
 class DefaultTimeGenerator implements TimeGeneratorInterface
 {
+
     /**
      * @var NodeProviderInterface
      */
     private $nodeProvider;
-
     /**
      * @var TimeConverterInterface
      */
     private $timeConverter;
-
     /**
      * @var TimeProviderInterface
      */
     private $timeProvider;
 
+
     /**
      * Constructs a `DefaultTimeGenerator` using a node provider, time converter,
      * and time provider
      *
-     * @param NodeProviderInterface $nodeProvider
+     * @param NodeProviderInterface  $nodeProvider
      * @param TimeConverterInterface $timeConverter
-     * @param TimeProviderInterface $timeProvider
+     * @param TimeProviderInterface  $timeProvider
      */
     public function __construct(
         NodeProviderInterface $nodeProvider,
@@ -62,6 +62,7 @@ class DefaultTimeGenerator implements TimeGeneratorInterface
         $this->timeProvider = $timeProvider;
     }
 
+
     /**
      * Generate a version 1 UUID from a host ID, sequence number, and the current time
      *
@@ -69,11 +70,12 @@ class DefaultTimeGenerator implements TimeGeneratorInterface
      * address. If $clockSeq is given, it is used as the sequence number;
      * otherwise a random 14-bit sequence number is chosen.
      *
-     * @param int|string $node A 48-bit number representing the hardware address
-     *     This number may be represented as an integer or a hexadecimal string.
-     * @param int $clockSeq A 14-bit number used to help avoid duplicates that
-     *     could arise when the clock is set backwards in time or if the node ID
-     *     changes.
+     * @param int|string $node     A 48-bit number representing the hardware address
+     *                             This number may be represented as an integer or a hexadecimal string.
+     * @param int        $clockSeq A 14-bit number used to help avoid duplicates that
+     *                             could arise when the clock is set backwards in time or if the node ID
+     *                             changes.
+     *
      * @return string A binary string
      * @throws UnsatisfiedDependencyException if called on a 32-bit system and
      *     `Moontoast\Math\BigNumber` is not present
@@ -112,11 +114,13 @@ class DefaultTimeGenerator implements TimeGeneratorInterface
         return hex2bin($hex);
     }
 
+
     /**
      * Uses the node provider given when constructing this instance to get
      * the node ID (usually a MAC address)
      *
      * @param string|int $node A node value that may be used to override the node provider
+     *
      * @return string Hexadecimal representation of the node ID
      * @throws InvalidArgumentException
      * @throws Exception

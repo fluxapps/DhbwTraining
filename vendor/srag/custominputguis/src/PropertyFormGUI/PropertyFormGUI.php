@@ -69,13 +69,13 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
      */
     protected $fields = [];
     /**
-     * @var ilFormPropertyGUI[]|ilFormSectionHeaderGUI[]
-     */
-    private $items_cache = [];
-    /**
      * @var object
      */
     protected $parent;
+    /**
+     * @var ilFormPropertyGUI[]|ilFormSectionHeaderGUI[]
+     */
+    private $items_cache = [];
 
 
     /**
@@ -93,6 +93,65 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
 
         $this->initForm();
     }
+
+
+    /**
+     *
+     */
+    protected abstract function initId()/*: void*/ ;
+
+
+    /**
+     *
+     */
+    private final function initForm()/*: void*/
+    {
+        $this->initAction();
+
+        $this->initCommands();
+
+        $this->initTitle();
+
+        $this->initItems();
+    }
+
+
+    /**
+     *
+     */
+    protected function initAction()/*: void*/
+    {
+        $this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent));
+    }
+
+
+    /**
+     *
+     */
+    protected abstract function initCommands()/*: void*/ ;
+
+
+    /**
+     *
+     */
+    protected abstract function initTitle()/*: void*/ ;
+
+
+    /**
+     *
+     */
+    private final function initItems()/*: void*/
+    {
+        $this->initFields();
+
+        $this->getFields($this->fields, $this);
+    }
+
+
+    /**
+     *
+     */
+    protected abstract function initFields()/*: void*/ ;
 
 
     /**
@@ -173,28 +232,41 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
 
 
     /**
+     * @param string $key
      *
+     * @return mixed
      */
-    private final function initForm()/*: void*/
+    protected abstract function getValue(/*string*/ $key);
+
+
+    /**
+     * @param string      $key
+     * @param string|null $default
+     *
+     * @return string
+     */
+    public function txt(/*string*/ $key,/*?string*/ $default = null)/*: string*/
     {
-        $this->initAction();
-
-        $this->initCommands();
-
-        $this->initTitle();
-
-        $this->initItems();
+        if ($default !== null) {
+            return self::plugin()->translate($key, static::LANG_MODULE, [], true, "", $default);
+        } else {
+            return self::plugin()->translate($key, static::LANG_MODULE);
+        }
     }
 
 
     /**
-     *
+     * @return bool
      */
-    private final function initItems()/*: void*/
+    public function storeForm()/*: bool*/
     {
-        $this->initFields();
+        if (!$this->storeFormCheck()) {
+            return false;
+        }
 
-        $this->getFields($this->fields, $this);
+        $this->storeFormItems($this->fields);
+
+        return true;
     }
 
 
@@ -212,6 +284,15 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
         }
 
         return true;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function checkInput()/*: bool*/
+    {
+        return parent::checkInput();
     }
 
 
@@ -238,87 +319,6 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
             }
         }
     }
-
-
-    /**
-     * @param string      $key
-     * @param string|null $default
-     *
-     * @return string
-     */
-    public function txt(/*string*/ $key,/*?string*/ $default = null)/*: string*/
-    {
-        if ($default !== null) {
-            return self::plugin()->translate($key, static::LANG_MODULE, [], true, "", $default);
-        } else {
-            return self::plugin()->translate($key, static::LANG_MODULE);
-        }
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function checkInput()/*: bool*/
-    {
-        return parent::checkInput();
-    }
-
-
-    /**
-     *
-     */
-    protected function initAction()/*: void*/
-    {
-        $this->setFormAction(self::dic()->ctrl()->getFormAction($this->parent));
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function storeForm()/*: bool*/
-    {
-        if (!$this->storeFormCheck()) {
-            return false;
-        }
-
-        $this->storeFormItems($this->fields);
-
-        return true;
-    }
-
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    protected abstract function getValue(/*string*/ $key);
-
-
-    /**
-     *
-     */
-    protected abstract function initCommands()/*: void*/ ;
-
-
-    /**
-     *
-     */
-    protected abstract function initFields()/*: void*/ ;
-
-
-    /**
-     *
-     */
-    protected abstract function initId()/*: void*/ ;
-
-
-    /**
-     *
-     */
-    protected abstract function initTitle()/*: void*/ ;
 
 
     /**

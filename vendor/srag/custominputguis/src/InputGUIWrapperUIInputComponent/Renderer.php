@@ -26,6 +26,20 @@ class Renderer extends InputRenderer
     /**
      * @inheritDoc
      */
+    public function registerResources(ResourceRegistry $registry)/*: void*/
+    {
+        parent::registerResources($registry);
+
+        $dir = __DIR__;
+        $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+        $registry->register($dir . "/css/InputGUIWrapperUIInputComponent.css");
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     protected function getComponentInterfaceName() : array
     {
         return [
@@ -55,20 +69,6 @@ class Renderer extends InputRenderer
         $tpl->setVariable("INPUT", self::output()->getHTML($input->getInput()));
 
         return self::output()->getHTML($tpl);
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function registerResources(ResourceRegistry $registry)/*: void*/
-    {
-        parent::registerResources($registry);
-
-        $dir = __DIR__;
-        $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-        $registry->register($dir . "/css/InputGUIWrapperUIInputComponent.css");
     }
 
 

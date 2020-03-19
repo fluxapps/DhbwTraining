@@ -59,65 +59,6 @@ class Renderer extends AbstractComponentRenderer
 
 
     /**
-     * Render standard progressmeter
-     *
-     * @param Standard          $component
-     * @param RendererInterface $default_renderer
-     *
-     * @return string
-     */
-    protected function renderStandard(Standard $component, RendererInterface $default_renderer)
-    {
-        $hasComparison = ($component->getComparison() != null && $component->getComparison() > 0);
-        if ($hasComparison) {
-            $tpl = $this->getTemplate("tpl.progressmeter_two_bar.html", true, true);
-        } else {
-            $tpl = $this->getTemplate("tpl.progressmeter_one_bar.html", true, true);
-        }
-
-        // set "responsive class" false
-        $tpl->touchBlock('responsive');
-
-        // set visible values
-        $tpl = $this->modifyVisibleValues($tpl, $component);
-
-        // set skew and rotation for process bars
-        $tpl = $this->modifyProgressBar($tpl, $component->getMainValueAsPercent(), 'MAIN');
-        if ($hasComparison) {
-            $tpl = $this->modifyProgressBar($tpl, $component->getComparisonAsPercent(), 'COMPARE');
-        }
-
-        // set progress bar color class
-        $tpl = $this->modifyProgressBarClasses($tpl, $component);
-
-        // set marker position
-        if ($component->getRequired() != $component->getMaximum()) {
-            $tpl->setVariable("MARKER_POS", $this->getMarkerPos($component->getRequiredAsPercent()));
-        } else {
-            $tpl->setVariable("MARKER_POS", '180');
-        }
-
-        $tpl->parseCurrentBlock();
-
-        return self::output()->getHTML($tpl);
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function registerResources(ResourceRegistry $registry)/*: void*/
-    {
-        parent::registerResources($registry);
-
-        $dir = __DIR__;
-        $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1) . "/..";
-
-        $registry->register($dir . "/css/chart.css");
-    }
-
-
-    /**
      * Render fixed size progressmeter
      *
      * @param FixedSize         $component
@@ -155,50 +96,6 @@ class Renderer extends AbstractComponentRenderer
         } else {
             $tpl->setVariable("MARKER_POS", '180');
         }
-
-        $tpl->parseCurrentBlock();
-
-        return self::output()->getHTML($tpl);
-    }
-
-
-    /**
-     * Render mini progressmeter
-     *
-     * @param Mini              $component
-     * @param RendererInterface $default_renderer
-     *
-     * @return string
-     */
-    protected function renderMini(Mini $component, RendererInterface $default_renderer)
-    {
-        $tpl = $this->getTemplate("tpl.progressmeter_mini.html", true, true);
-
-        // new vars
-        /*
-         * COLOR_ONE_CLASS
-         * BAR_ONE_WIDTH
-         * ROTATE_ONE
-         * NEEDLE_ONE_CLASS
-         */
-
-        $main_percentage = $component->getMainValueAsPercent();
-
-        // set progress bar color class
-        $color_class = 'no-success';
-        if ($this->getIsReached($main_percentage, $component->getRequiredAsPercent())) {
-            $color_class = 'success';
-        }
-        $tpl->setVariable('COLOR_ONE_CLASS', $color_class);
-        // set width for process bars
-        $tpl->setVariable('BAR_ONE_WIDTH', (86.5 * ($main_percentage / 100)));
-        // set marker position
-        $needle_class = 'no-needle';
-        if ($component->getRequired() != $component->getMaximum()) {
-            $needle_class = 'needle_color';
-            $tpl->setVariable('ROTATE_ONE', $this->getMarkerPos($component->getRequiredAsPercent()));
-        }
-        $tpl->setVariable('NEEDLE_ONE_CLASS', $needle_class);
 
         $tpl->parseCurrentBlock();
 
@@ -257,34 +154,6 @@ class Renderer extends AbstractComponentRenderer
 
 
     /**
-     * Modify the template variables for the progress bar classes, used for colors
-     *
-     * @param Template      $tpl
-     * @param ProgressMeter $component
-     *
-     * @return Template
-     */
-    protected function modifyProgressBarClasses(Template $tpl, Component\Component $component)
-    {
-        if ($this->getIsValueSet($component->getMainValueAsPercent())) {
-            if ($this->getIsReached($component->getMainValueAsPercent(), $component->getRequiredAsPercent())) {
-                $tpl->touchBlock('outer-bar-success');
-            } else {
-                $tpl->touchBlock('outer-bar-no-success');
-            }
-        } else {
-            if ($component instanceof Standard) {
-                if ($component->getComparison() > 0) {
-                    $tpl->touchBlock('inner-bar-active');
-                }
-            }
-        }
-
-        return $tpl;
-    }
-
-
-    /**
      * get skew by percent
      *
      * @param int $percentage
@@ -316,18 +185,30 @@ class Renderer extends AbstractComponentRenderer
 
 
     /**
-     * get marker position by percent
+     * Modify the template variables for the progress bar classes, used for colors
      *
-     * careful: marker position is no fixed positioning but
-     *          a rotation value for marker box.
+     * @param Template      $tpl
+     * @param ProgressMeter $component
      *
-     * @param int $percentage
-     *
-     * @return float
+     * @return Template
      */
-    protected function getMarkerPos($percentage)
+    protected function modifyProgressBarClasses(Template $tpl, Component\Component $component)
     {
-        return round((230 / 100 * ($percentage * 1)) - 115, 2, PHP_ROUND_HALF_UP);
+        if ($this->getIsValueSet($component->getMainValueAsPercent())) {
+            if ($this->getIsReached($component->getMainValueAsPercent(), $component->getRequiredAsPercent())) {
+                $tpl->touchBlock('outer-bar-success');
+            } else {
+                $tpl->touchBlock('outer-bar-no-success');
+            }
+        } else {
+            if ($component instanceof Standard) {
+                if ($component->getComparison() > 0) {
+                    $tpl->touchBlock('inner-bar-active');
+                }
+            }
+        }
+
+        return $tpl;
     }
 
 
@@ -358,6 +239,125 @@ class Renderer extends AbstractComponentRenderer
     protected function getIsReached($a_val, $b_val)
     {
         return ($a_val >= $b_val);
+    }
+
+
+    /**
+     * get marker position by percent
+     *
+     * careful: marker position is no fixed positioning but
+     *          a rotation value for marker box.
+     *
+     * @param int $percentage
+     *
+     * @return float
+     */
+    protected function getMarkerPos($percentage)
+    {
+        return round((230 / 100 * ($percentage * 1)) - 115, 2, PHP_ROUND_HALF_UP);
+    }
+
+
+    /**
+     * Render mini progressmeter
+     *
+     * @param Mini              $component
+     * @param RendererInterface $default_renderer
+     *
+     * @return string
+     */
+    protected function renderMini(Mini $component, RendererInterface $default_renderer)
+    {
+        $tpl = $this->getTemplate("tpl.progressmeter_mini.html", true, true);
+
+        // new vars
+        /*
+         * COLOR_ONE_CLASS
+         * BAR_ONE_WIDTH
+         * ROTATE_ONE
+         * NEEDLE_ONE_CLASS
+         */
+
+        $main_percentage = $component->getMainValueAsPercent();
+
+        // set progress bar color class
+        $color_class = 'no-success';
+        if ($this->getIsReached($main_percentage, $component->getRequiredAsPercent())) {
+            $color_class = 'success';
+        }
+        $tpl->setVariable('COLOR_ONE_CLASS', $color_class);
+        // set width for process bars
+        $tpl->setVariable('BAR_ONE_WIDTH', (86.5 * ($main_percentage / 100)));
+        // set marker position
+        $needle_class = 'no-needle';
+        if ($component->getRequired() != $component->getMaximum()) {
+            $needle_class = 'needle_color';
+            $tpl->setVariable('ROTATE_ONE', $this->getMarkerPos($component->getRequiredAsPercent()));
+        }
+        $tpl->setVariable('NEEDLE_ONE_CLASS', $needle_class);
+
+        $tpl->parseCurrentBlock();
+
+        return self::output()->getHTML($tpl);
+    }
+
+
+    /**
+     * Render standard progressmeter
+     *
+     * @param Standard          $component
+     * @param RendererInterface $default_renderer
+     *
+     * @return string
+     */
+    protected function renderStandard(Standard $component, RendererInterface $default_renderer)
+    {
+        $hasComparison = ($component->getComparison() != null && $component->getComparison() > 0);
+        if ($hasComparison) {
+            $tpl = $this->getTemplate("tpl.progressmeter_two_bar.html", true, true);
+        } else {
+            $tpl = $this->getTemplate("tpl.progressmeter_one_bar.html", true, true);
+        }
+
+        // set "responsive class" false
+        $tpl->touchBlock('responsive');
+
+        // set visible values
+        $tpl = $this->modifyVisibleValues($tpl, $component);
+
+        // set skew and rotation for process bars
+        $tpl = $this->modifyProgressBar($tpl, $component->getMainValueAsPercent(), 'MAIN');
+        if ($hasComparison) {
+            $tpl = $this->modifyProgressBar($tpl, $component->getComparisonAsPercent(), 'COMPARE');
+        }
+
+        // set progress bar color class
+        $tpl = $this->modifyProgressBarClasses($tpl, $component);
+
+        // set marker position
+        if ($component->getRequired() != $component->getMaximum()) {
+            $tpl->setVariable("MARKER_POS", $this->getMarkerPos($component->getRequiredAsPercent()));
+        } else {
+            $tpl->setVariable("MARKER_POS", '180');
+        }
+
+        $tpl->parseCurrentBlock();
+
+        return self::output()->getHTML($tpl);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function registerResources(ResourceRegistry $registry)/*: void*/
+    {
+        parent::registerResources($registry);
+
+        $dir = __DIR__;
+        $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1) . "/..";
+
+        $registry->register($dir . "/css/chart.css");
     }
 
 

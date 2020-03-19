@@ -45,6 +45,15 @@ final class DICStatic implements DICStaticInterface
 
 
     /**
+     * DICStatic constructor
+     */
+    private function __construct()
+    {
+
+    }
+
+
+    /**
      * @inheritDoc
      *
      * @deprecated
@@ -55,38 +64,6 @@ final class DICStatic implements DICStaticInterface
         self::$output = null;
         self::$plugins = [];
         self::$version = null;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public static function dic() : DICInterface
-    {
-        if (self::$dic === null) {
-            switch (true) {
-                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_3)):
-                    throw new DICException("DIC not supports ILIAS " . self::version()->getILIASVersion() . " anymore!");
-                    break;
-
-                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_4)):
-                    global $DIC;
-                    self::$dic = new ILIAS53DIC($DIC);
-                    break;
-
-                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_6_0)):
-                    global $DIC;
-                    self::$dic = new ILIAS54DIC($DIC);
-                    break;
-
-                default:
-                    global $DIC;
-                    self::$dic = new ILIAS60DIC($DIC);
-                    break;
-            }
-        }
-
-        return self::$dic;
     }
 
 
@@ -135,6 +112,38 @@ final class DICStatic implements DICStaticInterface
     /**
      * @inheritDoc
      */
+    public static function dic() : DICInterface
+    {
+        if (self::$dic === null) {
+            switch (true) {
+                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_3)):
+                    throw new DICException("DIC not supports ILIAS " . self::version()->getILIASVersion() . " anymore!");
+                    break;
+
+                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_4)):
+                    global $DIC;
+                    self::$dic = new ILIAS53DIC($DIC);
+                    break;
+
+                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_6_0)):
+                    global $DIC;
+                    self::$dic = new ILIAS54DIC($DIC);
+                    break;
+
+                default:
+                    global $DIC;
+                    self::$dic = new ILIAS60DIC($DIC);
+                    break;
+            }
+        }
+
+        return self::$dic;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public static function version() : VersionInterface
     {
         if (self::$version === null) {
@@ -142,14 +151,5 @@ final class DICStatic implements DICStaticInterface
         }
 
         return self::$version;
-    }
-
-
-    /**
-     * DICStatic constructor
-     */
-    private function __construct()
-    {
-
     }
 }

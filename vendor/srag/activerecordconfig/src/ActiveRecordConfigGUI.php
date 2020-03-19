@@ -228,6 +228,19 @@ abstract class ActiveRecordConfigGUI extends ilPluginConfigGUI
 
 
     /**
+     * @param string $key
+     *
+     * @return string
+     *
+     * @deprecated
+     */
+    protected function txt(string $key) : string
+    {
+        return self::plugin()->translate($key, self::LANG_MODULE_CONFIG);
+    }
+
+
+    /**
      * @param string $tab_id
      *
      * @return string
@@ -237,17 +250,6 @@ abstract class ActiveRecordConfigGUI extends ilPluginConfigGUI
     public final function getCmdForTab(string $tab_id) : string
     {
         return self::CMD_CONFIGURE . "_" . $tab_id;
-    }
-
-
-    /**
-     * @param string $tab_id
-     *
-     * @deprecated
-     */
-    public final function redirectToTab(string $tab_id)/*: void*/
-    {
-        self::dic()->ctrl()->redirect($this, $this->getCmdForTab($tab_id));
     }
 
 
@@ -267,77 +269,6 @@ abstract class ActiveRecordConfigGUI extends ilPluginConfigGUI
         $gui = $this->getConfigurationGUI($tab_id);
 
         self::output()->output($gui);
-    }
-
-
-    /**
-     * @param string $tab_id
-     *
-     * @throws ActiveRecordConfigException Class $config_gui_class_name not extends ActiveRecordConfigFormGUI or ActiveRecordObjectFormGUI!
-     *
-     * @internal
-     *
-     * @deprecated
-     */
-    private final function updateConfigure(string $tab_id)/*: void*/
-    {
-        self::dic()->tabs()->activateTab($tab_id);
-
-        $form = $this->getConfigurationFormGUI(static::$tabs[$tab_id], $tab_id);
-
-        if (!$form->storeForm()) {
-            self::output()->output($form);
-
-            return;
-        }
-
-        ilUtil::sendSuccess($this->txt($tab_id . "_saved"), true);
-
-        $this->redirectToTab($tab_id);
-    }
-
-
-    /**
-     * @param string $tab_id
-     *
-     * @throws ActiveRecordConfigException Class $config_form_gui_class_name not extends ActiveRecordConfigTableGUI!
-     *
-     * @internal
-     *
-     * @deprecated
-     */
-    private final function applyFilter(string $tab_id)/*: void*/
-    {
-        $table = $this->getConfigurationTable(static::$tabs[$tab_id], self::CMD_APPLY_FILTER . "_" . $tab_id, $tab_id);
-
-        $table->writeFilterToSession();
-
-        $table->resetOffset();
-
-        //$this->redirectToTab($tab_id);
-        $this->configure($tab_id); // Fix reset offset
-    }
-
-
-    /**
-     * @param string $tab_id
-     *
-     * @throws ActiveRecordConfigException Class $config_form_gui_class_name not extends ActiveRecordConfigTableGUI!
-     *
-     * @internal
-     *
-     * @deprecated
-     */
-    private final function resetFilter(string $tab_id)/*: void*/
-    {
-        $table = $this->getConfigurationTable(static::$tabs[$tab_id], self::CMD_RESET_FILTER . "_" . $tab_id, $tab_id);
-
-        $table->resetFilter();
-
-        $table->resetOffset();
-
-        //$this->redirectToTab($tab_id);
-        $this->configure($tab_id); // Fix reset offset
     }
 
 
@@ -441,14 +372,83 @@ abstract class ActiveRecordConfigGUI extends ilPluginConfigGUI
 
 
     /**
-     * @param string $key
+     * @param string $tab_id
      *
-     * @return string
+     * @throws ActiveRecordConfigException Class $config_gui_class_name not extends ActiveRecordConfigFormGUI or ActiveRecordObjectFormGUI!
+     *
+     * @internal
      *
      * @deprecated
      */
-    protected function txt(string $key) : string
+    private final function updateConfigure(string $tab_id)/*: void*/
     {
-        return self::plugin()->translate($key, self::LANG_MODULE_CONFIG);
+        self::dic()->tabs()->activateTab($tab_id);
+
+        $form = $this->getConfigurationFormGUI(static::$tabs[$tab_id], $tab_id);
+
+        if (!$form->storeForm()) {
+            self::output()->output($form);
+
+            return;
+        }
+
+        ilUtil::sendSuccess($this->txt($tab_id . "_saved"), true);
+
+        $this->redirectToTab($tab_id);
+    }
+
+
+    /**
+     * @param string $tab_id
+     *
+     * @deprecated
+     */
+    public final function redirectToTab(string $tab_id)/*: void*/
+    {
+        self::dic()->ctrl()->redirect($this, $this->getCmdForTab($tab_id));
+    }
+
+
+    /**
+     * @param string $tab_id
+     *
+     * @throws ActiveRecordConfigException Class $config_form_gui_class_name not extends ActiveRecordConfigTableGUI!
+     *
+     * @internal
+     *
+     * @deprecated
+     */
+    private final function applyFilter(string $tab_id)/*: void*/
+    {
+        $table = $this->getConfigurationTable(static::$tabs[$tab_id], self::CMD_APPLY_FILTER . "_" . $tab_id, $tab_id);
+
+        $table->writeFilterToSession();
+
+        $table->resetOffset();
+
+        //$this->redirectToTab($tab_id);
+        $this->configure($tab_id); // Fix reset offset
+    }
+
+
+    /**
+     * @param string $tab_id
+     *
+     * @throws ActiveRecordConfigException Class $config_form_gui_class_name not extends ActiveRecordConfigTableGUI!
+     *
+     * @internal
+     *
+     * @deprecated
+     */
+    private final function resetFilter(string $tab_id)/*: void*/
+    {
+        $table = $this->getConfigurationTable(static::$tabs[$tab_id], self::CMD_RESET_FILTER . "_" . $tab_id, $tab_id);
+
+        $table->resetFilter();
+
+        $table->resetOffset();
+
+        //$this->redirectToTab($tab_id);
+        $this->configure($tab_id); // Fix reset offset
     }
 }
