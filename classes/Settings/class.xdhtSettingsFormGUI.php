@@ -1,6 +1,7 @@
 <?php
 
 use srag\DIC\DhbwTraining\DICTrait;
+use srag\Plugins\DhbwTraining\Config\Config;
 
 /**
  * Class xdhtSettingsFormGUI
@@ -59,6 +60,12 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $ta = new ilTextAreaInputGUI(self::plugin()->translate('description'), 'desc');
         $ta->setRows(10);
         $this->addItem($ta);
+
+        if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
+            $item = new ilCheckboxInputGUI(self::plugin()->translate("learning_progress"), 'learning_progress');
+            $item->setValue("1");
+            $this->addItem($item);
+        }
 
         $item = new ilFormSectionHeaderGUI();
         $item->setTitle(self::plugin()->translate('availability'));
@@ -146,6 +153,9 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $values['url'] = $this->facade->settings()->getUrl();
         $values['log'] = $this->facade->settings()->getLog();
         $values['recommender_system'] = $this->facade->settings()->getRecommenderSystemServer();
+        if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
+            $values['learning_progress'] = $this->facade->settings()->getLearningProgress();
+        }
         $this->setValuesByArray($values);
     }
 
@@ -165,7 +175,10 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $this->facade->settings()->setSecret($this->getInput('secret'));
         $this->facade->settings()->setUrl($this->getInput('url'));
         $this->facade->settings()->setLog($this->getInput('log'));
-        $this->facade->settings()->setRecommenderSystemServer($this->getInput('recommender_system'));
+        $this->facade->settings()->setRecommenderSystemServer(intval($this->getInput('recommender_system')));
+        if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
+            $this->facade->settings()->setLearningProgress(intval($this->getInput('learning_progress')));
+        }
 
         return true;
     }

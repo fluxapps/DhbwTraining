@@ -1,5 +1,8 @@
 <?php
 
+use srag\DIC\DhbwTraining\DICTrait;
+use srag\Plugins\DhbwTraining\Config\Config;
+
 require_once __DIR__ . "/../vendor/autoload.php";
 
 /**
@@ -10,6 +13,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 class ilDhbwTrainingPlugin extends ilRepositoryObjectPlugin {
 
+    use DICTrait;
+    const PLUGIN_CLASS_NAME = self::class;
 	const PLUGIN_PREFIX = 'xdht';
 	const PLUGIN_NAME = 'DhbwTraining';
 
@@ -35,7 +40,9 @@ class ilDhbwTrainingPlugin extends ilRepositoryObjectPlugin {
 
 
 	protected function uninstallCustom() {
-		// TODO: Implement uninstallCustom() method.
+		self::dic()->database()->dropTable(Config::TABLE_NAME, false);
+        self::dic()->database()->dropTable(xdhtSettings::TABLE_NAME, false);
+        self::dic()->database()->dropTable(xdhtParticipant::TABLE_NAME, false);
 	}
 
 	/**

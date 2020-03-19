@@ -50,8 +50,6 @@ class ilDhbwTrainingImporter extends ilXmlImporter {
 		$new_xdht_setting->setDhbwTrainingObjectId($new_training_id);
 		$new_xdht_setting->setQuestionPoolId($data->question_pool_id->__toString ());
 		$new_xdht_setting->setIsOnline($data->is_online->__toString ());
-		$new_xdht_setting->setStartDate($data->start_date->__toString ());
-		$new_xdht_setting->setEndDate($data->end_date->__toString ());
 		$new_xdht_setting->store();
 		$DIC->ctrl()->redirectByClass(ilObjRootFolderGUI::class, 'render');
 	}

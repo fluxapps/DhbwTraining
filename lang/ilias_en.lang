@@ -74,4 +74,8 @@ log_info#:#Additional infos is displayed
 recommender_system_server_built_in_debug#:#Built-in debug server
 recommender_system_server_built_in_debug_info#:#You need to set %1$s in description of some questions.\nIn these questions, one is randomly selected for %2$s.\nSee in %3$s for adjust debug server
 permission_denied#:#Permission denied
-raw_response#:#Raw response
+config_configuration#:#Configuration
+config_configuration_saved#:#Configuration saved
+config_save#:#Save
+config_salt#:#Salt
+config_salt_info#:#Used to anonymize the user with the recommender system
