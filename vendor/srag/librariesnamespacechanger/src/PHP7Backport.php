@@ -48,6 +48,38 @@ final class PHP7Backport
      * @deprecated
      */
     private static $instance = null;
+
+
+    /**
+     * @param Event $event
+     *
+     * @return self
+     *
+     * @deprecated
+     */
+    private static function getInstance(Event $event) : self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self($event);
+        }
+
+        return self::$instance;
+    }
+
+
+    /**
+     * @param Event $event
+     *
+     * @internal
+     *
+     * @deprecated
+     */
+    public static function PHP7Backport(Event $event)/*: void*/
+    {
+        self::getInstance($event)->doPHP7Backport();
+    }
+
+
     /**
      * @var Event
      *
@@ -66,19 +98,6 @@ final class PHP7Backport
     private function __construct(Event $event)
     {
         $this->event = $event;
-    }
-
-
-    /**
-     * @param Event $event
-     *
-     * @internal
-     *
-     * @deprecated
-     */
-    public static function PHP7Backport(Event $event)/*: void*/
-    {
-        self::getInstance($event)->doPHP7Backport();
     }
 
 
@@ -126,22 +145,5 @@ final class PHP7Backport
         // Clean libraries tmp folder
         exec("rm -rfd " . escapeshellarg(self::TEMP_FOLDER_LIBRARIES));
         exec("rm -rfd " . escapeshellarg(self::TEMP_FOLDER_PHP7BACKPORT));
-    }
-
-
-    /**
-     * @param Event $event
-     *
-     * @return self
-     *
-     * @deprecated
-     */
-    private static function getInstance(Event $event) : self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self($event);
-        }
-
-        return self::$instance;
     }
 }
