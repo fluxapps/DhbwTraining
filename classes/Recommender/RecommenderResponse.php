@@ -77,6 +77,10 @@ class RecommenderResponse
     /**
      * @var array
      */
+    protected $competences = [];
+    /**
+     * @var array
+     */
     protected $send_success = [];
     /**
      * @var array
@@ -269,6 +273,24 @@ class RecommenderResponse
     public function setLearningProgressStatus(/*?*/ int $learning_progress_status = null)/*:void*/
     {
         $this->learning_progress_status = $learning_progress_status;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getCompetences() : array
+    {
+        return $this->competences;
+    }
+
+
+    /**
+     * @param array $competences
+     */
+    public function setCompetences(array $competences)/*:void*/
+    {
+        $this->competences = $competences;
     }
 
 

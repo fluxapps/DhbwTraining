@@ -14,6 +14,7 @@ class RecommenderCurl
 
     use DICTrait;
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
+    const KEY_RESPONSE_TIME_START = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_time_start";
     /**
      * @var xdhtObjectFacadeInterface
      */
@@ -44,6 +45,8 @@ class RecommenderCurl
     {
         global $DIC;
 
+        ilSession::clear(self::KEY_RESPONSE_TIME_START);
+
         $headers = [
             "Accept"       => "application/json",
             "Content-Type" => "application/json"
@@ -71,11 +74,11 @@ class RecommenderCurl
 
 
     /**
-     * @param string     $rest_url
-     * @param array      $headers
-     * @param array|null $post_data
+     * @param string $rest_url
+     * @param array  $headers
+     * @param array  $post_data
      */
-    protected function doRequest(string $rest_url, array $headers, /*?*/ array $post_data = null)/*:void*/
+    protected function doRequest(string $rest_url, array $headers, array $post_data = [])/*:void*/
     {
 
         $curlConnection = null;
@@ -83,15 +86,18 @@ class RecommenderCurl
         try {
             $curlConnection = $this->initCurlConnection($rest_url, $headers);
 
-            if ($post_data !== null) {
-                if ($this->facade->settings()->getLog()) {
-                    $this->response->addSendInfo('<pre>post_data:
-' . json_encode($post_data, JSON_FORCE_OBJECT | JSON_PRETTY_PRINT) . ' </pre>');
-                }
-
-                $curlConnection->setOpt(CURLOPT_POST, true);
-                $curlConnection->setOpt(CURLOPT_POSTFIELDS, json_encode($post_data, JSON_FORCE_OBJECT));
+            $response_time_start = intval(ilSession::get(self::KEY_RESPONSE_TIME_START));
+            if (!empty($response_time_start)) {
+                $post_data["response_time"] = (time() - $response_time_start);
             }
+
+            if ($this->facade->settings()->getLog()) {
+                $this->response->addSendInfo('<pre>post_data:
+' . json_encode($post_data, JSON_FORCE_OBJECT | JSON_PRETTY_PRINT) . ' </pre>');
+            }
+
+            $curlConnection->setOpt(CURLOPT_POST, true);
+            $curlConnection->setOpt(CURLOPT_POSTFIELDS, json_encode($post_data, JSON_FORCE_OBJECT));
 
             $raw_response = $curlConnection->exec();
 
@@ -170,6 +176,10 @@ class RecommenderCurl
             if (isset($result['learning_progress_status'])) {
                 $this->response->setLearningProgressStatus($result['learning_progress_status'] !== null ? intval($result['learning_progress_status']) : null);
             }
+
+            if (!empty($result['competences'])) {
+                $this->response->setCompetences((array) $result['competences']);
+            }
         } catch (Exception $ex) {
             if ($this->facade->settings()->getLog()) {
                 $this->response->addSendFailure($ex->getMessage());
@@ -183,6 +193,8 @@ class RecommenderCurl
                 $curlConnection = null;
             }
         }
+
+        ilSession::set(self::KEY_RESPONSE_TIME_START, time());
     }
 
 
@@ -208,7 +220,7 @@ class RecommenderCurl
 
         switch ($this->facade->settings()->getRecommenderSystemServer()) {
             case xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_EXTERNAL:
-                $url = rtrim($this->facade->settings()->getUrl() . "/") . $rest_url;
+                $url = rtrim($this->facade->settings()->getUrl(), "/") . $rest_url;
                 break;
 
             case xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG:
