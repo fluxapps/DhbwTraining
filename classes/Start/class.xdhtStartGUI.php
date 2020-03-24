@@ -88,8 +88,8 @@ class xdhtStartGUI
         $ilLinkButton->setUrl($start_training_link);
         /** @var $ilToolbar ilToolbarGUI */
         self::dic()->toolbar()->addButtonInstance($ilLinkButton);
-       // self::output()->output(new xdhtPageObjectGUI($this->facade), true);
-        self::output()->output("", true);
+        $this->renderCompetences();
+        self::output()->output(new xdhtPageObjectGUI($this->facade), true);
     }
 
 
@@ -113,6 +113,13 @@ class xdhtStartGUI
             $this->facade->xdhtParticipantFactory()->updateStatus($this->facade->xdhtParticipantFactory()
                 ->findOrCreateParticipantByUsrAndTrainingObjectId(self::dic()->user()
                     ->getId(), $this->facade->objectId()), $this->response->getLearningProgressStatus());
+        }
+
+        if (!empty($this->response->getCompetences())) {
+            foreach ($this->response->getCompetences() as $competence_id => $level_id) {
+                ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
+                ilPersonalSkill::saveSelfEvaluation(self::dic()->user()->getId(), $competence_id, 0, $competence_id, $level_id);
+            }
         }
 
         switch ($this->response->getStatus()) {
@@ -167,6 +174,8 @@ class xdhtStartGUI
         }
 
         $this->response->sendMessages();
+
+        $this->renderCompetences();
 
         self::output()->output([$this->response->renderProgressBar(), $output], true);
     }
@@ -406,5 +415,21 @@ class xdhtStartGUI
     {
         $question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId(strval(filter_input(INPUT_POST, 'recomander_id')));
         self::output()->output($this->initAnsweredQuestionForm($question), true);
+    }
+
+
+    /**
+     *
+     */
+    protected function renderCompetences()/*:void*/
+    {
+        self::dic()->ui()->mainTemplate()->setRightContent(self::output()->getHTML(self::dic()->ui()->factory()->listing()->descriptive(array_reduce(ilPersonalSkill::getSelectedUserSkills(self::dic()
+            ->user()
+            ->getId()), function (array $items, array $competence) : array {
+            $items[$competence["title"]] = (new ilBasicSkill($competence["skill_node_id"]))->getLevelData(ilPersonalSkill::getSelfEvaluation(self::dic()->user()->getId(), $competence["skill_node_id"],
+                0, $competence["skill_node_id"]))["title"];
+
+            return $items;
+        }, []))));
     }
 }

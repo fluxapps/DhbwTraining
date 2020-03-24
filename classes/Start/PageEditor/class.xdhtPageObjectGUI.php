@@ -43,14 +43,6 @@ class xdhtPageObjectGUI extends ilPageObjectGUI
      */
     protected function checkAndAddCOPageDefinition()/*:void*/
     {
-        // we always need a page object - create on demand
-        if (!xdhtPageObject::_exists(xdhtPageObject::PARENT_TYPE, $this->facade->objectId())) {
-            $page_obj = new xdhtPageObject();
-            $page_obj->setId($this->facade->objectId());
-            $page_obj->setParentId($this->facade->objectId());
-            $page_obj->create();
-        }
-
         // for some reason the entry in copg_pobj_def gets deleted from time to time, so we check and add it everytime now
         $sql_query = self::dic()->database()->queryF('SELECT * FROM copg_pobj_def WHERE parent_type = %s', [ilDBConstants::T_TEXT], [xdhtPageObject::PARENT_TYPE]);
         if (self::dic()->database()->numRows($sql_query) === 0) {
@@ -60,6 +52,14 @@ class xdhtPageObjectGUI extends ilPageObjectGUI
                 'directory'   => [ilDBConstants::T_TEXT, 'classes/Start/PageEditor'],
                 'component'   => [ilDBConstants::T_TEXT, self::plugin()->directory()]
             ]);
+        }
+
+        // we always need a page object - create on demand
+        if (!xdhtPageObject::_exists(xdhtPageObject::PARENT_TYPE, $this->facade->objectId())) {
+            $page_obj = new xdhtPageObject();
+            $page_obj->setId($this->facade->objectId());
+            $page_obj->setParentId($this->facade->objectId());
+            $page_obj->create();
         }
     }
 

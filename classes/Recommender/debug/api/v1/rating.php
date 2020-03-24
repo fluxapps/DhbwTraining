@@ -12,7 +12,12 @@ $response = [
     "answer_response_type"     => RecommenderResponse::MESSAGE_TYPE_INFO,
     "progress"                 => 1,
     "progress_type"            => RecommenderResponse::MESSAGE_TYPE_SUCCESS,
-    "learning_progress_status" => RecommenderResponse::LEARNING_PROGRESS_STATUS_COMPLETED
+    "learning_progress_status" => RecommenderResponse::LEARNING_PROGRESS_STATUS_COMPLETED,
+    "competences"              => [
+        11 => 13,
+        12 => 16,
+        13 => 19
+    ]
 ];
 
 require_once __DIR__ . "/_helper/_output.php";
