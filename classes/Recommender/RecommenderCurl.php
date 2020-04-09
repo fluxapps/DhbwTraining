@@ -48,8 +48,8 @@ class RecommenderCurl
         ilSession::clear(self::KEY_RESPONSE_TIME_START);
 
         $headers = [
-            "Accept"       => "application/json",
-            "Content-Type" => "application/json"
+            "Accept: application/json",
+            "Content-Type: application/json"
         ];
         $data = [
             "secret"               => $this->facade->settings()->getSecret(),
@@ -250,8 +250,8 @@ class RecommenderCurl
         global $DIC;
 
         $headers = [
-            "Accept"       => "application/json",
-            "Content-Type" => "application/json"
+            "Accept: application/json",
+            "Content-Type: application/json"
         ];
 
         $data = [
@@ -279,8 +279,8 @@ class RecommenderCurl
         global $DIC;
 
         $headers = [
-            "Accept"       => "application/json",
-            "Content-Type" => "application/json"
+            "Accept: application/json",
+            "Content-Type: application/json"
         ];
 
         $data = [
