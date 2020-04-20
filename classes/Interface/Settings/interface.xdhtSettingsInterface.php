@@ -122,6 +122,17 @@ interface xdhtSettingsInterface
 
 
     /**
+     * @return array
+     */
+    public function getRecommenderSystemServerBuiltInDebugCompetences() : array;
+
+
+    /**
+     * @param array $recommender_system_server_built_in_debug_competences
+     */
+    public function setRecommenderSystemServerBuiltInDebugCompetences(array $recommender_system_server_built_in_debug_competences)/*:void*/ ;
+
+    /**
      * @return int
      */
     public function getLearningProgress() : int;

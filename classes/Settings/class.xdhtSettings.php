@@ -89,6 +89,14 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
      */
     protected $recommender_system_server = self::RECOMMENDER_SYSTEM_SERVER_EXTERNAL;
     /**
+     * @var array
+     *
+     * @db_has_field  true
+     * @db_fieldtype  text
+     * @db_is_notnull true
+     */
+    protected $rec_sys_ser_bui_in_deb_comp = [];
+    /**
      * @var int
      *
      * @db_has_field  true
@@ -114,6 +122,38 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
     public function getConnectorContainerName()
     {
         return self::TABLE_NAME;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function sleep(/*string*/ $field_name)
+    {
+        $field_value = $this->{$field_name};
+
+        switch ($field_name) {
+            case "rec_sys_ser_bui_in_deb_comp":
+                return json_encode($field_value);
+
+            default:
+                return null;
+        }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function wakeUp(/*string*/ $field_name, $field_value)
+    {
+        switch ($field_name) {
+            case "rec_sys_ser_bui_in_deb_comp":
+                return json_decode($field_value, true) ?? [];
+
+            default:
+                return null;
+        }
     }
 
 
@@ -280,6 +320,24 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
     public function setRecommenderSystemServer(int $recommender_system_server)/*:void*/
     {
         $this->recommender_system_server = $recommender_system_server;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getRecommenderSystemServerBuiltInDebugCompetences() : array
+    {
+        return $this->rec_sys_ser_bui_in_deb_comp;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setRecommenderSystemServerBuiltInDebugCompetences(array $recommender_system_server_built_in_debug_competences)/*:void*/
+    {
+        $this->rec_sys_ser_bui_in_deb_comp = $recommender_system_server_built_in_debug_competences;
     }
 
 

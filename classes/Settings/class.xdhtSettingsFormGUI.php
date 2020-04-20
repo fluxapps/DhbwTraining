@@ -1,5 +1,6 @@
 <?php
 
+use srag\CustomInputGUIs\DhbwTraining\MultiLineNewInputGUI\MultiLineNewInputGUI;
 use srag\DIC\DhbwTraining\DICTrait;
 use srag\Plugins\DhbwTraining\Config\Config;
 
@@ -102,6 +103,16 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
             $recommender_system_server_built_in_debug->setInfo(nl2br(str_replace("\\n", "\n", self::plugin()
                 ->translate("recommender_system_server_built_in_debug_info", "", ["[[question_id]]", "recomander_id", self::plugin()->directory() . "/classes/Recommender/debug/api/v1"])), false));
             $recommender_system_server->addOption($recommender_system_server_built_in_debug);
+            $recommender_system_server_built_in_debug_competences = new MultiLineNewInputGUI("competences", "recommender_system_server_built_in_debug_competences");
+            $recommender_system_server_built_in_debug_competences->setShowSort(false);
+            $recommender_system_server_built_in_debug_competences->setInfo(self::plugin()->translate("recommender_system_server_built_in_debug_competences_info", "", ["competence_id", "skill_id"]));
+            $recommender_system_server_built_in_debug_competences_competence_id = new ilNumberInputGUI("competence_id", "competence_id");
+            $recommender_system_server_built_in_debug_competences_competence_id->setRequired(true);
+            $recommender_system_server_built_in_debug_competences->addInput($recommender_system_server_built_in_debug_competences_competence_id);
+            $recommender_system_server_built_in_debug_competences_skill_id = new ilNumberInputGUI("skill_id", "skill_id");
+            $recommender_system_server_built_in_debug_competences_skill_id->setRequired(true);
+            $recommender_system_server_built_in_debug_competences->addInput($recommender_system_server_built_in_debug_competences_skill_id);
+            $recommender_system_server_built_in_debug->addSubItem($recommender_system_server_built_in_debug_competences);
         }
 
         $ti = new ilTextInputGUI(self::plugin()->translate("url"), 'url');
@@ -155,6 +166,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $values['url'] = $this->facade->settings()->getUrl();
         $values['log'] = $this->facade->settings()->getLog();
         $values['recommender_system'] = $this->facade->settings()->getRecommenderSystemServer();
+        $values['recommender_system_server_built_in_debug_competences'] = $this->facade->settings()->getRecommenderSystemServerBuiltInDebugCompetences();
         if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
             $values['learning_progress'] = $this->facade->settings()->getLearningProgress();
         }
@@ -193,6 +205,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $this->facade->settings()->setUrl($this->getInput('url'));
         $this->facade->settings()->setLog($this->getInput('log'));
         $this->facade->settings()->setRecommenderSystemServer(intval($this->getInput('recommender_system')));
+        $this->facade->settings()->setRecommenderSystemServerBuiltInDebugCompetences((array) $this->getInput('recommender_system_server_built_in_debug_competences'));
         if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
             $this->facade->settings()->setLearningProgress(intval($this->getInput('learning_progress')));
         }
