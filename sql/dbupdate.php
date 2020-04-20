@@ -29,3 +29,7 @@
 \srag\Plugins\DhbwTraining\Config\Config::updateDB();
 \srag\Plugins\DhbwTraining\Config\Config::initDefaultSalt();
 ?>
+<#8>
+<?php
+\xdhtSettings::updateDB();
+?>

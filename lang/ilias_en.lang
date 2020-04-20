@@ -79,3 +79,4 @@ config_configuration_saved#:#Configuration saved
 config_save#:#Save
 config_salt#:#Salt
 config_salt_info#:#Used to anonymize the user with the recommender system
+recommender_system_server_built_in_debug_competences_info#:#If multiple same %1$s, a random %2$s will be taken
