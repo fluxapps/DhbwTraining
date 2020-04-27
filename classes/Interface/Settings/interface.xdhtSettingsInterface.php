@@ -132,6 +132,19 @@ interface xdhtSettingsInterface
      */
     public function setRecommenderSystemServerBuiltInDebugCompetences(array $recommender_system_server_built_in_debug_competences)/*:void*/ ;
 
+
+    /**
+     * @return array
+     */
+    public function getRecommenderSystemServerBuiltInDebugProgressmeters() : array;
+
+
+    /**
+     * @param array $recommender_system_server_built_in_debug_progressmeters
+     */
+    public function setRecommenderSystemServerBuiltInDebugProgressmeters(array $recommender_system_server_built_in_debug_progressmeters)/*:void*/ ;
+
+
     /**
      * @return int
      */

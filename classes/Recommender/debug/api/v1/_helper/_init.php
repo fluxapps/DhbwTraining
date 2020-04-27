@@ -22,6 +22,7 @@ $all_questions = array_keys(array_filter($facade->xdhtQuestionFactory()->getAllQ
     return (!empty($row["description"]) && (strpos($row["description"], "[[") !== false && strpos($row["description"], "]]") !== false));
 }));
 
+
 $random_recomander_id = $all_questions[rand(0, (count($all_questions) - 1))];
 
 $random_competences = $facade->settings()->getRecommenderSystemServerBuiltInDebugCompetences();
@@ -39,6 +40,24 @@ if (!empty($random_competences)) {
 } else {
     $random_competences = null;
 }
+
+$random_progress_meters = $facade->settings()->getRecommenderSystemServerBuiltInDebugProgressmeters();
+if (!empty($random_progress_meters)) {
+    /*
+    $random_progress_meter = array_map(function (array $skill_ids) : int {
+        return $skill_ids[rand(0, (count($skill_ids) - 1))];
+    }, array_reduce($random_competences, function (array $random_competences, array $competence) : array {
+        if (!isset($random_competences[$competence["competence_id"]])) {
+            $random_competences[$competence["competence_id"]] = [];
+        }
+        $random_competences[$competence["competence_id"]][] = $competence["skill_id"];
+
+        return $random_competences;
+    }, []));*/
+} else {
+    $random_progress_meters = null;
+}
+
 
 try {
     $post = json_decode(file_get_contents("php://input"), true);

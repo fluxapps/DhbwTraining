@@ -2,6 +2,7 @@
 
 use srag\DIC\DhbwTraining\DICTrait;
 use srag\Plugins\DhbwTraining\Config\Config;
+use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
 
 /**
  * Class ReccomenderCurl
@@ -13,6 +14,7 @@ class RecommenderCurl
 {
 
     use DICTrait;
+
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
     const KEY_RESPONSE_TIME_START = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_time_start";
     /**
@@ -179,6 +181,12 @@ class RecommenderCurl
 
             if (!empty($result['competences'])) {
                 $this->response->setCompetences((array) $result['competences']);
+            }
+
+            if (!empty($result['progress_meters'])) {
+
+                    RcSGateway::new()->trainingSession()->setDataOfProgressMeters($_GET['ref_id'], self::dic()->user()->getId(), (array) $result['progress_meters']);
+
             }
         } catch (Exception $ex) {
             if ($this->facade->settings()->getLog()) {

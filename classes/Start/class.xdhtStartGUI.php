@@ -1,6 +1,12 @@
 <?php
 
+use Ramsey\Uuid\Uuid;
 use srag\DIC\DhbwTraining\DICTrait;
+use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\Guid;
+use srag\Plugins\DhbwTraining\RecommenderSystem\Player\Infrastructure\RcSEventPublisher;
+use srag\Plugins\DhbwTraining\RecommenderSystem\Player\Infrastructure\RcSEventStore;
+use srag\Plugins\DhbwTraining\RecommenderSystem\Player\Infrastructure\RcSRepository;
+use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
 
 /**
  * Class xdhtStartGUI
@@ -9,10 +15,12 @@ use srag\DIC\DhbwTraining\DICTrait;
  *
  * @author            : Benjamin Seglias   <bs@studer-raimann.ch>
  */
-class xdhtStartGUI
+class
+xdhtStartGUI
 {
 
     use DICTrait;
+
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
     const CMD_STANDARD = "index";
     const CMD_START = "start";
@@ -55,9 +63,9 @@ class xdhtStartGUI
                 break;
             default:
                 $this->performCommand();
+                break;
         }
     }
-
 
     protected function performCommand()
     {
@@ -95,8 +103,19 @@ class xdhtStartGUI
 
     public function start()
     {
+        if(ilSession::_getData(ilObjDhbwTraining::KEY_TRAINING_SESSION_UUID) === 0) {
+
+            $recommender_gateway = RcSGateway::new();
+            $recommender_gateway->trainingSession()->startTrainingSession(
+               $_GET['ref_id'],
+                self::dic()->user()->getId()
+            );
+        }
+
+
         $recommender = new RecommenderCurl($this->facade, $this->response);
         $recommender->start();
+
         $this->proceedWithReturnOfRecommender();
     }
 
@@ -106,7 +125,6 @@ class xdhtStartGUI
      */
     public function proceedWithReturnOfRecommender()
     {
-
         $output = "";
 
         if ($this->facade->settings()->getLearningProgress() && $this->response->getLearningProgressStatus() !== null) {
@@ -117,8 +135,8 @@ class xdhtStartGUI
 
         if (!empty($this->response->getCompetences())) {
             foreach ($this->response->getCompetences() as $competence_id => $level_id) {
-                ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
-                ilPersonalSkill::saveSelfEvaluation(self::dic()->user()->getId(), $competence_id, 0, $competence_id, $level_id);
+                //ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
+                // ilPersonalSkill::saveSelfEvaluation(self::dic()->user()->getId(), $competence_id, 0, $competence_id, $level_id);
             }
         }
 
@@ -175,7 +193,10 @@ class xdhtStartGUI
 
         $this->response->sendMessages();
 
-        $this->renderCompetences();
+
+
+
+        self::dic()->ui()->mainTemplate()->setRightContent($this->response->getProgressMetersHtml());
 
         self::output()->output([$this->response->renderProgressBar(), $output], true);
     }
@@ -390,12 +411,17 @@ class xdhtStartGUI
         $previewSession = new ilAssQuestionPreviewSession(self::dic()->user()->getId(), $question['question_id']);
 
         $q_gui = assQuestionGUI::_getQuestionGUI("", $question['question_id']);
-        assQuestion::_includeClass($q_gui->getQuestionType(), 1);
-        $question_type_gui = assQuestion::getGuiClassNameByQuestionType($q_gui->getQuestionType());
+        if(is_object($q_gui )) {
+            assQuestion::_includeClass($q_gui->getQuestionType(), 1);
+            $question_type_gui = assQuestion::getGuiClassNameByQuestionType($q_gui->getQuestionType());
 
-        $ass_question = new $question_type_gui($question['question_id']);
+            $ass_question = new $question_type_gui($question['question_id']);
 
-        return $ass_question->object->persistPreviewState($previewSession);
+            return $ass_question->object->persistPreviewState($previewSession);
+        }
+
+        return false;
+
     }
 
 
@@ -426,6 +452,14 @@ class xdhtStartGUI
         self::dic()->ui()->mainTemplate()->setRightContent(self::output()->getHTML(self::dic()->ui()->factory()->listing()->descriptive(array_reduce(ilPersonalSkill::getSelectedUserSkills(self::dic()
             ->user()
             ->getId()), function (array $items, array $competence) : array {
+
+            $title = (new ilBasicSkill($competence["skill_node_id"]))->getLevelData(ilPersonalSkill::getSelfEvaluation(self::dic()->user()->getId(), $competence["skill_node_id"],
+                0, $competence["skill_node_id"]))["title"];
+
+            if ($title === null) {
+                return [];
+            }
+
             $items[$competence["title"]] = (new ilBasicSkill($competence["skill_node_id"]))->getLevelData(ilPersonalSkill::getSelfEvaluation(self::dic()->user()->getId(), $competence["skill_node_id"],
                 0, $competence["skill_node_id"]))["title"];
 

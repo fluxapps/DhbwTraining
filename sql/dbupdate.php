@@ -33,3 +33,7 @@
 <?php
 \xdhtSettings::updateDB();
 ?>
+<#9>
+<?php
+\xdhtSettings::updateDB();
+?>

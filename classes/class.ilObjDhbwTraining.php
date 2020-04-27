@@ -11,6 +11,8 @@ class ilObjDhbwTraining extends ilObjectPlugin implements ilLPStatusPluginInterf
 {
 
     const CMD_CLONE = 'doCloneObject';
+    const KEY_TRAINING_SESSION_UUID = "KEY_TRAINING_SESSION_UUID";
+    const KEY_TRAINING_EVENTS = "KEY_TRAINING_EVENTS";
 
 
     /**

@@ -103,16 +103,10 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
             $recommender_system_server_built_in_debug->setInfo(nl2br(str_replace("\\n", "\n", self::plugin()
                 ->translate("recommender_system_server_built_in_debug_info", "", ["[[question_id]]", "recomander_id", self::plugin()->directory() . "/classes/Recommender/debug/api/v1"])), false));
             $recommender_system_server->addOption($recommender_system_server_built_in_debug);
-            $recommender_system_server_built_in_debug_competences = new MultiLineNewInputGUI("competences", "recommender_system_server_built_in_debug_competences");
-            $recommender_system_server_built_in_debug_competences->setShowSort(false);
-            $recommender_system_server_built_in_debug_competences->setInfo(self::plugin()->translate("recommender_system_server_built_in_debug_competences_info", "", ["competence_id", "skill_id"]));
-            $recommender_system_server_built_in_debug_competences_competence_id = new ilNumberInputGUI("competence_id", "competence_id");
-            $recommender_system_server_built_in_debug_competences_competence_id->setRequired(true);
-            $recommender_system_server_built_in_debug_competences->addInput($recommender_system_server_built_in_debug_competences_competence_id);
-            $recommender_system_server_built_in_debug_competences_skill_id = new ilNumberInputGUI("skill_id", "skill_id");
-            $recommender_system_server_built_in_debug_competences_skill_id->setRequired(true);
-            $recommender_system_server_built_in_debug_competences->addInput($recommender_system_server_built_in_debug_competences_skill_id);
-            $recommender_system_server_built_in_debug->addSubItem($recommender_system_server_built_in_debug_competences);
+
+            $recommender_system_server_built_in_debug->addSubItem($this->getCompetencesInputGUI());
+
+            $recommender_system_server_built_in_debug->addSubItem($this->getProgressmeterInputGUI());
         }
 
         $ti = new ilTextInputGUI(self::plugin()->translate("url"), 'url');
@@ -167,6 +161,7 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $values['log'] = $this->facade->settings()->getLog();
         $values['recommender_system'] = $this->facade->settings()->getRecommenderSystemServer();
         $values['recommender_system_server_built_in_debug_competences'] = $this->facade->settings()->getRecommenderSystemServerBuiltInDebugCompetences();
+        $values['recommender_system_server_built_in_debug_progressmeters'] = $this->facade->settings()->getRecommenderSystemServerBuiltInDebugProgressmeters();
         if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
             $values['learning_progress'] = $this->facade->settings()->getLearningProgress();
         }
@@ -204,12 +199,84 @@ class xdhtSettingsFormGUI extends ilPropertyFormGUI
         $this->facade->settings()->setSecret($this->getInput('secret'));
         $this->facade->settings()->setUrl($this->getInput('url'));
         $this->facade->settings()->setLog($this->getInput('log'));
-        $this->facade->settings()->setRecommenderSystemServer(intval($this->getInput('recommender_system')));
+        $this->facade->settings()->setRecommenderSystemServer((int) $this->getInput('recommender_system'));
         $this->facade->settings()->setRecommenderSystemServerBuiltInDebugCompetences((array) $this->getInput('recommender_system_server_built_in_debug_competences'));
+
+        $this->facade->settings()->setRecommenderSystemServerBuiltInDebugProgressmeters((array) $this->getInput('recommender_system_server_built_in_debug_progressmeters'));
+
         if (Config::getField(Config::KEY_LEARNING_PROGRESS)) {
-            $this->facade->settings()->setLearningProgress(intval($this->getInput('learning_progress')));
+            $this->facade->settings()->setLearningProgress((int) $this->getInput('learning_progress'));
         }
 
         return true;
+    }
+
+
+    protected function getProgressmeterInputGUI() : MultiLineNewInputGUI
+    {
+        $recommender_system_server_built_in_debug_progressmeters = new MultiLineNewInputGUI("progressmeters", "recommender_system_server_built_in_debug_progressmeters");
+        $recommender_system_server_built_in_debug_progressmeters->setShowSort(false);
+        $recommender_system_server_built_in_debug_progressmeters->setInfo(self::plugin()->translate("recommender_system_server_built_in_debug_progressmeters_info", "",
+            [
+                "progressmeter_type",
+                "max_width_in_pixel",
+                "title",
+                "max_reachable_points",
+                "required_score",
+                "required_score_label",
+                "primary_reached_score",
+                "primary_reached_score_label",
+                "secondary_reached_score",
+                "secondary_reached_score_label"
+            ]));
+
+        $type = new ilSelectInputGUI('progressmeter_type', 'progressmeter_type');
+        $type->setOptions(['Standard', 'Mini']);
+        $recommender_system_server_built_in_debug_progressmeters->addInput($type);
+
+        $title = new ilTextInputGUI('title', 'title');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($title);
+
+        $max_width_in_pixel = new ilNumberInputGUI('max_width_in_pixel', 'max_width_in_pixel');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($max_width_in_pixel);
+
+
+        $max_reachable_score = new ilNumberInputGUI('max_reachable_score', 'max_reachable_score');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($max_reachable_score);
+
+        $required_score = new ilNumberInputGUI('required_score', 'required_score');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($required_score);
+
+        $required_score_label = new ilTextInputGUI('required_score_label', 'required_score_label');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($required_score_label);
+
+        $primary_reached_score = new ilNumberInputGUI('primary_reached_score', 'primary_reached_score');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($primary_reached_score);
+
+        $primary_reached_score_label = new ilTextInputGUI('primary_reached_score_label', 'primary_reached_score_label');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($primary_reached_score_label);
+
+        $secondary_reached_score = new ilNumberInputGUI('secondary_reached_score', 'secondary_reached_score');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($secondary_reached_score);
+
+        $secondary_reached_score_label = new ilTextInputGUI('secondary_reached_score_label', 'secondary_reached_score_label');
+        $recommender_system_server_built_in_debug_progressmeters->addInput($secondary_reached_score_label);
+
+        return $recommender_system_server_built_in_debug_progressmeters;
+    }
+
+
+    protected function getCompetencesInputGUI() : MultiLineNewInputGUI
+    {
+        $recommender_system_server_built_in_debug_competences = new MultiLineNewInputGUI("competences", "recommender_system_server_built_in_debug_competences");
+        $recommender_system_server_built_in_debug_competences->setShowSort(false);
+        $recommender_system_server_built_in_debug_competences->setInfo(self::plugin()->translate("recommender_system_server_built_in_debug_competences_info", "", ["competence_id", "skill_id"]));
+        $recommender_system_server_built_in_debug_competences_competence_id = new ilNumberInputGUI("competence_id", "competence_id");
+        $recommender_system_server_built_in_debug_competences_competence_id->setRequired(true);
+        $recommender_system_server_built_in_debug_competences->addInput($recommender_system_server_built_in_debug_competences_competence_id);
+        $recommender_system_server_built_in_debug_competences_skill_id = new ilNumberInputGUI("skill_id", "skill_id");
+        $recommender_system_server_built_in_debug_competences_skill_id->setRequired(true);
+        $recommender_system_server_built_in_debug_competences->addInput($recommender_system_server_built_in_debug_competences_skill_id);
+        return $recommender_system_server_built_in_debug_competences;
     }
 }

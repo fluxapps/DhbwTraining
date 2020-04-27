@@ -1,6 +1,8 @@
 <?php
 
 use srag\DIC\DhbwTraining\DICTrait;
+use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\Guid;
+use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
 
 /**
  * Class RecommenderResponse
@@ -12,6 +14,7 @@ class RecommenderResponse
 {
 
     use DICTrait;
+
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
     const STATUS_SUCCESS = "success";
     const STATUS_ERROR = "error";
@@ -78,6 +81,10 @@ class RecommenderResponse
      * @var array
      */
     protected $competences = [];
+    /**
+     * @var ProgressMeter[]
+     */
+    protected $progress_meters;
     /**
      * @var array
      */
@@ -205,6 +212,24 @@ class RecommenderResponse
 
 
     /**
+     * @return ProgressMeter[]
+     */
+    public function getProgressmeters() : array
+    {
+        return $this->progress_meters;
+    }
+
+
+    /**
+     * @param ProgressMeter[] $progressmeters
+     */
+    public function setProgressmeters($progressmeters)
+    {
+        $this->progress_meters = $progressmeters;
+    }
+
+
+    /**
      * @return string
      */
     public function getAnswerResponseType() : string
@@ -292,6 +317,18 @@ class RecommenderResponse
     {
         $this->competences = $competences;
     }
+
+
+    /**
+     * @return ProgressMeters
+     */
+   /* public function getProgressmeters() : ProgressMeters
+    {
+        return $this->progressmeters;
+    }
+*/
+
+
 
 
     /**
@@ -449,6 +486,68 @@ class RecommenderResponse
         if (!empty($this->send_failure)) {
             ilUtil::sendFailure(implode("<br><br>", $this->send_failure), true);
         }
+    }
+
+
+    public function getProgressMetersHtml()
+    {
+        $recommender_gateway = RcSGateway::new();
+        $progress_menter_list = $recommender_gateway->trainingSession()->getProgressMeterList($_GET['ref_id']);
+
+            return $progress_menter_list;
+
+
+
+        // render
+        return implode('', $progress_meter_html_list);
+    }
+
+
+    private function getProgressMeterHtml(ProgressMeter $progress_meter)
+    {
+        //$progress_meter_factory = new ProgressMeterFactory();
+        $progress_meter_factory = self::dic()->ui()->factory()->chart()->progressMeter();
+        switch ($progress_meter->getProgressmeterType()) {
+            case ProgressMeter::PROGRESS_METER_TYPE_MINI:
+
+                $ui_element = $progress_meter_factory->mini(
+                    (int) $progress_meter->getMaxReachableScore(),
+                    (int) $progress_meter->getPrimaryReachedScore(),
+                    (int) $progress_meter->getRequiredScore()
+                );
+                break;
+            default:
+                $ui_element = $progress_meter_factory->standard(
+                    (int) $progress_meter->getMaxReachableScore(),
+                    (int) $progress_meter->getPrimaryReachedScore(),
+                    (int) $progress_meter->getRequiredScore(),
+                    (int) $progress_meter->getSecondaryReachedScore()
+                );
+                $ui_element->withMainText($progress_meter->getPrimaryReachedScoreLabel());
+                $ui_element->withRequiredText($progress_meter->getRequiredScoreLabel());
+                break;
+        }
+
+        $progress_meter_id = md5((string) $progress_meter->getTitle());
+        $progress_meter_html = "<style>
+        #" . $progress_meter_id . " {
+            max-width: " . $progress_meter->getMaxWidthInPixel() . "px;
+             margin-bottom: 20px;
+        }
+        </style>";
+        $progress_meter_html .= '<div class="il_Block" datatable="0">';
+        $progress_meter_html .= '<div class="ilBlockHeader ui-sortable-handle" style="cursor: move;">';
+            $progress_meter_html .= '<div><h3 class="ilBlockHeader ui-sortable-handle" style="cursor: move;">' . $progress_meter->getTitle() . '</h3></div>';
+        $progress_meter_html .= '</div>';
+
+        $progress_meter_html .= '<div class="ilBlockRow1">';
+            $progress_meter_html .= '<div id="' . $progress_meter_id . '">';
+                $progress_meter_html .= self::dic()->ui()->renderer()->render($ui_element);
+                $progress_meter_html .= '</div>';
+            $progress_meter_html .= '</div>';
+        $progress_meter_html .= '</div>';
+
+        return $progress_meter_html;
     }
 
 

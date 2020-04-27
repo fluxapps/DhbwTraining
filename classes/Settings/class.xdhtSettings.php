@@ -97,6 +97,14 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
      */
     protected $rec_sys_ser_bui_in_deb_comp = [];
     /**
+     * @var array
+     *
+     * @db_has_field  true
+     * @db_fieldtype  text
+     * @db_is_notnull true
+     */
+    protected $rec_sys_ser_bui_in_deb_progm = [];
+    /**
      * @var int
      *
      * @db_has_field  true
@@ -134,6 +142,7 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
 
         switch ($field_name) {
             case "rec_sys_ser_bui_in_deb_comp":
+            case "rec_sys_ser_bui_in_deb_progm":
                 return json_encode($field_value);
 
             default:
@@ -149,6 +158,7 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
     {
         switch ($field_name) {
             case "rec_sys_ser_bui_in_deb_comp":
+            case "rec_sys_ser_bui_in_deb_progm":
                 return json_decode($field_value, true) ?? [];
 
             default:
@@ -338,6 +348,18 @@ class xdhtSettings extends ActiveRecord implements xdhtSettingsInterface
     public function setRecommenderSystemServerBuiltInDebugCompetences(array $recommender_system_server_built_in_debug_competences)/*:void*/
     {
         $this->rec_sys_ser_bui_in_deb_comp = $recommender_system_server_built_in_debug_competences;
+    }
+
+
+    public function getRecommenderSystemServerBuiltInDebugProgressmeters() : array
+    {
+        return $this->rec_sys_ser_bui_in_deb_progm;
+    }
+
+
+    public function setRecommenderSystemServerBuiltInDebugProgressmeters(array $recommender_system_server_built_in_debug_progressmeters)
+    {
+        $this->rec_sys_ser_bui_in_deb_progm = $recommender_system_server_built_in_debug_progressmeters;
     }
 
 
