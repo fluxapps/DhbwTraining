@@ -169,6 +169,10 @@ class RecommenderCurl
                 $this->response->setMessageType(strval($result['message_type']));
             }
 
+            if(!empty($result['progress_display'])) {
+                $this->response->setProgressDisplay((bool)($result['progress_display']));
+            }
+
             $this->response->setProgress(null);
             $this->response->setProgressType(strval($result['progress_type']));
             if (isset($result['progress']) && !empty($result['progress_type'])) {

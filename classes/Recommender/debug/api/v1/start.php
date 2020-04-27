@@ -10,6 +10,7 @@ $response = [
     "message_type"             => RecommenderResponse::MESSAGE_TYPE_INFO,
     "answer_response"          => "",
     "answer_response_type"     => RecommenderResponse::MESSAGE_TYPE_INFO,
+    "progress_display"          => 1,
     "progress"                 => 0,
     "progress_type"            => ilProgressBar::TYPE_INFO,
     "learning_progress_status" => RecommenderResponse::LEARNING_PROGRESS_STATUS_NOT_ATTEMPTED,

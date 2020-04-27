@@ -66,6 +66,10 @@ class RecommenderResponse
      */
     protected $answer_response_type = self::MESSAGE_TYPE_INFO;
     /**
+     * @var bool
+     */
+    protected $progress_display = false;
+    /**
      * @var float|null
      */
     protected $progress = null;
@@ -208,6 +212,24 @@ class RecommenderResponse
     public function setAnswerResponse(string $answer_response)
     {
         $this->answer_response = $answer_response;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function getProgressDisplay() : bool
+    {
+        return $this->progress_display;
+    }
+
+
+    /**
+     * @param bool $progress_display
+     */
+    public function setProgressDisplay(bool $progress_display)
+    {
+        $this->progress_display = $progress_display;
     }
 
 
@@ -480,8 +502,8 @@ class RecommenderResponse
     public function getProgressMetersHtml()
     {
         $progress_meter_html_list = [];
-        if(count($this->progress_meters) > 0) {
-            foreach($this->progress_meters as $progress_meter) {
+        if (count($this->progress_meters) > 0) {
+            foreach ($this->progress_meters as $progress_meter) {
                 $progress_meter_html_list[] = $this->getProgressMeterHtml($progress_meter);
             }
         }
@@ -525,14 +547,14 @@ class RecommenderResponse
         </style>";
         $progress_meter_html .= '<div class="il_Block" datatable="0">';
         $progress_meter_html .= '<div class="ilBlockHeader ui-sortable-handle" style="cursor: move;">';
-            $progress_meter_html .= '<div><h3 class="ilBlockHeader ui-sortable-handle" style="cursor: move;">' . $progress_meter->getTitle() . '</h3></div>';
+        $progress_meter_html .= '<div><h3 class="ilBlockHeader ui-sortable-handle" style="cursor: move;">' . $progress_meter->getTitle() . '</h3></div>';
         $progress_meter_html .= '</div>';
 
         $progress_meter_html .= '<div class="ilBlockRow1">';
-            $progress_meter_html .= '<div id="' . $progress_meter_id . '">';
-                $progress_meter_html .= self::dic()->ui()->renderer()->render($ui_element);
-                $progress_meter_html .= '</div>';
-            $progress_meter_html .= '</div>';
+        $progress_meter_html .= '<div id="' . $progress_meter_id . '">';
+        $progress_meter_html .= self::dic()->ui()->renderer()->render($ui_element);
+        $progress_meter_html .= '</div>';
+        $progress_meter_html .= '</div>';
         $progress_meter_html .= '</div>';
 
         return $progress_meter_html;
@@ -544,7 +566,7 @@ class RecommenderResponse
      */
     public function renderProgressBar() : string
     {
-        if ($this->progress === null) {
+        if ($this->progress_display === false) {
             return "";
         }
 
