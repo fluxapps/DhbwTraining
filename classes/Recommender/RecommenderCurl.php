@@ -18,6 +18,7 @@ class RecommenderCurl
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
     const KEY_RESPONSE_TIME_START = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_time_start";
     const KEY_RESPONSE_PROGRESS_METER = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_progress_meter";
+    const KEY_RESPONSE_PROGRESS_BAR = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_progress_bar";
     /**
      * @var xdhtObjectFacadeInterface
      */
@@ -168,13 +169,22 @@ class RecommenderCurl
                 $this->response->setMessageType(strval($result['message_type']));
             }
 
-            if (isset($result['progress'])) {
-                $this->response->setProgress($result['progress'] !== null ? floatval($result['progress']) : null);
+            $this->response->setProgress(null);
+            $this->response->setProgressType(strval($result['progress_type']));
+            if (isset($result['progress']) && !empty($result['progress_type'])) {
+                $this->response->setProgress(floatval($result['progress']));
+                $this->response->setProgressType(strval($result['progress_type']));
+
+                ilSession::set(self::KEY_RESPONSE_PROGRESS_BAR, serialize(['progress' => $result['progress'],'progress_type' => $result['progress_type']]));
+            } else {
+                if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_BAR)) > 0) {
+                    $progress_bar = unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_BAR));
+
+                    $this->response->setProgress($progress_bar['progress']);
+                    $this->response->setProgress($progress_bar['progress_type']);
+                }
             }
 
-            if (!empty($result['progress_type'])) {
-                $this->response->setProgressType(strval($result['progress_type']));
-            }
 
             if (isset($result['learning_progress_status'])) {
                 $this->response->setLearningProgressStatus($result['learning_progress_status'] !== null ? intval($result['learning_progress_status']) : null);

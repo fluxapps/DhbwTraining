@@ -104,6 +104,7 @@ xdhtStartGUI
     public function start()
     {
         ilSession::set(RecommenderCurl::KEY_RESPONSE_PROGRESS_METER, '');
+        ilSession::set(RecommenderCurl::KEY_RESPONSE_PROGRESS_BAR, '');
 
         $recommender = new RecommenderCurl($this->facade, $this->response);
         $recommender->start();

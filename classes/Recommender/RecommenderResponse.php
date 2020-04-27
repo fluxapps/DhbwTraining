@@ -553,19 +553,19 @@ class RecommenderResponse
         $progress_bar->setCurrent($this->progress * 100);
 
         switch ($this->progress_type) {
-            case self::MESSAGE_TYPE_SUCCESS:
+            case ilProgressBar::TYPE_SUCCESS:
                 $progress_bar->setType(ilProgressBar::TYPE_SUCCESS);
                 break;
 
-            case self::MESSAGE_TYPE_QUESTION:
+            case ilProgressBar::TYPE_WARNING:
                 $progress_bar->setType(ilProgressBar::TYPE_WARNING);
                 break;
 
-            case self::MESSAGE_TYPE_FAILURE:
+            case ilProgressBar::TYPE_DANGER:
                 $progress_bar->setType(ilProgressBar::TYPE_DANGER);
                 break;
 
-            case self::MESSAGE_TYPE_INFO:
+            case ilProgressBar::TYPE_INFO:
             default:
                 $progress_bar->setType(ilProgressBar::TYPE_INFO);
                 break;

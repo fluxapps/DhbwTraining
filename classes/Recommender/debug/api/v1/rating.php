@@ -11,7 +11,7 @@ $response = [
     "answer_response"          => "",
     "answer_response_type"     => RecommenderResponse::MESSAGE_TYPE_INFO,
     "progress"                 => 1,
-    "progress_type"            => RecommenderResponse::MESSAGE_TYPE_SUCCESS,
+    "progress_type"            => ilProgressBar::TYPE_INFO,
     "learning_progress_status" => RecommenderResponse::LEARNING_PROGRESS_STATUS_COMPLETED,
     "competences"              => $random_competences
 ];
