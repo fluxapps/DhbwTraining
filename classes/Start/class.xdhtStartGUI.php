@@ -103,15 +103,7 @@ xdhtStartGUI
 
     public function start()
     {
-        if(ilSession::_getData(ilObjDhbwTraining::KEY_TRAINING_SESSION_UUID) === 0) {
-
-            $recommender_gateway = RcSGateway::new();
-            $recommender_gateway->trainingSession()->startTrainingSession(
-               $_GET['ref_id'],
-                self::dic()->user()->getId()
-            );
-        }
-
+        ilSession::set(RecommenderCurl::KEY_RESPONSE_PROGRESS_METER, '');
 
         $recommender = new RecommenderCurl($this->facade, $this->response);
         $recommender->start();
@@ -192,7 +184,6 @@ xdhtStartGUI
         }
 
         $this->response->sendMessages();
-
 
 
 

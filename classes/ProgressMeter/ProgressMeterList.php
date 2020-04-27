@@ -1,12 +1,6 @@
 <?php
 
-namespace srag\Plugins\DhbwTraining\RecommenderSystem\Player\Domain\TrainingSession\Model\ProgressMeter;
-
-use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\AbstractValueObject;
-use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\ValueObjectList;
-
-class ProgressMeterList extends AbstractValueObject implements ValueObjectList
-{
+class ProgressMeterList {
 
     /**
      * @var ProgressMeter[]

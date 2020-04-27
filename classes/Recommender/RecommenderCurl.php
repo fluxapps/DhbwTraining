@@ -2,7 +2,7 @@
 
 use srag\DIC\DhbwTraining\DICTrait;
 use srag\Plugins\DhbwTraining\Config\Config;
-use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
+
 
 /**
  * Class ReccomenderCurl
@@ -17,6 +17,7 @@ class RecommenderCurl
 
     const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
     const KEY_RESPONSE_TIME_START = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_time_start";
+    const KEY_RESPONSE_PROGRESS_METER = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_progress_meter";
     /**
      * @var xdhtObjectFacadeInterface
      */
@@ -185,9 +186,23 @@ class RecommenderCurl
 
             if (!empty($result['progress_meters'])) {
 
-                    RcSGateway::new()->trainingSession()->setDataOfProgressMeters($_GET['ref_id'], self::dic()->user()->getId(), (array) $result['progress_meters']);
 
+                $progress_meter_list = [];
+                foreach($result['progress_meters'] as $key => $value){
+                    $progress_meter_list[] = ProgressMeter::newFromArray($value);
+                }
+
+                ilSession::set(self::KEY_RESPONSE_PROGRESS_METER, serialize($progress_meter_list));
+
+
+                $this->response->setProgressmeters((array) $progress_meter_list);
+            } else {
+                if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)) > 0) {
+                   $this->response->setProgressmeters((array) unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)));
+                }
             }
+
+
         } catch (Exception $ex) {
             if ($this->facade->settings()->getLog()) {
                 $this->response->addSendFailure($ex->getMessage());

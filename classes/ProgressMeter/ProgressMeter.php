@@ -1,11 +1,6 @@
 <?php
 
-namespace srag\Plugins\DhbwTraining\RecommenderSystem\Player\Domain\TrainingSession\Model\ProgressMeter;
-
-use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\AbstractValueObject;
-use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\ValueObject;
-
-class ProgressMeter extends AbstractValueObject implements ValueObject
+class ProgressMeter
 {
 
     const PROGRESS_METER_TYPE_STANDARD = "STANDARD";

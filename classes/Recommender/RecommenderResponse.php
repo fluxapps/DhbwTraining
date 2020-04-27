@@ -84,7 +84,7 @@ class RecommenderResponse
     /**
      * @var ProgressMeter[]
      */
-    protected $progress_meters;
+    protected $progress_meters = [];
     /**
      * @var array
      */
@@ -221,11 +221,11 @@ class RecommenderResponse
 
 
     /**
-     * @param ProgressMeter[] $progressmeters
+     * @param ProgressMeter[]
      */
-    public function setProgressmeters($progressmeters)
+    public function setProgressmeters($progress_meters)
     {
-        $this->progress_meters = $progressmeters;
+        $this->progress_meters = $progress_meters;
     }
 
 
@@ -317,18 +317,6 @@ class RecommenderResponse
     {
         $this->competences = $competences;
     }
-
-
-    /**
-     * @return ProgressMeters
-     */
-   /* public function getProgressmeters() : ProgressMeters
-    {
-        return $this->progressmeters;
-    }
-*/
-
-
 
 
     /**
@@ -491,12 +479,12 @@ class RecommenderResponse
 
     public function getProgressMetersHtml()
     {
-        $recommender_gateway = RcSGateway::new();
-        $progress_menter_list = $recommender_gateway->trainingSession()->getProgressMeterList($_GET['ref_id']);
-
-            return $progress_menter_list;
-
-
+        $progress_meter_html_list = [];
+        if(count($this->progress_meters) > 0) {
+            foreach($this->progress_meters as $progress_meter) {
+                $progress_meter_html_list[] = $this->getProgressMeterHtml($progress_meter);
+            }
+        }
 
         // render
         return implode('', $progress_meter_html_list);
