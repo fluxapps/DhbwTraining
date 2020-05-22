@@ -184,8 +184,8 @@ class RecommenderCurl
                 if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_BAR)) > 0) {
                     $progress_bar = unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_BAR));
 
-                    $this->response->setProgress($progress_bar['progress']);
-                    $this->response->setProgress($progress_bar['progress_type']);
+                    $this->response->setProgress(floatval($progress_bar['progress']));
+                    $this->response->setProgressType(floatval($progress_bar['progress_type']));
                 }
             }
 

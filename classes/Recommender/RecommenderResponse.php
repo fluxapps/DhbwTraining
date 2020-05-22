@@ -504,7 +504,10 @@ class RecommenderResponse
         $progress_meter_html_list = [];
         if (count($this->progress_meters) > 0) {
             foreach ($this->progress_meters as $progress_meter) {
-                $progress_meter_html_list[] = $this->getProgressMeterHtml($progress_meter);
+                if($progress_meter->getMaxReachableScore() > 0) {
+                    $progress_meter_html_list[] = $this->getProgressMeterHtml($progress_meter);
+                }
+
             }
         }
 
