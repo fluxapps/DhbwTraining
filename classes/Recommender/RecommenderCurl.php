@@ -1,5 +1,8 @@
 <?php
-require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Recommender/RecommenderResponse.php');
+
+use srag\DIC\DhbwTraining\DICTrait;
+use srag\Plugins\DhbwTraining\Config\Config;
+
 
 /**
  * Class ReccomenderCurl
@@ -7,240 +10,327 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
-class RecommenderCurl {
+class RecommenderCurl
+{
 
-	use xdhtDIC;
-	/**
-	 * @var string
-	 */
-	const AUTHORIZATION_USERNAMEPASSWORD = "usernamepassword";
-	/**
-	 * @var string
-	 */
-	const AUTHORIZATION_OAUTH = "oauth";
-	/**
-	 * @var string
-	 */
-	protected $jira_domain = "";
-	/**
-	 * @var string
-	 */
-	protected $jira_authorization = "";
-	/**
-	 * @var string
-	 */
-	protected $jira_username = "";
-	/**
-	 * @var string
-	 */
-	protected $jira_password = "";
-	/**
-	 * @var string
-	 */
-	protected $jira_consumer_key = "";
-	/**
-	 * @var string
-	 */
-	protected $jira_private_key = "";
-	/**
-	 * @var string
-	 */
-	protected $jira_access_token = "";
+    use DICTrait;
+
+    const PLUGIN_CLASS_NAME = ilDhbwTrainingPlugin::class;
+    const KEY_RESPONSE_TIME_START = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_time_start";
+    const KEY_RESPONSE_PROGRESS_METER = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_progress_meter";
+    const KEY_RESPONSE_PROGRESS_BAR = ilDhbwTrainingPlugin::PLUGIN_PREFIX . "_response_progress_bar";
+    /**
+     * @var xdhtObjectFacadeInterface
+     */
+    protected $facade;
+    /**
+     * @var RecommenderResponse
+     */
+    protected $response;
 
 
-	/**
-	 * JiraCurl constructor
-	 */
-	public function __construct() {
-	}
+    /**
+     * RecommenderCurl constructor
+     *
+     * @param xdhtObjectFacadeInterface $facade
+     * @param RecommenderResponse       $response
+     */
+    public function __construct(xdhtObjectFacadeInterface $facade, RecommenderResponse $response)
+    {
+        $this->facade = $facade;
+        $this->response = $response;
+    }
 
 
-	/**
-	 * Init a Jira Curl connection
-	 *
-	 * @param string $url
-	 * @param array  $headers
-	 *
-	 * @return ilCurlConnection
-	 * @throws ilCurlConnectionException
-	 */
-	protected function initCurlConnection(string $url, array $headers): ilCurlConnection {
-		$curlConnection = new ilCurlConnection();
+    /**
+     *
+     */
+    public function start()/*:void*/
+    {
+        global $DIC;
 
-		$curlConnection->init();
+        ilSession::clear(self::KEY_RESPONSE_TIME_START);
 
-		$curlConnection->setOpt(CURLOPT_RETURNTRANSFER, true);
-		$curlConnection->setOpt(CURLOPT_VERBOSE, true);
-		$curlConnection->setOpt(CURLOPT_SSL_VERIFYPEER, false);
-		$curlConnection->setOpt(CURLOPT_SSL_VERIFYHOST, false);
-		$curlConnection->setOpt(CURLOPT_URL, $url);
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json"
+        ];
+        $data = [
+            "secret"               => $this->facade->settings()->getSecret(),
+            "installation_key"     => $this->facade->settings()->getInstallationKey(),
+            "user_id"              => $this->getAnonymizedUserHash(),
+            "lang_key"             => $DIC->user()->getLanguage(),
+            "training_obj_id"      => $this->facade->settings()->getDhbwTrainingObjectId(),
+            "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId()
+        ];
 
-		$curlConnection->setOpt(CURLOPT_HTTPHEADER, $headers);
-
-		return $curlConnection;
-	}
-
-
-	/**
-	 * @param string $rest_url
-	 * @param array  $headers
-	 * @param null   $post_data
-	 *
-	 * @return null|RecommenderResponse
-	 */
-	protected function doRequest(string $rest_url, array $headers, $post_data = NULL,xdhtSettingsInterface $settings)/*: ?array*/ {
-
-		/**
-		 * DEBUG
-		 */
-		/*
-		$response = new RecommenderResponse();
-		$response->setStatus( RecommenderResponse::STATUS_SUCCESS);
-		//$response->setQuestionId('1');
-		$response->setRecomanderId("1235ds");
-		$response->setResponseType(RecommenderResponse::RESPONSE_TYPE_NEXT_QUESTION);
-
-			$response->setAnswerResponse("Richtig ! [tex]f(x)=\int_{-\infty}^x e^{-t^2}dt[/tex]");
-			$response->setMessage('Zusätzlliche Nachricht');
-
-		return $response;
-		*/
-		///
-		///
-
-		$url = $settings->getUrl().$rest_url;
-
-		$curlConnection = NULL;
-
-		try {
-			$curlConnection = $this->initCurlConnection($url, $headers);
-
-			if ($post_data !== NULL) {
-				$curlConnection->setOpt(CURLOPT_POST, true);
-				$curlConnection->setOpt(CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-				$curlConnection->setOpt(CURLOPT_POSTFIELDS, $post_data);
-			}
-
-			if($settings->getLog()) {
-				global $DIC;
-				$DIC->logger()->root()->log("xdht - POST".print_r($post_data,true));
-
-			}
-			$result = $curlConnection->exec();
-			$result = json_decode($result, true);
-			if($settings->getLog()) {
-				global $DIC;
-				$DIC->logger()->root()->log("xdht - RESULT".print_r($result,true));
-			}
-			if(empty($result['status'])) {
-				ilUtil::sendFailure("Es ist ein Fehler aufgetreten - Kein Status".print_r($result,true),true);
-				$this->ctrl()->redirectByClass("xdhtStartGUI", xdhtStartGUI::CMD_STANDARD);
-			}
-
-			$response = new RecommenderResponse();
-			$response->setStatus($result['status']);
-			$response->setRecomanderId($result['recomander_id']);
-			$response->setResponseType($result['response_type']);
-
-			if(!is_null($result['answer_response'])) {
-				$response->setAnswerResponse($result['answer_response']);
-			}
-			if(!is_null($result['message'])) {
-				$response->setMessage($result['message']);
-			}
-			return $response;
-		} catch (Exception $ex) {
-			echo $ex->getMessage();
-			// Curl-Error!
-			return NULL;
-		} finally {
-			// Close Curl connection
-			if ($curlConnection !== NULL) {
-				$curlConnection->close();
-				$curlConnection = NULL;
-			}
-		}
-	}
+        $this->doRequest("api/v1/start", $headers, $data);
+    }
 
 
-	/**
-	 * @return null|RecommenderResponse
-	 */
-	public function start(xdhtSettingsInterface $settings) {
-		global $DIC;
-
-		$headers = [
-			"Accept" => "application/json",
-			"Content-Type" => "application/json"
-		];
-		$data = [
-			"secret" => $settings->getSecret(),
-			"installation_key" =>  $settings->getInstallationKey(),
-			"user_id" => $DIC->user()->getId(),
-			"lang_key" => $DIC->user()->getLanguage(),
-			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
-            "question_pool_obj_id" => $settings->getQuestionPoolId()
-		];
-
-		$response = $this->doRequest("api/v1/start", $headers, json_encode($data),$settings);
-
-		return $response;
-	}
-
-	/**
-	 * @return null|RecommenderResponse
-	 */
-	public function answer($recomander_id, $question_type, $answer,xdhtSettingsInterface $settings) {
-		global $DIC;
-
-		$headers = [
-			"Accept" => "application/json",
-			"Content-Type" => "application/json"
-		];
+    /**
+     * @return string
+     */
+    protected function getAnonymizedUserHash() : string
+    {
+        return md5(Config::getField(Config::KEY_SALT) . self::dic()->user()->getLogin());
+    }
 
 
-		$data = [
-			"secret" => $settings->getSecret(),
-			"installation_key" => $settings->getInstallationKey(),
-			"user_id" => $DIC->user()->getId(),
-			"lang_key" => $DIC->user()->getLanguage(),
-			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
-			"question_pool_obj_id" => $settings->getQuestionPoolId(),
-			"recomander_id" => $recomander_id,
-			"question_type" => $question_type,
-			"answer" => $answer
-		];
+    /**
+     * @param string $rest_url
+     * @param array  $headers
+     * @param array  $post_data
+     */
+    protected function doRequest(string $rest_url, array $headers, array $post_data = [])/*:void*/
+    {
 
-		$response = $this->doRequest("api/v1/answer", $headers, json_encode($data,JSON_FORCE_OBJECT),$settings);
+        $curlConnection = null;
 
-		return $response;
-	}
+        try {
+            $curlConnection = $this->initCurlConnection($rest_url, $headers);
 
-	/**
-	 * @return null|RecommenderResponse
-	 */
-	public function sendRating($recomander_id, $rating, xdhtSettingsInterface $settings) {
-		global $DIC;
+            $response_time_start = intval(ilSession::get(self::KEY_RESPONSE_TIME_START));
+            if (!empty($response_time_start)) {
+                $post_data["response_time"] = (time() - $response_time_start);
+            }
 
-		$headers = [
-			"Accept" => "application/json",
-			"Content-Type" => "application/json"
-		];
+            if ($this->facade->settings()->getLog()) {
+                $this->response->addSendInfo('<pre>post_data:
+' . json_encode($post_data, JSON_FORCE_OBJECT | JSON_PRETTY_PRINT) . ' </pre>');
+            }
+
+            $curlConnection->setOpt(CURLOPT_POST, true);
+            $curlConnection->setOpt(CURLOPT_POSTFIELDS, json_encode($post_data, JSON_FORCE_OBJECT));
+
+            $raw_response = $curlConnection->exec();
+
+            if (empty($raw_response)) {
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_not_reached"));
+
+                return;
+            }
+
+            $result = json_decode($raw_response, true);
+
+            if (empty($result) || !is_array($result)) {
+                if ($this->facade->settings()->getLog()) {
+                    $this->response->addSendInfo('<pre>raw_response:
+' . $raw_response . ' </pre>');
+                }
+
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_not_reached"));
+
+                return;
+            }
+
+            if ($this->facade->settings()->getLog()) {
+                if ($this->facade->settings()->getRecommenderSystemServer() === xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG) {
+                    if (!empty($result['debug_server'])) {
+                        $this->response->addSendInfo('<pre>' . self::plugin()->translate("recommender_system_server_built_in_debug") . ':
+' . json_encode($result['debug_server'], JSON_PRETTY_PRINT) . '</pre>');
+                    }
+                    unset($result['debug_server']);
+                }
+
+                $this->response->addSendInfo('<pre>response:
+' . json_encode($result, JSON_PRETTY_PRINT) . ' </pre>');
+            }
+
+            if (!empty($result['status'])) {
+                $this->response->setStatus(strval($result['status']));
+            } else {
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_no_status"));
+
+                return;
+            }
+
+            if (!empty($result['recomander_id'])) {
+                $this->response->setRecomanderId(strval($result['recomander_id']));
+            }
+
+            if (!empty($result['response_type'])) {
+                $this->response->setResponseType(intval($result['response_type']));
+            }
+
+            if (!empty($result['answer_response'])) {
+                $this->response->setAnswerResponse(strval($result['answer_response']));
+            }
+
+            if (!empty($result['answer_response_type'])) {
+                $this->response->setAnswerResponseType(strval($result['answer_response_type']));
+            }
+
+            if (!empty($result['message'])) {
+                $this->response->setMessage(strval($result['message']));
+            }
+
+            if (!empty($result['message_type'])) {
+                $this->response->setMessageType(strval($result['message_type']));
+            }
+
+            if(!empty($result['progress_display'])) {
+                $this->response->setProgressDisplay((bool)($result['progress_display']));
+            }
+
+            $this->response->setProgress(null);
+            $this->response->setProgressType(strval($result['progress_type']));
+            if (isset($result['progress']) && !empty($result['progress_type'])) {
+                $this->response->setProgress(floatval($result['progress']));
+                $this->response->setProgressType(strval($result['progress_type']));
+
+                ilSession::set(self::KEY_RESPONSE_PROGRESS_BAR, serialize(['progress' => $result['progress'],'progress_type' => $result['progress_type']]));
+            } else {
+                if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_BAR)) > 0) {
+                    $progress_bar = unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_BAR));
+
+                    $this->response->setProgress(floatval($progress_bar['progress']));
+                    $this->response->setProgressType(floatval($progress_bar['progress_type']));
+                }
+            }
 
 
-		$data = [
-			"secret" => $settings->getSecret(),
-			"installation_key" => $settings->getInstallationKey(),
-			"user_id" => $DIC->user()->getId(),
-			"lang_key" => $DIC->user()->getLanguage(),
-			"training_obj_id" => $settings->getDhbwTrainingObjectId(),
-			"question_pool_obj_id" => $settings->getQuestionPoolId(),
-			"recomander_id" => $recomander_id,
-			"rating" => $rating
-		];
+            if (isset($result['learning_progress_status'])) {
+                $this->response->setLearningProgressStatus($result['learning_progress_status'] !== null ? intval($result['learning_progress_status']) : null);
+            }
 
-		$response = $this->doRequest("api/v1/rating", $headers, json_encode($data,JSON_FORCE_OBJECT),$settings);
+            if (!empty($result['competences'])) {
+                $this->response->setCompetences((array) $result['competences']);
+            }
 
-		return $response;
-	}
+            if (!empty($result['progress_meters'])) {
+
+
+                $progress_meter_list = [];
+                foreach($result['progress_meters'] as $key => $value){
+                    $progress_meter_list[] = ProgressMeter::newFromArray($value);
+                }
+
+                ilSession::set(self::KEY_RESPONSE_PROGRESS_METER, serialize($progress_meter_list));
+
+
+                $this->response->setProgressmeters((array) $progress_meter_list);
+            } else {
+                if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)) > 0) {
+                   $this->response->setProgressmeters((array) unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)));
+                }
+            }
+
+
+        } catch (Exception $ex) {
+            if ($this->facade->settings()->getLog()) {
+                $this->response->addSendFailure($ex->getMessage());
+            } else {
+                $this->response->addSendFailure(self::plugin()->translate("error_recommender_system_not_reached"));
+            }
+        } finally {
+            // Close Curl connection
+            if ($curlConnection !== null) {
+                $curlConnection->close();
+                $curlConnection = null;
+            }
+        }
+
+        ilSession::set(self::KEY_RESPONSE_TIME_START, time());
+    }
+
+
+    /**
+     * Init a Curl connection
+     *
+     * @param array  $headers
+     * @param string $rest_url
+     *
+     * @return ilCurlConnection
+     * @throws ilCurlConnectionException
+     */
+    protected function initCurlConnection(string $rest_url, array $headers) : ilCurlConnection
+    {
+        $curlConnection = new ilCurlConnection();
+
+        $curlConnection->init();
+
+        $curlConnection->setOpt(CURLOPT_RETURNTRANSFER, true);
+        $curlConnection->setOpt(CURLOPT_VERBOSE, true);
+        $curlConnection->setOpt(CURLOPT_SSL_VERIFYPEER, false);
+        $curlConnection->setOpt(CURLOPT_SSL_VERIFYHOST, false);
+
+        switch ($this->facade->settings()->getRecommenderSystemServer()) {
+            case xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_EXTERNAL:
+                $url = rtrim($this->facade->settings()->getUrl(), "/") . $rest_url;
+                break;
+
+            case xdhtSettingsInterface::RECOMMENDER_SYSTEM_SERVER_BUILT_IN_DEBUG:
+                $url = ILIAS_HTTP_PATH . substr(self::plugin()->directory(), 1) . "/classes/Recommender/debug/" . trim($rest_url, "/") . ".php?ref_id=" . $this->facade->refId();
+                $curlConnection->setOpt(CURLOPT_COOKIE, session_name() . '=' . session_id() . ";XDEBUG_SESSION=" . $_COOKIE["XDEBUG_SESSION"]);
+                break;
+
+            default:
+                break;
+        }
+
+        $curlConnection->setOpt(CURLOPT_URL, $url);
+
+        $curlConnection->setOpt(CURLOPT_HTTPHEADER, $headers);
+
+        return $curlConnection;
+    }
+
+
+    /**
+     * @param string $recomander_id
+     * @param int    $question_type
+     * @param mixed  $answer
+     */
+    public function answer(string $recomander_id, int $question_type, $answer)/*:void*/
+    {
+        global $DIC;
+
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json"
+        ];
+
+        $data = [
+            "secret"               => $this->facade->settings()->getSecret(),
+            "installation_key"     => $this->facade->settings()->getInstallationKey(),
+            "user_id"              => $this->getAnonymizedUserHash(),
+            "lang_key"             => $DIC->user()->getLanguage(),
+            "training_obj_id"      => $this->facade->settings()->getDhbwTrainingObjectId(),
+            "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId(),
+            "recomander_id"        => $recomander_id,
+            "question_type"        => $question_type,
+            "answer"               => $answer
+        ];
+
+        $this->doRequest("api/v1/answer", $headers, $data);
+    }
+
+
+    /**
+     * @param string $recomander_id
+     * @param int    $rating
+     */
+    public function sendRating(string $recomander_id, int $rating)/*:void*/
+    {
+        global $DIC;
+
+        $headers = [
+            "Accept: application/json",
+            "Content-Type: application/json"
+        ];
+
+        $data = [
+            "secret"               => $this->facade->settings()->getSecret(),
+            "installation_key"     => $this->facade->settings()->getInstallationKey(),
+            "user_id"              => $this->getAnonymizedUserHash(),
+            "lang_key"             => $DIC->user()->getLanguage(),
+            "training_obj_id"      => $this->facade->settings()->getDhbwTrainingObjectId(),
+            "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId(),
+            "recomander_id"        => $recomander_id,
+            "rating"               => $rating
+        ];
+
+        $this->doRequest("api/v1/rating", $headers, $data);
+    }
 }

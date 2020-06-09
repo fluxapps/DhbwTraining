@@ -1,4 +1,3 @@
-
 <?php
 /*
 	+-----------------------------------------------------------------------------+
@@ -22,81 +21,76 @@
 	+-----------------------------------------------------------------------------+
 */
 
-
 /**
  * Class xdhtSettingsXmlWriter
  *
  * @author: Benjamin Seglias   <bs@studer-raimann.ch>
  */
+class xdhtSettingsXmlWriter extends ilXmlWriter
+{
 
-include_once './Services/Xml/classes/class.ilXmlWriter.php';
-include_once './Customizing/global/plugins/Services/Repository/RepositoryObject/DhbwTraining/classes/Settings/class.xdhtSettings.php';
-include_once "./Services/Xml/classes/class.ilXmlWriter.php";
-
-class xdhtSettingsXmlWriter extends ilXmlWriter {
+    var $il_obj_dhbw_training = null;
 
 
-	var $il_obj_dhbw_training = null;
+    /**
+     * constructor
+     *
+     * @param string    xml version
+     * @param string    output encoding
+     * @param string    input encoding
+     *
+     * @access    public
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	/**
-	 * constructor
-	 * @param	string	xml version
-	 * @param	string	output encoding
-	 * @param	string	input encoding
-	 * @access	public
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-	}
+
+    /**
+     * Set file target directories
+     *
+     * @param string    relative file target directory
+     * @param string    absolute file target directory
+     */
+    function setFileTargetDirectories($a_rel, $a_abs)
+    {
+        $this->target_dir_relative = $a_rel;
+        $this->target_dir_absolute = $a_abs;
+    }
 
 
-	/**
-	 * Set file target directories
-	 *
-	 * @param	string	relative file target directory
-	 * @param	string	absolute file target directory
-	 */
-	function setFileTargetDirectories($a_rel, $a_abs)
-	{
-		$this->target_dir_relative = $a_rel;
-		$this->target_dir_absolute = $a_abs;
-	}
+    function start()
+    {
+        global $ilDB;
 
-	function start()
-	{
-		global $ilDB;
+        //ilUtil::makeDir($this->target_dir_absolute."/training");
+        $this->il_obj_dhbw_training = ilObject2::_lookupObjectId($_GET['ref_id']);
+        $query = 'SELECT * FROM rep_robj_xdht_settings 
+			WHERE dhbw_training_object_id = ' . $ilDB->quote($this->il_obj_dhbw_training, 'integer');
 
-		//ilUtil::makeDir($this->target_dir_absolute."/training");
-		$this->il_obj_dhbw_training = ilObject2::_lookupObjectId($_GET['ref_id']);
-		$query = 'SELECT * FROM rep_robj_xdht_settings 
-			WHERE dhbw_training_object_id = '.$ilDB->quote($this->il_obj_dhbw_training, 'integer');
+        $res = $ilDB->query($query);
 
-		$res = $ilDB->query($query);
+        while ($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
+            $this->xmlStartTag("xdhtSettings", null);
 
-		while( $row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT) )
-		{
-			$this->xmlStartTag("xdhtSettings", null);
+            $this->xmlElement("Id", null, (int) $row->id);
+            $this->xmlElement("dhbw_training_object_id", null, (int) $row->dhbw_training_object_id);
+            $this->xmlElement("question_pool_id", null, $row->question_pool_id);
+            $this->xmlElement("is_online", null, $row->is_online);
 
-			$this->xmlElement("Id", null, (int)$row->id);
-			$this->xmlElement("dhbw_training_object_id", null, (int)$row->dhbw_training_object_id);
-			$this->xmlElement("question_pool_id",  null, $row->question_pool_id);
-			$this->xmlElement("is_online",  null, $row->is_online);
-			$this->xmlElement("start_date",  null, $row->start_date);
-			$this->xmlElement("end_date",  null, $row->end_date);
+            $this->xmlEndTag("xdhtSettings");
+        }
 
-			$this->xmlEndTag("xdhtSettings");
-		}
+        return true;
+    }
 
-		return true;
-	}
 
-	function getXML()
-	{
-		// Replace ascii code 11 characters because of problems with xml sax parser
-		return str_replace('&#11;', '', $this->xmlDumpMem(false));
-	}
-
+    function getXML()
+    {
+        // Replace ascii code 11 characters because of problems with xml sax parser
+        return str_replace('&#11;', '', $this->xmlDumpMem(false));
+    }
 }
 
 ?>

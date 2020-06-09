@@ -1,22 +1,16 @@
 <!-- BEGIN form -->
-
-		<div class="il_ass_question_preview_container ilc_page_cont_PageContainer">
-			<h1>{TITLE}</h1>
-		<form action="{ACTION}" method="post">
-			<div class="form-group">
-				<!-- BEGIN question -->
-				{QUESTION}
-				<!-- END question -->
-			</div>
-			<div>{DIFFICULTY}</div>
-			<button type="submit" class="btn btn-primary" name="submitted" value="{BTN_QST_LEVEL1_VALUE}">{BTN_QST_LEVEL1_TEXT}</button>
-			<button type="submit" class="btn btn-primary" name="submitted" value="{BTN_QST_LEVEL2_VALUE}">{BTN_QST_LEVEL2_TEXT}</button>
-			<button type="submit" class="btn btn-primary" name="submitted" value="{BTN_QST_LEVEL3_VALUE}">{BTN_QST_LEVEL3_TEXT}</button>
-			<button type="submit" class="btn btn-primary" name="submitted" value="{BTN_QST_LEVEL4_VALUE}">{BTN_QST_LEVEL4_TEXT}</button>
-			<input type="hidden" name="question_id" value="{QUESTION_ID}" />
-			<input type="hidden" name="recomander_id" value="{RECOMANDER_ID}" />
-		</form>
-
+<div class="il_ass_question_preview_container ilc_page_cont_PageContainer">
+	<h1>{TITLE}</h1>
+	<form action="{ACTION}" method="post">
+		<div class="form-group">
+			<!-- BEGIN question -->				{QUESTION}
+			<!-- END question -->
 		</div>
-
-<!-- END form -->
+		<div>{DIFFICULTY}</div>
+		<button class="btn btn-default" name="submitted" type="submit" value="{BTN_QST_LEVEL1_VALUE}">{BTN_QST_LEVEL1_TEXT}</button>
+		<button class="btn btn-default" name="submitted" type="submit" value="{BTN_QST_LEVEL2_VALUE}">{BTN_QST_LEVEL2_TEXT}</button>
+		<button class="btn btn-default" name="submitted" type="submit" value="{BTN_QST_LEVEL3_VALUE}">{BTN_QST_LEVEL3_TEXT}</button>
+		<button class="btn btn-default" name="submitted" type="submit" value="{BTN_QST_LEVEL4_VALUE}">{BTN_QST_LEVEL4_TEXT}</button>
+		<input name="question_id" type="hidden" value="{QUESTION_ID}"/> <input name="recomander_id" type="hidden" value="{RECOMANDER_ID}"/>
+	</form>
+</div><!-- END form -->
