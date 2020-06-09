@@ -1,12 +1,7 @@
 <?php
 
-use Ramsey\Uuid\Uuid;
 use srag\DIC\DhbwTraining\DICTrait;
-use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\Guid;
-use srag\Plugins\DhbwTraining\RecommenderSystem\Player\Infrastructure\RcSEventPublisher;
-use srag\Plugins\DhbwTraining\RecommenderSystem\Player\Infrastructure\RcSEventStore;
-use srag\Plugins\DhbwTraining\RecommenderSystem\Player\Infrastructure\RcSRepository;
-use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
+
 
 /**
  * Class xdhtStartGUI
@@ -15,8 +10,7 @@ use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
  *
  * @author            : Benjamin Seglias   <bs@studer-raimann.ch>
  */
-class
-xdhtStartGUI
+class xdhtStartGUI
 {
 
     use DICTrait;
@@ -128,8 +122,15 @@ xdhtStartGUI
 
         if (!empty($this->response->getCompetences())) {
             foreach ($this->response->getCompetences() as $competence_id => $level_id) {
-                //ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
-                // ilPersonalSkill::saveSelfEvaluation(self::dic()->user()->getId(), $competence_id, 0, $competence_id, $level_id);
+                ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
+                ilBasicSkill::writeUserSkillLevelStatus(
+                    $level_id,
+                    self::dic()->user()->getId(),
+                    $this->facade->refId(),
+                    $competence_id,
+                    ilBasicSkill::ACHIEVED,
+                    true
+                    );
             }
         }
 

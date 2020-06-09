@@ -75,8 +75,8 @@ class ProgressMeter
         string $required_score_label,
         int $primary_reached_score,
         string $primary_reached_score_label,
-        $secondary_reached_score = null,
-        $secondary_reached_score_label = null
+        int $secondary_reached_score,
+        string $secondary_reached_score_label
     ) : ProgressMeter {
         $obj = new static();
         $obj->title = $title;
@@ -106,7 +106,7 @@ class ProgressMeter
         int $max_width_in_pixel,
         int $max_reachable_points,
         int $required_score,
-        $primary_reached_score = null
+        int $primary_reached_score
     ) : ProgressMeter {
         $obj = new static();
         $obj->title = $title;
