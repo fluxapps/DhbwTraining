@@ -1,6 +1,5 @@
 <?php
 
-use srag\CustomInputGUIs\DhbwTraining\ProgressMeter\Implementation\Factory;
 use srag\DIC\DhbwTraining\DICTrait;
 use srag\Plugins\DhbwTraining\RecommenderSystem\Common\Domain\Aggregate\Model\Guid;
 use srag\Plugins\DhbwTraining\RecommenderSystem\RcSGateway;
@@ -519,8 +518,8 @@ class RecommenderResponse
 
     private function getProgressMeterHtml(ProgressMeter $progress_meter)
     {
-        $progress_meter_factory = new Factory();
-        
+        //$progress_meter_factory = new ProgressMeterFactory();
+        $progress_meter_factory = self::dic()->ui()->factory()->chart()->progressMeter();
         switch ($progress_meter->getProgressmeterType()) {
             case ProgressMeter::PROGRESS_METER_TYPE_MINI:
 
