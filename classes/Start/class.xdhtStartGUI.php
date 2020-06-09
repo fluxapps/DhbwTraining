@@ -241,8 +241,7 @@ xdhtStartGUI
 
         $tpl->setVariable('QUESTION_ID', $question['question_id']);
         $tpl->setVariable('RECOMANDER_ID', $question['recomander_id']);
-        //reset preview session
-        $previewSession->setParticipantsSolution(999999);
+        $previewSession->setParticipantsSolution(0);
         return $tpl;
     }
 
