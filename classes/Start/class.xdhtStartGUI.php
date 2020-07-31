@@ -336,9 +336,9 @@ class xdhtStartGUI
                      */
                     $question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result' . $_POST['question_id'] . 'ID']];
                     if (is_object($question_answer)) {
-                        $answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
+                        $answertext = ["aorder" => $question_answer->getAOrder()];
                     } else {
-                        $answertext = ["answertext" => ""];
+                        $answertext = ["aorder" => "-1"];
                     }
                     break;
                 case 'assMultipleChoice':
@@ -346,9 +346,9 @@ class xdhtStartGUI
                         if (strpos($key, 'multiple_choice_result') !== false) {
                             $question_answer = $question_answers->getAnswers()[$value];
                             if (is_object($question_answer)) {
-                                $answertext[] = ["aorder" => base64_encode($question_answer->getAnswertext())];
+                                $answertext[] = ["aorder" => $question_answer->getAOrder()];
                             } else {
-                                $answertext = ["answertext" => ""];
+                                $answertext = ["aorder" => "-1"];
                             }
                         }
                     }
