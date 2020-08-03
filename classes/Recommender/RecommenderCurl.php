@@ -282,7 +282,7 @@ class RecommenderCurl
      * @param int    $question_type
      * @param mixed  $answer
      */
-    public function answer(string $recomander_id, int $question_type, $answer)/*:void*/
+    public function answer(string $recomander_id, int $question_type, int $question_max_points, $answer)/*:void*/
     {
         global $DIC;
 
@@ -300,6 +300,7 @@ class RecommenderCurl
             "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId(),
             "recomander_id"        => $recomander_id,
             "question_type"        => $question_type,
+            "question_max_points"  => $question_max_points,
             "answer"               => $answer
         ];
 

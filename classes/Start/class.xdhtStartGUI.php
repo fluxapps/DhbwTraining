@@ -336,9 +336,9 @@ class xdhtStartGUI
                      */
                     $question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result' . $_POST['question_id'] . 'ID']];
                     if (is_object($question_answer)) {
-                        $answertext = ["aorder" => $question_answer->getAOrder()];
+                        $answertext = ["answertext" => base64_encode("Choice " . $question_answer->getAOrder()), "points" => $question_answer->getPoints()];
                     } else {
-                        $answertext = ["aorder" => "-1"];
+                        $answertext = ["answertext" => "", "points" => 0];
                     }
                     break;
                 case 'assMultipleChoice':
@@ -346,9 +346,9 @@ class xdhtStartGUI
                         if (strpos($key, 'multiple_choice_result') !== false) {
                             $question_answer = $question_answers->getAnswers()[$value];
                             if (is_object($question_answer)) {
-                                $answertext[] = ["aorder" => $question_answer->getAOrder()];
+                                $answertext[] = ["answertext" => base64_encode("Choice " . $question_answer->getAOrder()), "points" => $question_answer->getPoints()];
                             } else {
-                                $answertext = ["aorder" => "-1"];
+                                $answertext = ["answertext" => "", "points" => 0];
                             }
                         }
                     }
@@ -364,19 +364,22 @@ class xdhtStartGUI
                                 xdhtQuestionFactory::CLOZE_TYPE_NUMERIC
                             ])
                             ) {
-                                $answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type' => 2, 'answertext' => base64_encode($value)];
+                                $answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type' => 2, 'answertext' => base64_encode($value),
+                                    'points' => ($question_answer[$arr_splitted_gap[1]][0]->getAnswertext() == $value) * $question_answer[$arr_splitted_gap[1]][0]->getPoints()];
                             } else {
                                 if (is_object($question_answer[$arr_splitted_gap[1]][$value])) {
                                     $answertext[] = [
                                         "gap_id"     => $arr_splitted_gap[1],
                                         'cloze_type' => $question_answer[$arr_splitted_gap[1]]['cloze_type'],
-                                        'answertext' => base64_encode($question_answer[$arr_splitted_gap[1]][$value]->getAnswertext())
+                                        'answertext' => base64_encode($question_answer[$arr_splitted_gap[1]][$value]->getAnswertext()),
+                                        'points' => ($question_answer[$arr_splitted_gap[1]][0]->getAnswertext() == $value) * $question_answer[$arr_splitted_gap[1]][0]->getPoints()
                                     ];
                                 } else {
                                     $answertext[] = [
                                         "gap_id"     => $arr_splitted_gap[1],
                                         'cloze_type' => $question_answer[$arr_splitted_gap[1]]['cloze_type'],
-                                        'answertext' => ""
+                                        'answertext' => "",
+                                        'points' => 0
                                     ];
                                 }
                             }
@@ -386,7 +389,7 @@ class xdhtStartGUI
             }
 
             $recommender = new RecommenderCurl($this->facade, $this->response);
-            $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $answertext);
+            $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $question['points'], $answertext);
 
             $this->proceedWithReturnOfRecommender();
         }

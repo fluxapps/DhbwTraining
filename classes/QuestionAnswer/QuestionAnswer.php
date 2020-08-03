@@ -30,6 +30,10 @@ class QuestionAnswer
      */
     //Todo separate Class er Question!
     protected $cloze_type;
+    /**
+     * @var int
+     */
+    protected $points;
 
 
     /**
@@ -119,5 +123,22 @@ class QuestionAnswer
     public function setClozeType(int $cloze_type)
     {
         $this->cloze_type = $cloze_type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPoints() : int
+    {
+        return $this->points;
+    }
+
+
+    /**
+     * @param int $points
+     */
+    public function setPoints(int $points)
+    {
+        $this->points = $points;
     }
 }
