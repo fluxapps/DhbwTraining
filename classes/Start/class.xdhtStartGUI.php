@@ -136,16 +136,18 @@ class xdhtStartGUI
 
         switch ($this->response->getStatus()) {
             case RecommenderResponse::STATUS_SUCCESS:
-                if ($this->response->getAnswerResponse()) {
+                if ($this->response->getAnswerResponse() != "") {
                     $formatter = new ilAssSelfAssessmentQuestionFormatter();
-                    $this->response->addSendMessage($formatter->format($this->response->getAnswerResponse()), $this->response->getAnswerResponseType());
+                    $feedback = new Feedback($this->response->getAnswerResponse(), $this->response->getRecomanderId(), $this->response->getCorrect(), $this->facade);
+
+                    $this->response->addSendMessage($formatter->format($feedback->getFeedback()), $feedback->getFeedbackType());
                 }
 
                 if ($this->response->getMessage()) {
                     $this->response->addSendMessage($this->response->getMessage(), $this->response->getMessageType());
                 }
 
-                if ($this->response->getAnswerResponse()) {
+                if ($this->response->getAnswerResponse() != "") {
                     $question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
                     $output = $this->initAnsweredQuestionForm($question);
 
@@ -168,7 +170,6 @@ class xdhtStartGUI
                         self::dic()->ctrl()->redirect($this, self::CMD_STANDARD);
 
                         return;
-                        break;
                     default:
                         $output = $this->initSeparatorForm();
                         break;

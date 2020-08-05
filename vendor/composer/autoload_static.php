@@ -73,6 +73,7 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'ProgressMeterList' => __DIR__ . '/../..' . '/classes/ProgressMeter/ProgressMeterList.php',
         'QuestionAnswer' => __DIR__ . '/../..' . '/classes/QuestionAnswer/QuestionAnswer.php',
         'QuestionAnswers' => __DIR__ . '/../..' . '/classes/QuestionAnswer/QuestionAnswers.php',
+        'Feedback' => __DIR__ . '/../..' . '/classes/Feedback/Feedback.php',
         'Ramsey\\Uuid\\BinaryUtils' => __DIR__ . '/..' . '/ramsey/uuid/src/BinaryUtils.php',
         'Ramsey\\Uuid\\Builder\\DefaultUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DefaultUuidBuilder.php',
         'Ramsey\\Uuid\\Builder\\DegradedUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DegradedUuidBuilder.php',

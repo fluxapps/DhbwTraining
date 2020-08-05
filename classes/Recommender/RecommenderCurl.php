@@ -153,7 +153,7 @@ class RecommenderCurl
                 $this->response->setResponseType(intval($result['response_type']));
             }
 
-            if (!empty($result['answer_response'])) {
+            if (isset($result['answer_response'])) {
                 $this->response->setAnswerResponse(strval($result['answer_response']));
             }
 
@@ -214,6 +214,10 @@ class RecommenderCurl
                 if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)) > 0) {
                    $this->response->setProgressmeters((array) unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)));
                 }
+            }
+
+            if (isset($result['correct'])) {
+                $this->response->setCorrect($result['correct']);
             }
 
 

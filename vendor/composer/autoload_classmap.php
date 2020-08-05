@@ -12,6 +12,7 @@ return array(
     'ProgressMeterList' => $baseDir . '/classes/ProgressMeter/ProgressMeterList.php',
     'QuestionAnswer' => $baseDir . '/classes/QuestionAnswer/QuestionAnswer.php',
     'QuestionAnswers' => $baseDir . '/classes/QuestionAnswer/QuestionAnswers.php',
+    'Feedback' => $baseDir . '/classes/Feedback/Feedback.php',
     'Ramsey\\Uuid\\BinaryUtils' => $vendorDir . '/ramsey/uuid/src/BinaryUtils.php',
     'Ramsey\\Uuid\\Builder\\DefaultUuidBuilder' => $vendorDir . '/ramsey/uuid/src/Builder/DefaultUuidBuilder.php',
     'Ramsey\\Uuid\\Builder\\DegradedUuidBuilder' => $vendorDir . '/ramsey/uuid/src/Builder/DegradedUuidBuilder.php',

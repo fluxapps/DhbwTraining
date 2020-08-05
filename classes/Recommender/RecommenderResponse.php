@@ -106,6 +106,12 @@ class RecommenderResponse
      */
     protected $send_failure = [];
 
+    /**
+     * @var bool
+     */
+    protected $correct;
+
+
 
     /**
      * @return string
@@ -597,5 +603,22 @@ class RecommenderResponse
         }
 
         return self::output()->getHTML($progress_bar);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCorrect() : bool
+    {
+        return $this->correct;
+    }
+
+
+    /**
+     * @param bool $correct
+     */
+    public function setCorrect(bool $correct)
+    {
+        $this->correct = $correct;
     }
 }
