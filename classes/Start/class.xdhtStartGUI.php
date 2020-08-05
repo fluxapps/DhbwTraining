@@ -357,6 +357,7 @@ class xdhtStartGUI
                     foreach ($_POST as $key => $value) {
 
                         if (strpos($key, 'gap_') !== false) {
+                            $value = str_replace(array(' ', ','), array('', '.'), $value);
                             $arr_splitted_gap = explode('gap_', $key);
                             $question_answer = $question_answers->getAnswers();
                             if (in_array($question_answer[$arr_splitted_gap[1]]['cloze_type'], [

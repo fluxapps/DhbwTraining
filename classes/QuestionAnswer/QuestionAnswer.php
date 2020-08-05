@@ -104,7 +104,7 @@ class QuestionAnswer
      */
     public function setAnswertext(string $answertext)
     {
-        $this->answertext = $answertext;
+        $this->answertext = str_replace(array(' ', ','), array('', '.'), $answertext);
     }
 
 
