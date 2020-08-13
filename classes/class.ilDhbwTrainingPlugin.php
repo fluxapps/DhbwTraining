@@ -55,7 +55,7 @@ class ilDhbwTrainingPlugin extends ilRepositoryObjectPlugin
      */
     protected function beforeActivation()
     {
-        global $ilDB;
+        global $ilDB, $DIC;
         parent::beforeActivation();
 
         // check whether type exists in object data, if not, create the type
@@ -69,7 +69,9 @@ class ilDhbwTrainingPlugin extends ilRepositoryObjectPlugin
 
         // add rbac operations
         // 1: edit_permissions, 2: visible, 3: read, 4:write, 6:delete
-        $ops = array(55, 58, 95);
+        $ops = array_map(function (array $operation) : int {
+            return $operation["ops_id"];
+        }, $DIC->database()->fetchAll($DIC->database()->query("SELECT ops_id FROM rbac_operations WHERE " . $DIC->database()->in("operation", ["read_learning_progress", "edit_learning_progress", "copy"], false, ilDBConstants::T_TEXT))));
         foreach ($ops as $op) {
             // check whether type exists in object data, if not, create the type
             $set = $ilDB->query("SELECT * FROM rbac_ta " .
