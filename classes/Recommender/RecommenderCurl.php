@@ -64,7 +64,7 @@ class RecommenderCurl
             "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId()
         ];
 
-        $this->doRequest("api/v1/start", $headers, $data);
+        $this->doRequest("/v1/start", $headers, $data);
     }
 
 
@@ -303,7 +303,7 @@ class RecommenderCurl
             "answer"               => $answer
         ];
 
-        $this->doRequest("api/v1/answer", $headers, $data);
+        $this->doRequest("/v1/answer", $headers, $data);
     }
 
 
@@ -331,6 +331,6 @@ class RecommenderCurl
             "rating"               => $rating
         ];
 
-        $this->doRequest("api/v1/rating", $headers, $data);
+        $this->doRequest("/v1/rating", $headers, $data);
     }
 }
