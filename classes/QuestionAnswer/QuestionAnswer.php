@@ -31,7 +31,7 @@ class QuestionAnswer
     //Todo separate Class er Question!
     protected $cloze_type;
     /**
-     * @var int
+     * @var float
      */
     protected $points;
 
@@ -128,16 +128,16 @@ class QuestionAnswer
     /**
      * @return int
      */
-    public function getPoints() : int
+    public function getPoints() : float
     {
         return $this->points;
     }
 
 
     /**
-     * @param int $points
+     * @param float $points
      */
-    public function setPoints(int $points)
+    public function setPoints(float $points)
     {
         $this->points = $points;
     }
