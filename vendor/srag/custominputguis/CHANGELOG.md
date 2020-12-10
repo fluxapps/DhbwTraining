@@ -1,5 +1,128 @@
 # Changelog
 
+## [0.41.2]
+- Fix composer 2
+- Move doc/DESCRIPTION.md to src/LONG_DESCRIPTION.md
+
+## [0.41.1]
+- Generate readme
+
+## [0.41.0]
+- Generate readme
+
+## [0.40.0]
+- Custom hooks for `CustomInputGUIsLoaderDetector::getRendererFor`
+
+## [0.39.3]
+- Fix not required `ilDateTimeInputGUI` in `InputGUIWrapperUIInputComponent`
+
+## [0.39.2]
+- Use `DataFactory` from dic
+
+## [0.39.1]
+- Make `cleanValues` static in `MultiSelectSearchNewInputGUI`
+
+## [0.39.0]
+- Support `MultiLineNewInputGUI` in `TableGUI`
+
+## [0.38.0]
+- `AjaxAutoCompleteCtrl` skip ids
+
+## [0.37.0]
+- Move `PieChart` and `LearningProgressPieUI` to seperate libraries
+
+## [0.36.4]
+- Fix
+
+## [0.36.3]
+- `AbstractFormBuilder`: Fix radios in section
+
+## [0.36.2]
+- Fix language select meta bar which current ctrl gui has namespaces (public page)
+
+## [0.36.1]
+- Fix disabled `ilCheckboxInputGUI` in `InputGUIWrapperUIInputComponent` on form error
+
+## [0.36.0]
+- Remove ProgressMeter (For ILIAS 5.3, use from Core for >= ILIAS 5.4)
+- Refactored to PHP 7.0
+
+## [0.35.1]
+- Fix
+
+## [0.35.0]
+- `CustomInputGUIsLoaderDetector`
+
+## [0.34.18]
+- Fix ILIAS 6
+
+## [0.34.17]
+- Fix ILIAS 6
+
+## [0.34.16]
+- Fix ILIAS 6
+
+## [0.34.15]
+- Fix ILIAS 6
+
+## [0.34.14]
+- Fix ILIAS 6
+
+## [0.34.13]
+- Fix ILIAS 6
+
+## [0.34.12]
+- Fix ILIAS 6
+
+## [0.34.11]
+- Fix ILIAS 6
+
+## [0.34.10]
+- Fix
+
+## [0.34.9]
+- Fix ILIAS 6
+
+## [0.34.8]
+- Fix ILIAS 6
+
+## [0.34.7]
+- Fix
+
+## [0.34.6]
+- Fix
+
+## [0.34.5]
+- Fix
+
+## [0.34.4]
+- Fix
+
+## [0.34.3]
+- Fix
+
+## [0.34.2]
+- Fix
+
+## [0.34.1]
+- Fix
+
+## [0.34.0]
+- `AbstractFormBuilder`
+- Deprecated `PropertyFormGUI`
+
+## [0.33.7]
+- Fix
+
+## [0.33.6]
+- Fix
+
+## [0.33.5]
+- Deprecated `TableGUI`
+
+## [0.33.4]
+- Fix `ilRepositorySelector2InputGUI`
+
 ## [0.33.3]
 - `OrgUnitAjaxAutoCompleteCtrl`
 

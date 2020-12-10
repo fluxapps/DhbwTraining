@@ -20,60 +20,87 @@ use srag\DIC\DhbwTraining\DICTrait;
 /**
  * Class PropertyFormGUI
  *
- * @package srag\CustomInputGUIs\DhbwTraining\PropertyFormGUI
+ * @package    srag\CustomInputGUIs\DhbwTraining\PropertyFormGUI
  *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
+ * @author     studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
+ *
+ * @deprecated Please use `AbstractFormBuilder`
  */
 abstract class PropertyFormGUI extends ilPropertyFormGUI
 {
 
     use DICTrait;
+
     /**
      * @var string
+     *
+     * @deprecated
+     */
+    const LANG_MODULE = "";
+    /**
+     * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_CLASS = "class";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_DISABLED = "disabled";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_MULTI = "multi";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_NOT_ADD = "not_add";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_OPTIONS = "options";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_REQUIRED = "required";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_SUBITEMS = "subitems";
     /**
      * @var string
+     *
+     * @deprecated
      */
     const PROPERTY_VALUE = "value";
     /**
-     * @var string
-     */
-    const LANG_MODULE = "";
-    /**
      * @var array
+     *
+     * @deprecated
      */
     protected $fields = [];
     /**
      * @var object
+     *
+     * @deprecated
      */
     protected $parent;
     /**
      * @var ilFormPropertyGUI[]|ilFormSectionHeaderGUI[]
+     *
+     * @deprecated
      */
     private $items_cache = [];
 
@@ -82,8 +109,10 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
      * PropertyFormGUI constructor
      *
      * @param object $parent
+     *
+     * @deprecated
      */
-    public function __construct($parent)
+    public function __construct(/*object*/ $parent)
     {
         $this->initId();
 
@@ -96,28 +125,63 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
 
 
     /**
+     * @inheritDoc
      *
+     * @deprecated
      */
-    protected abstract function initId()/*: void*/ ;
-
-
-    /**
-     *
-     */
-    private final function initForm()/*: void*/
+    public function checkInput() : bool
     {
-        $this->initAction();
-
-        $this->initCommands();
-
-        $this->initTitle();
-
-        $this->initItems();
+        return parent::checkInput();
     }
 
 
     /**
+     * @return bool
      *
+     * @deprecated
+     */
+    public function storeForm() : bool
+    {
+        if (!$this->storeFormCheck()) {
+            return false;
+        }
+
+        $this->storeFormItems($this->fields);
+
+        return true;
+    }
+
+
+    /**
+     * @param string      $key
+     * @param string|null $default
+     *
+     * @return string
+     *
+     * @deprecated
+     */
+    public function txt(string $key,/*?*/ string $default = null) : string
+    {
+        if ($default !== null) {
+            return self::plugin()->translate($key, static::LANG_MODULE, [], true, "", $default);
+        } else {
+            return self::plugin()->translate($key, static::LANG_MODULE);
+        }
+    }
+
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     *
+     * @deprecated
+     */
+    protected abstract function getValue(string $key);
+
+
+    /**
+     * @deprecated
      */
     protected function initAction()/*: void*/
     {
@@ -126,32 +190,55 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
 
 
     /**
-     *
+     * @deprecated
      */
     protected abstract function initCommands()/*: void*/ ;
 
 
     /**
-     *
+     * @deprecated
+     */
+    protected abstract function initFields()/*: void*/ ;
+
+
+    /**
+     * @deprecated
+     */
+    protected abstract function initId()/*: void*/ ;
+
+
+    /**
+     * @deprecated
      */
     protected abstract function initTitle()/*: void*/ ;
 
 
     /**
+     * @return bool
      *
+     * @deprecated
      */
-    private final function initItems()/*: void*/
+    protected final function storeFormCheck() : bool
     {
-        $this->initFields();
+        $this->setValuesByPost();
 
-        $this->getFields($this->fields, $this);
+        $this->check_input_called = false; // Fix 'Error: ilPropertyFormGUI->checkInput() called twice.'
+
+        if (!$this->checkInput()) {
+            return false;
+        }
+
+        return true;
     }
 
 
     /**
+     * @param string $key
+     * @param mixed  $value
      *
+     * @deprecated
      */
-    protected abstract function initFields()/*: void*/ ;
+    protected abstract function storeValue(string $key, $value)/*: void*/ ;
 
 
     /**
@@ -162,6 +249,8 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
      * @throws PropertyFormGUIException Class $class not exists!
      * @throws PropertyFormGUIException $item must be an instance of ilFormPropertyGUI, ilFormSectionHeaderGUI or ilRadioOption!
      * @throws PropertyFormGUIException $options needs to be an array!
+     *
+     * @deprecated
      */
     private final function getFields(array $fields, $parent_item)/*: void*/
     {
@@ -232,72 +321,35 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
 
 
     /**
-     * @param string $key
-     *
-     * @return mixed
+     * @deprecated
      */
-    protected abstract function getValue(/*string*/ $key);
-
-
-    /**
-     * @param string      $key
-     * @param string|null $default
-     *
-     * @return string
-     */
-    public function txt(/*string*/ $key,/*?string*/ $default = null)/*: string*/
+    private final function initForm()/*: void*/
     {
-        if ($default !== null) {
-            return self::plugin()->translate($key, static::LANG_MODULE, [], true, "", $default);
-        } else {
-            return self::plugin()->translate($key, static::LANG_MODULE);
-        }
+        $this->initAction();
+
+        $this->initCommands();
+
+        $this->initTitle();
+
+        $this->initItems();
     }
 
 
     /**
-     * @return bool
+     * @deprecated
      */
-    public function storeForm()/*: bool*/
+    private final function initItems()/*: void*/
     {
-        if (!$this->storeFormCheck()) {
-            return false;
-        }
+        $this->initFields();
 
-        $this->storeFormItems($this->fields);
-
-        return true;
-    }
-
-
-    /**
-     * @return bool
-     */
-    protected final function storeFormCheck()/*: bool*/
-    {
-        $this->setValuesByPost();
-
-        $this->check_input_called = false; // Fix 'Error: ilPropertyFormGUI->checkInput() called twice.'
-
-        if (!$this->checkInput()) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function checkInput()/*: bool*/
-    {
-        return parent::checkInput();
+        $this->getFields($this->fields, $this);
     }
 
 
     /**
      * @param array $fields
+     *
+     * @deprecated
      */
     private final function storeFormItems(array $fields)/*: void*/
     {
@@ -319,11 +371,4 @@ abstract class PropertyFormGUI extends ilPropertyFormGUI
             }
         }
     }
-
-
-    /**
-     * @param string $key
-     * @param mixed  $value
-     */
-    protected abstract function storeValue(/*string*/ $key, $value)/*: void*/ ;
 }

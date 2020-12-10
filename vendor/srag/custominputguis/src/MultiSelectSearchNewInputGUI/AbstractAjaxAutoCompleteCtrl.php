@@ -15,15 +15,22 @@ abstract class AbstractAjaxAutoCompleteCtrl
 {
 
     use DICTrait;
+
     const CMD_AJAX_AUTO_COMPLETE = "ajaxAutoComplete";
+    /**
+     * @var array|null
+     */
+    protected $skip_ids = null;
 
 
     /**
      * AbstractAjaxAutoCompleteCtrl constructor
+     *
+     * @param array|null $skip_ids
      */
-    public function __construct()
+    public function __construct(/*?*/ array $skip_ids = null)
     {
-
+        $this->skip_ids = $skip_ids;
     }
 
 
@@ -54,12 +61,17 @@ abstract class AbstractAjaxAutoCompleteCtrl
     /**
      * @param array $ids
      *
-     * @return bool
+     * @return array
      */
-    public function validateOptions(array $ids) : bool
-    {
-        return (count($ids) === count($this->fillOptions($ids)));
-    }
+    public abstract function fillOptions(array $ids) : array;
+
+
+    /**
+     * @param string|null $search
+     *
+     * @return array
+     */
+    public abstract function searchOptions(/*?*/ string $search = null) : array;
 
 
     /**
@@ -67,7 +79,10 @@ abstract class AbstractAjaxAutoCompleteCtrl
      *
      * @return bool
      */
-    public abstract function fillOptions(array $ids) : array;
+    public function validateOptions(array $ids) : bool
+    {
+        return (count($this->skipIds($ids)) === count($this->fillOptions($ids)));
+    }
 
 
     /**
@@ -91,9 +106,18 @@ abstract class AbstractAjaxAutoCompleteCtrl
 
 
     /**
-     * @param string|null $search
+     * @param array $ids
      *
      * @return array
      */
-    public abstract function searchOptions(/*?*/ string $search = null) : array;
+    protected function skipIds(array $ids) : array
+    {
+        if (empty($this->skip_ids)) {
+            return $ids;
+        }
+
+        return array_filter($ids, function ($id) : bool {
+            return (!in_array($id, $this->skip_ids));
+        }, ARRAY_FILTER_USE_KEY);
+    }
 }

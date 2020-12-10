@@ -19,6 +19,7 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
 {
 
     use DICTrait;
+
     /**
      * @var string
      */
@@ -37,7 +38,7 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
 
 
     /**
-     * @return bool
+     * @inheritDoc
      */
     public function checkInput() : bool
     {
@@ -79,7 +80,7 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
     /**
      * @param ilTemplate $tpl
      */
-    public function insert(ilTemplate $tpl) /*: void*/
+    public function insert(ilTemplate $tpl)/*: void*/
     {
         $html = $this->render();
 
@@ -103,22 +104,12 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
 
 
     /**
-     * @return string
-     */
-    protected function getDataUrl() : string
-    {
-        return "data:text/html;charset=UTF-8;base64," . base64_encode($this->html);
-    }
-
-
-    /**
      * @param string $title
      *
      * @return self
      */
-    public function setTitle(/*string*/
-        $title
-    ) : self {
+    public function setTitle(/*string*/ $title) : self
+    {
         $this->title = $title;
 
         return $this;
@@ -141,8 +132,17 @@ class StaticHTMLPresentationInputGUI extends ilFormPropertyGUI
      *
      * @throws ilFormException
      */
-    public function setValueByArray(/*string*/ $values)/*: void*/
+    public function setValueByArray(/*array*/ $values)/*: void*/
     {
         //throw new ilFormException("StaticHTMLPresentationInputGUI does not support set screenshots!");
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getDataUrl() : string
+    {
+        return "data:text/html;charset=UTF-8;base64," . base64_encode($this->html);
     }
 }

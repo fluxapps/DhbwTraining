@@ -1,6 +1,6 @@
 <?php
 
-namespace srag\CustomInputGUIs\DhbwTraining\CheckboxInputGUI;
+namespace srag\CustomInputGUIs\DhbwTraining\AjaxCheckbox;
 
 use srag\CustomInputGUIs\DhbwTraining\Template\Template;
 use srag\CustomInputGUIs\DhbwTraining\Waiter\Waiter;
@@ -9,7 +9,7 @@ use srag\DIC\DhbwTraining\DICTrait;
 /**
  * Class AjaxCheckbox
  *
- * @package srag\CustomInputGUIs\DhbwTraining\CheckboxInputGUI
+ * @package srag\CustomInputGUIs\DhbwTraining\AjaxCheckbox
  *
  * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
@@ -17,6 +17,7 @@ class AjaxCheckbox
 {
 
     use DICTrait;
+
     const GET_PARAM_CHECKED = "checked";
     /**
      * @var bool

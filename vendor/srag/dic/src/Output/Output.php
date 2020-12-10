@@ -3,7 +3,7 @@
 namespace srag\DIC\DhbwTraining\Output;
 
 use ILIAS\UI\Component\Component;
-use ILIAS\UI\Implementation\Render\ilTemplateWrapper;
+use ILIAS\UI\Implementation\Render\Template;
 use ilTable2GUI;
 use ilTemplate;
 use JsonSerializable;
@@ -23,48 +23,12 @@ final class Output implements OutputInterface
 
     use DICTrait;
 
-
     /**
      * Output constructor
      */
     public function __construct()
     {
 
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function output($value, bool $show = false, bool $main_template = true)/*: void*/
-    {
-        $html = $this->getHTML($value);
-
-        if (self::dic()->ctrl()->isAsynch()) {
-            echo $html;
-
-            exit;
-        } else {
-            if ($main_template) {
-                if (self::version()->is60()) {
-                    self::dic()->ui()->mainTemplate()->loadStandardTemplate();
-                } else {
-                    self::dic()->ui()->mainTemplate()->getStandardTemplate();
-                }
-            }
-
-            self::dic()->ui()->mainTemplate()->setLocator();
-
-            self::dic()->ui()->mainTemplate()->setContent($html);
-
-            if ($show) {
-                if (self::version()->is60()) {
-                    self::dic()->ui()->mainTemplate()->printToStdout();
-                } else {
-                    self::dic()->ui()->mainTemplate()->show();
-                }
-            }
-        }
     }
 
 
@@ -106,7 +70,7 @@ final class Output implements OutputInterface
 
                 // Template instance
                 case ($value instanceof ilTemplate):
-                case ($value instanceof ilTemplateWrapper):
+                case ($value instanceof Template):
                     $html = $value->get();
                     break;
 
@@ -118,6 +82,43 @@ final class Output implements OutputInterface
         }
 
         return strval($html);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function output($value, bool $show = false, bool $main_template = true)/*: void*/
+    {
+        $html = $this->getHTML($value);
+
+        if (self::dic()->ctrl()->isAsynch()) {
+            echo $html;
+
+            exit;
+        } else {
+            if ($main_template) {
+                if (self::version()->is6()) {
+                    self::dic()->ui()->mainTemplate()->loadStandardTemplate();
+                } else {
+                    self::dic()->ui()->mainTemplate()->getStandardTemplate();
+                }
+            }
+
+            self::dic()->ui()->mainTemplate()->setLocator();
+
+            if (!empty($html)) {
+                self::dic()->ui()->mainTemplate()->setContent($html);
+            }
+
+            if ($show) {
+                if (self::version()->is6()) {
+                    self::dic()->ui()->mainTemplate()->printToStdout();
+                } else {
+                    self::dic()->ui()->mainTemplate()->show();
+                }
+            }
+        }
     }
 
 

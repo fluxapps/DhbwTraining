@@ -99,7 +99,10 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI
                 $this->tabs->activateTab(self::TAB_PARTICIPANTS);
                 //has to be called because in this case parent::executeCommand is not executed(contains getStandardTempplate and Show)
                 //Show Method has to be called in the corresponding methods
+            if(method_exists($this->tpl,'getStandardTemplate')) {
                 $this->tpl->getStandardTemplate();
+            }
+
                 $xdhtParticipantsGUI = new xdhtParticipantGUI($this->facade);
                 $this->ctrl->forwardCommand($xdhtParticipantsGUI);
                 break;
@@ -110,7 +113,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI
                 $this->tabs->activateTab(self::TAB_START);
                 //has to be called because in this case parent::executeCommand is not executed(contains getStandardTempplate and Show)
                 //Show Method has to be called in the corresponding methods
+                if(method_exists($this->tpl,'getStandardTemplate')) {
                 $this->tpl->getStandardTemplate();
+            }
                 $xdhtQuestionGUI = new xdhtQuestionGUI($this->facade);
                 $this->ctrl->forwardCommand($xdhtQuestionGUI);
                 break;
@@ -119,7 +124,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI
                 $this->setTabs();
                 $this->setLocator();
                 $this->tabs->activateTab(self::TAB_START);
+                if(method_exists($this->tpl,'getStandardTemplate')) {
                 $this->tpl->getStandardTemplate();
+            }
                 $xdhtStartGUI = new xdhtStartGUI($this->facade);
                 $this->ctrl->forwardCommand($xdhtStartGUI);
                 break;
@@ -128,7 +135,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI
                 $this->setTabs();
                 $this->setLocator();
                 $this->tabs->activateTab(self::TAB_EXPORT);
+                if(method_exists($this->tpl,'getStandardTemplate')) {
                 $this->tpl->getStandardTemplate();
+            }
                 $exp_gui = new xdhtExportGUI($this); // $this is the ilObj...GUI class of the resource
                 //$exp_gui->addFormat("xml");
                 self::dic()->ctrl()->forwardCommand($exp_gui);
@@ -138,7 +147,9 @@ class ilObjDhbwTrainingGUI extends ilObjectPluginGUI
                             $this->setTabs();
                             $this->setLocator();
                             $this->tabs->activateTab(self::TAB_START);
-                            $this->tpl->getStandardTemplate();
+                            if(method_exists($this->tpl,'getStandardTemplate')) {
+                $this->tpl->getStandardTemplate();
+            }
                             $exp = new ilExportGUI($this);
                             $exp->addFormat('xml');
                             $this->ctrl->forwardCommand($exp);

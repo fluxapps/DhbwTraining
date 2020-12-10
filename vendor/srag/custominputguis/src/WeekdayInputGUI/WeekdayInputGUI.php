@@ -21,6 +21,7 @@ class WeekdayInputGUI extends ilFormPropertyGUI implements ilTableFilterItem
 {
 
     use DICTrait;
+
     const TYPE = 'weekday';
     /**
      * @var array
@@ -34,7 +35,7 @@ class WeekdayInputGUI extends ilFormPropertyGUI implements ilTableFilterItem
      * @param string $a_title
      * @param string $a_postvar
      */
-    public function __construct(/*string*/ $a_title, /*string*/ $a_postvar)
+    public function __construct(string $a_title, string $a_postvar)
     {
         parent::__construct($a_title, $a_postvar);
 
@@ -43,9 +44,9 @@ class WeekdayInputGUI extends ilFormPropertyGUI implements ilTableFilterItem
 
 
     /**
-     * @return bool
+     * @inheritDoc
      */
-    public function checkInput()/*: bool*/
+    public function checkInput() : bool
     {
         return ($_POST[$this->getPostVar()] == null) || (count($_POST[$this->getPostVar()]) <= 7);
     }
@@ -54,7 +55,7 @@ class WeekdayInputGUI extends ilFormPropertyGUI implements ilTableFilterItem
     /**
      * @inheritDoc
      */
-    public function getTableFilterHTML()/*: string*/
+    public function getTableFilterHTML() : string
     {
         $html = $this->render();
 
@@ -63,9 +64,40 @@ class WeekdayInputGUI extends ilFormPropertyGUI implements ilTableFilterItem
 
 
     /**
+     * @return array
+     */
+    public function getValue() : array
+    {
+        return $this->value;
+    }
+
+
+    /**
+     * @param array $value
+     */
+    public function setValue(/*array*/ $value)/*: void*/
+    {
+        $this->value = $value;
+    }
+
+
+    /**
+     * @param ilTemplate $tpl
+     */
+    public function insert(ilTemplate $tpl)/*: void*/
+    {
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
+    }
+
+
+    /**
      * @return string
      */
-    public function render()/*: string*/
+    public function render() : string
     {
         $tpl = new Template(__DIR__ . "/templates/tpl.weekday_input.html", true, true);
 
@@ -89,49 +121,10 @@ class WeekdayInputGUI extends ilFormPropertyGUI implements ilTableFilterItem
 
 
     /**
-     * Get Value.
-     *
-     * @return array Value
+     * @param array $values
      */
-    public function getValue()/*: array*/
+    public function setValueByArray(/*array*/ $values)/*: void*/
     {
-        return $this->value;
-    }
-
-
-    /**
-     * Set Value.
-     *
-     * @param array $a_value Value
-     */
-    public function setValue(/*array*/ $a_value)/*: void*/
-    {
-        $this->value = $a_value;
-    }
-
-
-    /**
-     * @param ilTemplate $tpl
-     */
-    public function insert(ilTemplate $tpl)/*: void*/
-    {
-        $html = $this->render();
-
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
-    }
-
-
-    /**
-     * Set value by array
-     *
-     * @param array $a_values
-     *
-     * @internal param object $a_item Item
-     */
-    public function setValueByArray(/*array*/ $a_values)/*: void*/
-    {
-        $this->setValue($a_values[$this->getPostVar()] ? $a_values[$this->getPostVar()] : []);
+        $this->setValue($values[$this->getPostVar()] ? $values[$this->getPostVar()] : []);
     }
 }

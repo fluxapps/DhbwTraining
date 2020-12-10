@@ -26,13 +26,13 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
 
 
     /**
-     * @return array
+     * @return string
      *
      * @deprecated
      */
-    public function getSubItems()/*: array*/
+    public function getContainerType() : string
     {
-        return array();
+        return 'crs';
     }
 
 
@@ -41,7 +41,58 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
      *
      * @deprecated
      */
-    public function render()/*: string*/
+    public function getPlaceholder() : string
+    {
+        return $this->placeholder;
+    }
+
+
+    /**
+     * @param string $placeholder
+     *
+     * @deprecated
+     */
+    public function setPlaceholder(string $placeholder)/*: void*/
+    {
+        $this->placeholder = $placeholder;
+    }
+
+
+    /**
+     * @return array
+     *
+     * @deprecated
+     */
+    public function getSubItems() : array
+    {
+        return array();
+    }
+
+
+    /**
+     * @return array
+     *
+     * @deprecated
+     */
+    public function getValue() : array
+    {
+        $val = parent::getValue();
+        if (is_array($val)) {
+            return $val;
+        } elseif (!$val) {
+            return array();
+        } else {
+            return explode(',', $val);
+        }
+    }
+
+
+    /**
+     * @return string
+     *
+     * @deprecated
+     */
+    public function render() : string
     {
         $tpl = $this->getInputTemplate();
         $json_values = $this->getValueAsJson();
@@ -95,66 +146,13 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
 
 
     /**
-     * @return string
-     *
-     * @deprecated
-     */
-    protected function getValueAsJson()/*: string*/
-    {
-        return json_encode(array());
-    }
-
-
-    /**
-     * @return array
-     *
-     * @deprecated
-     */
-    public function getValue()/*: array*/
-    {
-        $val = parent::getValue();
-        if (is_array($val)) {
-            return $val;
-        } elseif (!$val) {
-            return array();
-        } else {
-            return explode(',', $val);
-        }
-    }
-
-
-    /**
-     * @param string $text
-     * @param string $string
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    private function stripLastStringOccurrence(/*string*/
-        $text, /*string*/
-        $string
-    )/*: string*/
-    {
-        $pos = strrpos($text, $string);
-        if ($pos !== false) {
-            $text = substr_replace($text, "", $pos, strlen($string));
-        }
-
-        return $text;
-    }
-
-
-    /**
      * @param string $postVar
      *
      * @return string
      *
      * @deprecated
      */
-    protected function escapePostVar(/*string*/
-        $postVar
-    )/*: string*/
+    protected function escapePostVar(string $postVar) : string
     {
         $postVar = $this->stripLastStringOccurrence($postVar, "[]");
         $postVar = str_replace("[", '\\\\[', $postVar);
@@ -169,32 +167,27 @@ class MultiSelectSearchInput2GUI extends MultiSelectSearchInputGUI
      *
      * @deprecated
      */
-    public function getPlaceholder()/*: string*/
+    protected function getValueAsJson() : string
     {
-        return $this->placeholder;
+        return json_encode(array());
     }
 
 
     /**
-     * @param string $placeholder
+     * @param string $text
+     * @param string $string
      *
-     * @deprecated
-     */
-    public function setPlaceholder(/*string*/
-        $placeholder
-    )/*: void*/
-    {
-        $this->placeholder = $placeholder;
-    }
-
-
-    /**
      * @return string
      *
      * @deprecated
      */
-    public function getContainerType()/*: string*/
+    private function stripLastStringOccurrence(string $text, string $string) : string
     {
-        return 'crs';
+        $pos = strrpos($text, $string);
+        if ($pos !== false) {
+            $text = substr_replace($text, "", $pos, strlen($string));
+        }
+
+        return $text;
     }
 }

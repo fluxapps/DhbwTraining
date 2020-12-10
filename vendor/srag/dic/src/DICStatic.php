@@ -5,7 +5,6 @@ namespace srag\DIC\DhbwTraining;
 use ilLogLevel;
 use ilPlugin;
 use srag\DIC\DhbwTraining\DIC\DICInterface;
-use srag\DIC\DhbwTraining\DIC\Implementation\ILIAS53DIC;
 use srag\DIC\DhbwTraining\DIC\Implementation\ILIAS54DIC;
 use srag\DIC\DhbwTraining\DIC\Implementation\ILIAS60DIC;
 use srag\DIC\DhbwTraining\Exception\DICException;
@@ -70,6 +69,33 @@ final class DICStatic implements DICStaticInterface
     /**
      * @inheritDoc
      */
+    public static function dic() : DICInterface
+    {
+        if (self::$dic === null) {
+            switch (true) {
+                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_4)):
+                    throw new DICException("DIC not supports ILIAS " . self::version()->getILIASVersion() . " anymore!");
+                    break;
+
+                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_6)):
+                    global $DIC;
+                    self::$dic = new ILIAS54DIC($DIC);
+                    break;
+
+                default:
+                    global $DIC;
+                    self::$dic = new ILIAS60DIC($DIC);
+                    break;
+            }
+        }
+
+        return self::$dic;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public static function output() : OutputInterface
     {
         if (self::$output === null) {
@@ -106,38 +132,6 @@ final class DICStatic implements DICStaticInterface
         }
 
         return self::$plugins[$plugin_class_name];
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public static function dic() : DICInterface
-    {
-        if (self::$dic === null) {
-            switch (true) {
-                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_3)):
-                    throw new DICException("DIC not supports ILIAS " . self::version()->getILIASVersion() . " anymore!");
-                    break;
-
-                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_5_4)):
-                    global $DIC;
-                    self::$dic = new ILIAS53DIC($DIC);
-                    break;
-
-                case (self::version()->isLower(VersionInterface::ILIAS_VERSION_6_0)):
-                    global $DIC;
-                    self::$dic = new ILIAS54DIC($DIC);
-                    break;
-
-                default:
-                    global $DIC;
-                    self::$dic = new ILIAS60DIC($DIC);
-                    break;
-            }
-        }
-
-        return self::$dic;
     }
 
 

@@ -20,6 +20,8 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 {
 
     use DICTrait;
+
+    const EMPTY_PLACEHOLDER = "__empty_placeholder__";
     /**
      * @var bool
      */
@@ -57,6 +59,19 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
         parent::__construct($title, $post_var);
 
         self::init();
+    }
+
+
+    /**
+     * @param array $values
+     *
+     * @return array
+     */
+    public static function cleanValues(array $values) : array
+    {
+        return array_values(array_filter($values, function ($value) : bool {
+            return ($value !== self::EMPTY_PLACEHOLDER);
+        }));
     }
 
 
@@ -103,6 +118,8 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
             $values = [];
         }
 
+        $values = self::cleanValues($values);
+
         if ($this->getRequired() && empty($values)) {
             $this->setAlert(self::dic()->language()->txt("msg_input_is_required"));
 
@@ -136,6 +153,24 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
+     * @return AbstractAjaxAutoCompleteCtrl|null
+     */
+    public function getAjaxAutoCompleteCtrl()/*: ?AbstractAjaxAutoCompleteCtrl*/
+    {
+        return $this->ajax_auto_complete_ctrl;
+    }
+
+
+    /**
+     * @param AbstractAjaxAutoCompleteCtrl|null $ajax_auto_complete_ctrl
+     */
+    public function setAjaxAutoCompleteCtrl(/*?*/ AbstractAjaxAutoCompleteCtrl $ajax_auto_complete_ctrl = null)/*: void*/
+    {
+        $this->ajax_auto_complete_ctrl = $ajax_auto_complete_ctrl;
+    }
+
+
+    /**
      * @return int|null
      */
     public function getLimitCount()/* : ?int*/
@@ -154,20 +189,24 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
-     * @return AbstractAjaxAutoCompleteCtrl|null
+     * @return int
      */
-    public function getAjaxAutoCompleteCtrl()/*: ?AbstractAjaxAutoCompleteCtrl*/
+    public function getMinimumInputLength() : int
     {
-        return $this->ajax_auto_complete_ctrl;
+        if ($this->minimum_input_length !== null) {
+            return $this->minimum_input_length;
+        } else {
+            return ($this->getAjaxAutoCompleteCtrl() !== null ? 3 : 0);
+        }
     }
 
 
     /**
-     * @param AbstractAjaxAutoCompleteCtrl|null $ajax_auto_complete_ctrl
+     * @param int|null $minimum_input_length
      */
-    public function setAjaxAutoCompleteCtrl(/*?*/ AbstractAjaxAutoCompleteCtrl $ajax_auto_complete_ctrl = null)/*: void*/
+    public function setMinimumInputLength(/*?*/ int $minimum_input_length = null)/*: void*/
     {
-        $this->ajax_auto_complete_ctrl = $ajax_auto_complete_ctrl;
+        $this->minimum_input_length = $minimum_input_length;
     }
 
 
@@ -199,6 +238,50 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
+     * @inheritDoc
+     */
+    public function getToolbarHTML() : string
+    {
+        return $this->render();
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getValue() : array
+    {
+        return $this->value;
+    }
+
+
+    /**
+     * @param array $value
+     */
+    public function setValue(/*array*/ $value)/*: void*/
+    {
+        if (is_array($value)) {
+            $this->value = self::cleanValues($value);
+        } else {
+            $this->value = [];
+        }
+    }
+
+
+    /**
+     * @param ilTemplate $tpl
+     */
+    public function insert(ilTemplate $tpl)/*: void*/
+    {
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
+    }
+
+
+    /**
      * @return string
      */
     public function render() : string
@@ -208,6 +291,8 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
         $tpl->setVariableEscaped("ID", $this->getFieldId());
 
         $tpl->setVariableEscaped("POST_VAR", $this->getPostVar());
+
+        $tpl->setVariableEscaped("EMPTY_PLACEHOLDER", self::EMPTY_PLACEHOLDER); // ILIAS 6 will not set `null` value to input on post
 
         $config = [
             "maximumSelectionLength" => $this->getLimitCount(),
@@ -249,76 +334,10 @@ class MultiSelectSearchNewInputGUI extends ilFormPropertyGUI implements ilTableF
 
 
     /**
-     * @return int
+     * @param array $values
      */
-    public function getMinimumInputLength() : int
+    public function setValueByArray(/*array*/ $values)/*: void*/
     {
-        if ($this->minimum_input_length !== null) {
-            return $this->minimum_input_length;
-        } else {
-            return ($this->getAjaxAutoCompleteCtrl() !== null ? 3 : 0);
-        }
-    }
-
-
-    /**
-     * @param int|null $minimum_input_length
-     */
-    public function setMinimumInputLength(/*?*/ int $minimum_input_length = null)/*: void*/
-    {
-        $this->minimum_input_length = $minimum_input_length;
-    }
-
-
-    /**
-     * @return array
-     */
-    public function getValue() : array
-    {
-        return $this->value;
-    }
-
-
-    /**
-     * @param array $value
-     */
-    public function setValue(/*array*/ $value)/*: void*/
-    {
-        if (is_array($value)) {
-            $this->value = $value;
-        } else {
-            $this->value = [];
-        }
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getToolbarHTML() : string
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * @param ilTemplate $tpl
-     */
-    public function insert(ilTemplate $tpl) /*: void*/
-    {
-        $html = $this->render();
-
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
-    }
-
-
-    /**
-     * @param array $value
-     */
-    public function setValueByArray(/*array*/ $value)/*: void*/
-    {
-        $this->setValue($value[$this->getPostVar()]);
+        $this->setValue($values[$this->getPostVar()]);
     }
 }
