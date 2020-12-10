@@ -68,17 +68,6 @@ class ActiveRecordConfig extends Config
 
 
     /**
-     * @return ActiveRecordConfigRepository
-     *
-     * @deprecated
-     */
-    protected static function config() : ActiveRecordConfigRepository
-    {
-        return ActiveRecordConfigRepository::getInstance(static::TABLE_NAME, static::$fields);
-    }
-
-
-    /**
      * Get all values
      *
      * @return array [ [ "name" => value ], ... ]
@@ -131,6 +120,17 @@ class ActiveRecordConfig extends Config
 
 
     /**
+     * @return ActiveRecordConfigRepository
+     *
+     * @deprecated
+     */
+    protected static function config() : ActiveRecordConfigRepository
+    {
+        return ActiveRecordConfigRepository::getInstance(static::TABLE_NAME, static::$fields);
+    }
+
+
+    /**
      * @param string $name
      * @param int    $type
      * @param mixed  $default_value
@@ -149,6 +149,52 @@ class ActiveRecordConfig extends Config
 }
 
 /**
+ * Class ActiveRecordConfigFactory
+ *
+ * @package    srag\ActiveRecordConfig\DhbwTraining
+ *
+ * @author     studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
+ *
+ * @deprecated Do not use - only used for be compatible with old version
+ */
+final class ActiveRecordConfigFactory extends AbstractFactory
+{
+
+    /**
+     * @var self|null
+     *
+     * @deprecated
+     */
+    protected static $instance = null;
+
+
+    /**
+     * ActiveRecordConfigFactory constructor
+     *
+     * @deprecated
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    /**
+     * @return self
+     *
+     * @deprecated
+     */
+    public static function getInstance() : self
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+}
+
+/**
  * Class ActiveRecordConfigRepository
  *
  * @package    srag\ActiveRecordConfig\DhbwTraining
@@ -161,23 +207,23 @@ final class ActiveRecordConfigRepository extends AbstractRepository
 {
 
     /**
-     * @var self
+     * @var self|null
      *
      * @deprecated
      */
     protected static $instance = null;
-    /**
-     * @var string
-     *
-     * @deprecated
-     */
-    protected $table_name;
     /**
      * @var array
      *
      * @deprecated
      */
     protected $fields;
+    /**
+     * @var string
+     *
+     * @deprecated
+     */
+    protected $table_name;
 
 
     /**
@@ -233,9 +279,9 @@ final class ActiveRecordConfigRepository extends AbstractRepository
      *
      * @deprecated
      */
-    protected function getTableName() : string
+    protected function getFields() : array
     {
-        return $this->table_name;
+        return $this->fields;
     }
 
 
@@ -244,54 +290,8 @@ final class ActiveRecordConfigRepository extends AbstractRepository
      *
      * @deprecated
      */
-    protected function getFields() : array
+    protected function getTableName() : string
     {
-        return $this->fields;
-    }
-}
-
-/**
- * Class ActiveRecordConfigFactory
- *
- * @package    srag\ActiveRecordConfig\DhbwTraining
- *
- * @author     studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
- *
- * @deprecated Do not use - only used for be compatible with old version
- */
-final class ActiveRecordConfigFactory extends AbstractFactory
-{
-
-    /**
-     * @var self
-     *
-     * @deprecated
-     */
-    protected static $instance = null;
-
-
-    /**
-     * ActiveRecordConfigFactory constructor
-     *
-     * @deprecated
-     */
-    protected function __construct()
-    {
-        parent::__construct();
-    }
-
-
-    /**
-     * @return self
-     *
-     * @deprecated
-     */
-    public static function getInstance() : self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        return $this->table_name;
     }
 }

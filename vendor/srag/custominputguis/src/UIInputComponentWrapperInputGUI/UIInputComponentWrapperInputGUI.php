@@ -24,6 +24,7 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
 {
 
     use DICTrait;
+
     /**
      * @var bool
      */
@@ -49,15 +50,6 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
         //parent::__construct($title, $post_var);
 
         self::init();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function setPostVar(/*string*/ $post_var)/*: void*/
-    {
-        $this->input = $this->input->withNameFrom(new UIInputComponentWrapperNameSource($post_var));
     }
 
 
@@ -108,8 +100,8 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
      */
     public function getDisabled()/*:bool*/
     {
-        if (self::version()->is60()) {
-            return $this->input->getDisabled();
+        if (self::version()->is6()) {
+            return $this->input->isDisabled();
         } else {
             throw new ilFormException("disabled not exists in ILIAS 5.4 or below!");
         }
@@ -146,6 +138,15 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
     /**
      * @inheritDoc
      */
+    public function getPostVar()/*:string*/
+    {
+        return $this->input->getName();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function getRequired()/*:bool*/
     {
         return $this->input->isRequired();
@@ -158,19 +159,6 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
     public function getTableFilterHTML() : string
     {
         return $this->render();
-    }
-
-
-    /**
-     * @return string
-     */
-    public function render() : string
-    {
-        $tpl = new Template(__DIR__ . "/templates/input.html");
-
-        $tpl->setVariable("INPUT", self::output()->getHTML($this->input));
-
-        return self::output()->getHTML($tpl);
     }
 
 
@@ -204,13 +192,26 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
     /**
      * @param ilTemplate $tpl
      */
-    public function insert(ilTemplate $tpl) /*: void*/
+    public function insert(ilTemplate $tpl)/*: void*/
     {
         $html = $this->render();
 
         $tpl->setCurrentBlock("prop_generic");
         $tpl->setVariable("PROP_GENERIC", $html);
         $tpl->parseCurrentBlock();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function render() : string
+    {
+        $tpl = new Template(__DIR__ . "/templates/input.html");
+
+        $tpl->setVariable("INPUT", self::output()->getHTML($this->input));
+
+        return self::output()->getHTML($tpl);
     }
 
 
@@ -230,7 +231,7 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
      */
     public function setDisabled(/*bool*/ $disabled)/*: void*/
     {
-        if (self::version()->is60()) {
+        if (self::version()->is6()) {
             $this->input = $this->input->withDisabled($disabled);
         } else {
             throw new ilFormException("disabled not exists in ILIAS 5.4 or below!");
@@ -244,6 +245,15 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
     public function setInfo(/*string*/ $info)/*: void*/
     {
         $this->input = $this->input->withByline($info);
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function setPostVar(/*string*/ $post_var)/*: void*/
+    {
+        $this->input = $this->input->withNameFrom(new UIInputComponentWrapperNameSource($post_var));
     }
 
 
@@ -266,6 +276,19 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
 
 
     /**
+     * @param mixed $value
+     */
+    public function setValue($value)/*: void*/
+    {
+        try {
+            $this->input = $this->input->withValue($value);
+        } catch (Throwable $ex) {
+
+        }
+    }
+
+
+    /**
      * @param array $values
      */
     public function setValueByArray(/*array*/ $values)/*: void*/
@@ -273,23 +296,5 @@ class UIInputComponentWrapperInputGUI extends ilFormPropertyGUI implements ilTab
         if (isset($values[$this->getPostVar()])) {
             $this->setValue($values[$this->getPostVar()]);
         }
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getPostVar()/*:string*/
-    {
-        return $this->input->getName();
-    }
-
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)/*: void*/
-    {
-        $this->input = $this->input->withValue($value);
     }
 }

@@ -18,7 +18,6 @@ class MultilangualTabsInputGUI
 
     use DICTrait;
 
-
     /**
      * MultilangualTabsInputGUI constructor
      */
@@ -65,23 +64,6 @@ class MultilangualTabsInputGUI
 
 
     /**
-     * @param bool $default
-     *
-     * @return array
-     */
-    public static function getLanguages(bool $default = false) : array
-    {
-        $lang_keys = self::dic()->language()->getInstalledLanguages();
-
-        if ($default) {
-            array_unshift($lang_keys, "default");
-        }
-
-        return array_combine($lang_keys, array_map("strtoupper", $lang_keys));
-    }
-
-
-    /**
      * @param TabsInputGUI        $tabs
      * @param ilFormPropertyGUI[] $inputs
      * @param bool                $default_language
@@ -97,7 +79,7 @@ class MultilangualTabsInputGUI
                 $tab_input = clone $input;
 
                 if ($default_required && $lang_key === "default") {
-                    $input->setRequired(true);
+                    $tab_input->setRequired(true);
                 }
 
                 $tab->addInput($tab_input);
@@ -105,6 +87,23 @@ class MultilangualTabsInputGUI
 
             $tabs->addTab($tab);
         }
+    }
+
+
+    /**
+     * @param bool $default
+     *
+     * @return array
+     */
+    public static function getLanguages(bool $default = false) : array
+    {
+        $lang_keys = self::dic()->language()->getInstalledLanguages();
+
+        if ($default) {
+            array_unshift($lang_keys, "default");
+        }
+
+        return array_combine($lang_keys, array_map("strtoupper", $lang_keys));
     }
 
 

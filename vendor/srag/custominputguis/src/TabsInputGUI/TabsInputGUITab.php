@@ -17,14 +17,7 @@ class TabsInputGUITab
 {
 
     use DICTrait;
-    /**
-     * @var string
-     */
-    protected $title = "";
-    /**
-     * @var string
-     */
-    protected $post_var = "";
+
     /**
      * @var bool
      */
@@ -41,6 +34,14 @@ class TabsInputGUITab
      * @var ilFormPropertyGUI[]|null
      */
     protected $inputs_generated = null;
+    /**
+     * @var string
+     */
+    protected $post_var = "";
+    /**
+     * @var string
+     */
+    protected $title = "";
 
 
     /**
@@ -53,6 +54,19 @@ class TabsInputGUITab
     {
         $this->title = $title;
         $this->post_var = $post_var;
+    }
+
+
+    /**
+     *
+     */
+    public function __clone()/*:void*/
+    {
+        if ($this->inputs_generated !== null) {
+            $this->inputs_generated = array_map(function (ilFormPropertyGUI $input) : ilFormPropertyGUI {
+                return clone $input;
+            }, $this->inputs_generated);
+        }
     }
 
 
@@ -175,19 +189,6 @@ class TabsInputGUITab
     public function setActive(bool $active)/* : void*/
     {
         $this->active = $active;
-    }
-
-
-    /**
-     *
-     */
-    public function __clone()/*:void*/
-    {
-        if ($this->inputs_generated !== null) {
-            $this->inputs_generated = array_map(function (ilFormPropertyGUI $input) : ilFormPropertyGUI {
-                return clone $input;
-            }, $this->inputs_generated);
-        }
     }
 }
 

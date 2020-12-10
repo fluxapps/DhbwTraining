@@ -18,6 +18,7 @@ class Config extends ActiveRecord
 {
 
     use DICTrait;
+
     /**
      * @var string
      */
@@ -25,23 +26,7 @@ class Config extends ActiveRecord
     /**
      * @var int
      */
-    const TYPE_STRING = 1;
-    /**
-     * @var int
-     */
-    const TYPE_INTEGER = 2;
-    /**
-     * @var int
-     */
-    const TYPE_DOUBLE = 3;
-    /**
-     * @var int
-     */
     const TYPE_BOOLEAN = 4;
-    /**
-     * @var int
-     */
-    const TYPE_TIMESTAMP = 5;
     /**
      * @var int
      */
@@ -49,7 +34,23 @@ class Config extends ActiveRecord
     /**
      * @var int
      */
+    const TYPE_DOUBLE = 3;
+    /**
+     * @var int
+     */
+    const TYPE_INTEGER = 2;
+    /**
+     * @var int
+     */
     const TYPE_JSON = 7;
+    /**
+     * @var int
+     */
+    const TYPE_STRING = 1;
+    /**
+     * @var int
+     */
+    const TYPE_TIMESTAMP = 5;
     /**
      * @var string
      */
@@ -87,26 +88,6 @@ class Config extends ActiveRecord
 
 
     /**
-     * @inheritDoc
-     *
-     * @deprecated
-     */
-    public static function returnDbTableName() : string
-    {
-        return self::getTableName();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getConnectorContainerName() : string
-    {
-        return self::getTableName();
-    }
-
-
-    /**
      * @return string
      */
     public static function getTableName() : string
@@ -130,27 +111,21 @@ class Config extends ActiveRecord
 
     /**
      * @inheritDoc
+     *
+     * @deprecated
      */
-    public function sleep(/*string*/ $field_name)
+    public static function returnDbTableName() : string
     {
-        $field_value = $this->{$field_name};
-
-        switch ($field_name) {
-            default:
-                return null;
-        }
+        return self::getTableName();
     }
 
 
     /**
      * @inheritDoc
      */
-    public function wakeUp(/*string*/ $field_name, $field_value)
+    public function getConnectorContainerName() : string
     {
-        switch ($field_name) {
-            default:
-                return null;
-        }
+        return self::getTableName();
     }
 
 
@@ -187,5 +162,31 @@ class Config extends ActiveRecord
     public function setValue($value)/*: void*/
     {
         $this->value = $value;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function sleep(/*string*/ $field_name)
+    {
+        $field_value = $this->{$field_name};
+
+        switch ($field_name) {
+            default:
+                return parent::sleep($field_name);
+        }
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function wakeUp(/*string*/ $field_name, $field_value)
+    {
+        switch ($field_name) {
+            default:
+                return parent::wakeUp($field_name, $field_value);
+        }
     }
 }

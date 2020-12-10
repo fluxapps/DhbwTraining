@@ -21,9 +21,10 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 {
 
     use DICTrait;
-    const SHOW_INPUT_LABEL_NONE = 1;
-    const SHOW_INPUT_LABEL_AUTO = 2;
+
     const SHOW_INPUT_LABEL_ALWAYS = 3;
+    const SHOW_INPUT_LABEL_AUTO = 2;
+    const SHOW_INPUT_LABEL_NONE = 1;
     /**
      * @var bool
      */
@@ -73,6 +74,17 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
+     *
+     */
+    public function __clone()/*:void*/
+    {
+        $this->tabs = array_map(function (TabsInputGUITab $tab) : TabsInputGUITab {
+            return clone $tab;
+        }, $this->tabs);
+    }
+
+
+    /**
      * @param TabsInputGUITab $tab
      */
     public function addTab(TabsInputGUITab $tab)/*: void*/
@@ -117,6 +129,60 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
+     * @return int
+     */
+    public function getShowInputLabel() : int
+    {
+        return $this->show_input_label;
+    }
+
+
+    /**
+     * @param int $show_input_label
+     */
+    public function setShowInputLabel(int $show_input_label)/* : void*/
+    {
+        $this->show_input_label = $show_input_label;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getTableFilterHTML() : string
+    {
+        return $this->render();
+    }
+
+
+    /**
+     * @return TabsInputGUITab[]
+     */
+    public function getTabs() : array
+    {
+        return $this->tabs;
+    }
+
+
+    /**
+     * @param TabsInputGUITab[] $tabs
+     */
+    public function setTabs(array $tabs)/*: void*/
+    {
+        $this->tabs = $tabs;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getToolbarHTML() : string
+    {
+        return $this->render();
+    }
+
+
+    /**
      * @return array
      */
     public function getValue() : array
@@ -139,11 +205,15 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
-     * @inheritDoc
+     * @param ilTemplate $tpl
      */
-    public function getTableFilterHTML() : string
+    public function insert(ilTemplate $tpl)/*: void*/
     {
-        return $this->render();
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
     }
 
 
@@ -207,79 +277,10 @@ class TabsInputGUI extends ilFormPropertyGUI implements ilTableFilterItem, ilToo
 
 
     /**
-     * @return TabsInputGUITab[]
+     * @param array $values
      */
-    public function getTabs() : array
+    public function setValueByArray(/*array*/ $values)/*: void*/
     {
-        return $this->tabs;
-    }
-
-
-    /**
-     * @param TabsInputGUITab[] $tabs
-     */
-    public function setTabs(array $tabs) /*: void*/
-    {
-        $this->tabs = $tabs;
-    }
-
-
-    /**
-     * @return int
-     */
-    public function getShowInputLabel() : int
-    {
-        return $this->show_input_label;
-    }
-
-
-    /**
-     * @param int $show_input_label
-     */
-    public function setShowInputLabel(int $show_input_label)/* : void*/
-    {
-        $this->show_input_label = $show_input_label;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
-    public function getToolbarHTML() : string
-    {
-        return $this->render();
-    }
-
-
-    /**
-     * @param ilTemplate $tpl
-     */
-    public function insert(ilTemplate $tpl) /*: void*/
-    {
-        $html = $this->render();
-
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
-    }
-
-
-    /**
-     * @param array $value
-     */
-    public function setValueByArray(/*array*/ $value)/*: void*/
-    {
-        $this->setValue($value[$this->getPostVar()]);
-    }
-
-
-    /**
-     *
-     */
-    public function __clone()/*:void*/
-    {
-        $this->tabs = array_map(function (TabsInputGUITab $tab) : TabsInputGUITab {
-            return clone $tab;
-        }, $this->tabs);
+        $this->setValue($values[$this->getPostVar()]);
     }
 }

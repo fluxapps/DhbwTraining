@@ -23,6 +23,7 @@ class ScreenshotsInputGUI extends ilFormPropertyGUI implements Pluginable
 {
 
     use DICTrait;
+
     const LANG_MODULE = "screenshotsinputgui";
     /**
      * @var bool
@@ -33,13 +34,13 @@ class ScreenshotsInputGUI extends ilFormPropertyGUI implements Pluginable
      */
     protected $allowed_formats = ["bmp", "gif", "jpg", "png"];
     /**
-     * @var UploadResult[]
-     */
-    protected $screenshots = [];
-    /**
      * @var PluginInterface|null
      */
     protected $plugin = null;
+    /**
+     * @var UploadResult[]
+     */
+    protected $screenshots = [];
 
 
     /**
@@ -72,97 +73,24 @@ class ScreenshotsInputGUI extends ilFormPropertyGUI implements Pluginable
 
 
     /**
+     * @return string[]
+     */
+    public function getAllowedFormats() : array
+    {
+        return $this->allowed_formats;
+    }
+
+
+    /**
+     * @param string[] $allowed_formats
      *
+     * @return self
      */
-    protected function processScreenshots()/*: void*/
+    public function setAllowedFormats(array $allowed_formats) : self
     {
-        $this->screenshots = [];
+        $this->allowed_formats = $allowed_formats;
 
-        if (!self::dic()->upload()->hasBeenProcessed()) {
-            self::dic()->upload()->process();
-        }
-
-        if (self::dic()->upload()->hasUploads()) {
-            $uploads = self::dic()->http()->request()->getUploadedFiles()[$this->getPostVar()];
-
-            if (is_array($uploads)) {
-                $uploads = array_values(array_flip(array_map(function (UploadedFile $file) : string {
-                    return $file->getClientFilename();
-                }, $uploads)));
-
-                $this->screenshots = array_values(array_filter(self::dic()->upload()
-                    ->getResults(), function (UploadResult $file) use (&$uploads): bool {
-                    $ext = pathinfo($file->getName(), PATHINFO_EXTENSION);
-
-                    return ($file->getStatus()->getCode() === ProcessingStatus::OK && in_array($file->getPath(), $uploads)
-                        && in_array($ext, $this->allowed_formats));
-                }));
-            }
-        }
-    }
-
-
-    /**
-     * @return UploadResult[]
-     */
-    public function getValue() : array
-    {
-        return $this->screenshots;
-    }
-
-
-    /**
-     * @param ilTemplate $tpl
-     */
-    public function insert(ilTemplate $tpl) /*: void*/
-    {
-        $html = $this->render();
-
-        $tpl->setCurrentBlock("prop_generic");
-        $tpl->setVariable("PROP_GENERIC", $html);
-        $tpl->parseCurrentBlock();
-    }
-
-
-    /**
-     * @return string
-     */
-    public function render() : string
-    {
-        $this->init();
-
-        $screenshots_tpl = $this->getPlugin()->template(__DIR__ . "/templates/screenshots.html", true, true, false);
-        $screenshots_tpl->setVariable("TXT_UPLOAD_SCREENSHOT", $this->getPlugin()
-            ->translate("upload_screenshot", self::LANG_MODULE));
-        $screenshots_tpl->setVariable("TXT_TAKE_PAGE_SCREENSHOT", $this->getPlugin()
-            ->translate("take_page_screenshot", self::LANG_MODULE));
-        $screenshots_tpl->setVariable("POST_VAR", $this->getPostVar());
-        $screenshots_tpl->setVariable("ALLOWED_FORMATS", implode(",", array_map(function (string $format) : string {
-            return "." . $format;
-        }, $this->getAllowedFormats())));
-
-        return self::output()->getHTML($screenshots_tpl);
-    }
-
-
-    /**
-     *
-     */
-    public function init()/*: void*/
-    {
-        if (self::$init === false) {
-            self::$init = true;
-
-            $dir = __DIR__;
-            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
-
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/es6-promise/dist/es6-promise.auto.min.js");
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/canvas-toBlob/canvas-toBlob.js");
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/html2canvas/dist/html2canvas.min.js");
-
-            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/js/ScreenshotsInputGUI.min.js", false);
-            self::dic()->ui()->mainTemplate()->addOnLoadCode($this->getJSOnLoadCode());
-        }
+        return $this;
     }
 
 
@@ -193,24 +121,68 @@ class ScreenshotsInputGUI extends ilFormPropertyGUI implements Pluginable
 
 
     /**
-     * @return string[]
+     * @return UploadResult[]
      */
-    public function getAllowedFormats() : array
+    public function getValue() : array
     {
-        return $this->allowed_formats;
+        $this->processScreenshots();
+
+        return $this->screenshots;
     }
 
 
     /**
-     * @param string[] $allowed_formats
      *
-     * @return self
      */
-    public function setAllowedFormats(array $allowed_formats) : self
+    public function init()/*: void*/
     {
-        $this->allowed_formats = $allowed_formats;
+        if (self::$init === false) {
+            self::$init = true;
 
-        return $this;
+            $dir = __DIR__;
+            $dir = "./" . substr($dir, strpos($dir, "/Customizing/") + 1);
+
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/es6-promise/dist/es6-promise.auto.min.js");
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/canvas-toBlob/canvas-toBlob.js");
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/../../node_modules/html2canvas/dist/html2canvas.min.js");
+
+            self::dic()->ui()->mainTemplate()->addJavaScript($dir . "/js/ScreenshotsInputGUI.min.js", false);
+            self::dic()->ui()->mainTemplate()->addOnLoadCode($this->getJSOnLoadCode());
+        }
+    }
+
+
+    /**
+     * @param ilTemplate $tpl
+     */
+    public function insert(ilTemplate $tpl)/*: void*/
+    {
+        $html = $this->render();
+
+        $tpl->setCurrentBlock("prop_generic");
+        $tpl->setVariable("PROP_GENERIC", $html);
+        $tpl->parseCurrentBlock();
+    }
+
+
+    /**
+     * @return string
+     */
+    public function render() : string
+    {
+        $this->init();
+
+        $screenshots_tpl = $this->getPlugin()->template(__DIR__ . "/templates/screenshots.html", true, true, false);
+        $screenshots_tpl->setVariable("TXT_UPLOAD_SCREENSHOT", $this->getPlugin()
+            ->translate("upload_screenshot", self::LANG_MODULE));
+        $screenshots_tpl->setVariable("TXT_TAKE_PAGE_SCREENSHOT", $this->getPlugin()
+            ->translate("take_page_screenshot", self::LANG_MODULE));
+        $screenshots_tpl->setVariable("POST_VAR", $this->getPostVar());
+        $screenshots_tpl->setVariable("ALLOWED_FORMATS", implode(",", array_map(function (string $format) : string {
+            return "." . $format;
+        }, $this->getAllowedFormats())));
+
+        return self::output()->getHTML($screenshots_tpl);
     }
 
 
@@ -270,5 +242,36 @@ class ScreenshotsInputGUI extends ilFormPropertyGUI implements Pluginable
         $this->plugin = $plugin;
 
         return $this;
+    }
+
+
+    /**
+     *
+     */
+    protected function processScreenshots()/*: void*/
+    {
+        $this->screenshots = [];
+
+        if (!self::dic()->upload()->hasBeenProcessed()) {
+            self::dic()->upload()->process();
+        }
+
+        if (self::dic()->upload()->hasUploads()) {
+            $uploads = self::dic()->http()->request()->getUploadedFiles()[$this->getPostVar()];
+
+            if (is_array($uploads)) {
+                $uploads = array_values(array_flip(array_map(function (UploadedFile $file) : string {
+                    return $file->getClientFilename();
+                }, $uploads)));
+
+                $this->screenshots = array_values(array_filter(self::dic()->upload()
+                    ->getResults(), function (UploadResult $file) use (&$uploads) : bool {
+                    $ext = pathinfo($file->getName(), PATHINFO_EXTENSION);
+
+                    return ($file->getStatus()->getCode() === ProcessingStatus::OK && in_array($file->getPath(), $uploads)
+                        && in_array($ext, $this->allowed_formats));
+                }));
+            }
+        }
     }
 }

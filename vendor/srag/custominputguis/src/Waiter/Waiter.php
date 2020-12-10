@@ -15,14 +15,15 @@ final class Waiter
 {
 
     use DICTrait;
-    /**
-     * @var string
-     */
-    const TYPE_WAITER = "waiter";
+
     /**
      * @var string
      */
     const TYPE_PERCENTAGE = "percentage";
+    /**
+     * @var string
+     */
+    const TYPE_WAITER = "waiter";
     /**
      * @var bool
      */
@@ -41,7 +42,7 @@ final class Waiter
     /**
      * @param string $type
      */
-    public static final function init(/*string*/ $type)/*: void*/
+    public static final function init(string $type)/*: void*/
     {
         if (self::$init === false) {
             self::$init = true;
