@@ -121,10 +121,15 @@ class xdhtStartGUI
         }
 
         if (!empty($this->response->getCompetences())) {
+            global $ilDB;
             foreach ($this->response->getCompetences() as $competence_id => $level_id) {
+                $sql = "select id from skl_level as sl join qpl_qst_skl_assigns as ql on ql.skill_base_fi = sl.skill_id where ql.skill_tref_fi = $competence_id and sl.nr = $level_id limit 1";
+                $set = $ilDB->query($sql);
+                $row = $ilDB->fetchAssoc($set);
+
                 ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
                 ilBasicSkill::writeUserSkillLevelStatus(
-                    $level_id,
+                    $row['id'],
                     self::dic()->user()->getId(),
                     $this->facade->refId(),
                     $competence_id,
@@ -387,7 +392,7 @@ class xdhtStartGUI
             }
 
             $recommender = new RecommenderCurl($this->facade, $this->response);
-            $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $question['points'], $answertext);
+            $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $question['points'], $question['skills'], $answertext);
 
             $this->proceedWithReturnOfRecommender();
         }

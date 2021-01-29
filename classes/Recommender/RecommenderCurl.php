@@ -283,10 +283,12 @@ class RecommenderCurl
 
     /**
      * @param string $recomander_id
-     * @param int    $question_type
-     * @param mixed  $answer
+     * @param int $question_type
+     * @param int $question_max_points
+     * @param array $skill
+     * @param mixed $answer
      */
-    public function answer(string $recomander_id, int $question_type, int $question_max_points, $answer)/*:void*/
+    public function answer(string $recomander_id, int $question_type, int $question_max_points, array $skill, $answer)/*:void*/
     {
         global $DIC;
 
@@ -305,7 +307,8 @@ class RecommenderCurl
             "recomander_id"        => $recomander_id,
             "question_type"        => $question_type,
             "question_max_points"  => $question_max_points,
-            "answer"               => $answer
+            "answer"               => $answer,
+            "skills"               => $skill
         ];
 
         $this->doRequest("/v1/answer", $headers, $data);

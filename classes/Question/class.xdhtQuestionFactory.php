@@ -52,6 +52,14 @@ inner join qpl_qst_type on qpl_qst_type.question_type_id = qpl_questions.questio
         $row = $ilDB->fetchAssoc($set);
 
         $row['recomander_id'] = $recomander_id;
+        $row['skills'] = array();
+
+        $question_id = $row["question_id"];
+        $sql = "SELECT skill_tref_fi FROM qpl_qst_skl_assigns where question_fi = $question_id";
+        $set = $ilDB->query($sql);
+        while ($sk = $ilDB->fetchAssoc($set)) {
+            array_push($row['skills'], $sk['skill_tref_fi']);
+        }
 
         return $row;
     }
