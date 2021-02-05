@@ -2,10 +2,12 @@
 <div class="il_ass_question_preview_container ilc_page_cont_PageContainer">
 	<h1>{TITLE}</h1>
 	<form action="{ACTION}" method="post">
-		<div class="form-group">
-			<!-- BEGIN question -->				{QUESTION}
-			<!-- END question -->
-		</div>
+		<fieldset disabled>
+			<div class="form-group">
+				<!-- BEGIN question -->				{QUESTION}
+				<!-- END question -->
+			</div>
+		</fieldset>
 		<div>{DIFFICULTY}</div>
 		<button class="btn btn-default" name="submitted" type="submit" value="{BTN_QST_LEVEL1_VALUE}">{BTN_QST_LEVEL1_TEXT}</button>
 		<button class="btn btn-default" name="submitted" type="submit" value="{BTN_QST_LEVEL2_VALUE}">{BTN_QST_LEVEL2_TEXT}</button>
