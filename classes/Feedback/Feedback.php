@@ -84,10 +84,10 @@ class Feedback
     public function getFeedbackType()
     {
         if ($this->correct) {
-            return ilTemplate::MESSAGE_TYPE_SUCCESS;
+            return ilGlobalTemplate::MESSAGE_TYPE_SUCCESS;
         }
         else {
-            return ilTemplate::MESSAGE_TYPE_FAILURE;
+            return ilGlobalTemplate::MESSAGE_TYPE_FAILURE;
         }
     }
 
