@@ -52,6 +52,7 @@ class QuestionAnswers
                     $question_answer->setAnswerId($row['answer_id']);
                     $question_answer->setAnswertext($row['answertext']);
                     $question_answer->setAOrder($row['aorder']);
+                    $question_answer->setPoints($row['points']);
                     $arr_question_answers[$row['aorder']] = $question_answer;
                 }
                 $this->setAnswers($arr_question_answers);
@@ -69,6 +70,7 @@ class QuestionAnswers
                     $question_answer->setAnswerId($row['answer_id']);
                     $question_answer->setAnswertext($row['answertext']);
                     $question_answer->setAOrder($row['aorder']);
+                    $question_answer->setPoints($row['points']);
                     $arr_question_answers[$row['aorder']] = $question_answer;
                 }
                 $this->setAnswers($arr_question_answers);
@@ -88,6 +90,7 @@ class QuestionAnswers
                     $question_answer->setAnswertext($row['answertext']);
                     $question_answer->setAOrder($row['aorder']);
                     $question_answer->setClozeType($row['cloze_type']);
+                    $question_answer->setPoints($row['points']);
                     $arr_question_answers[$row['gap_id']]['cloze_type'] = $row['cloze_type'];
                     $arr_question_answers[$row['gap_id']][$row['aorder']] = $question_answer;
                 }

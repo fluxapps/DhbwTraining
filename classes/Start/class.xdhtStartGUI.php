@@ -121,10 +121,15 @@ class xdhtStartGUI
         }
 
         if (!empty($this->response->getCompetences())) {
+            global $ilDB;
             foreach ($this->response->getCompetences() as $competence_id => $level_id) {
+                $sql = "select id from skl_level as sl join qpl_qst_skl_assigns as ql on ql.skill_base_fi = sl.skill_id where ql.skill_tref_fi = $competence_id and sl.nr = $level_id limit 1";
+                $set = $ilDB->query($sql);
+                $row = $ilDB->fetchAssoc($set);
+
                 ilPersonalSkill::addPersonalSkill(self::dic()->user()->getId(), $competence_id);
                 ilBasicSkill::writeUserSkillLevelStatus(
-                    $level_id,
+                    $row['id'],
                     self::dic()->user()->getId(),
                     $this->facade->refId(),
                     $competence_id,
@@ -136,16 +141,18 @@ class xdhtStartGUI
 
         switch ($this->response->getStatus()) {
             case RecommenderResponse::STATUS_SUCCESS:
-                if ($this->response->getAnswerResponse()) {
+                if ($this->response->getAnswerResponse() != "") {
                     $formatter = new ilAssSelfAssessmentQuestionFormatter();
-                    $this->response->addSendMessage($formatter->format($this->response->getAnswerResponse()), $this->response->getAnswerResponseType());
+                    $feedback = new Feedback($this->response->getAnswerResponse(), $this->response->getRecomanderId(), $this->response->getCorrect(), $this->facade);
+
+                    $this->response->addSendMessage($formatter->format($feedback->getFeedback()), $feedback->getFeedbackType());
                 }
 
                 if ($this->response->getMessage()) {
                     $this->response->addSendMessage($this->response->getMessage(), $this->response->getMessageType());
                 }
 
-                if ($this->response->getAnswerResponse()) {
+                if ($this->response->getAnswerResponse() != "") {
                     $question = $this->facade->xdhtQuestionFactory()->getQuestionByRecomanderId($_POST['recomander_id']);
                     $output = $this->initAnsweredQuestionForm($question);
 
@@ -168,7 +175,6 @@ class xdhtStartGUI
                         self::dic()->ctrl()->redirect($this, self::CMD_STANDARD);
 
                         return;
-                        break;
                     default:
                         $output = $this->initSeparatorForm();
                         break;
@@ -242,7 +248,7 @@ class xdhtStartGUI
 
         $tpl->setVariable('QUESTION_ID', $question['question_id']);
         $tpl->setVariable('RECOMANDER_ID', $question['recomander_id']);
-        $previewSession->setParticipantsSolution(999999);
+        $previewSession->setParticipantsSolution(null);
         return $tpl;
     }
 
@@ -336,9 +342,9 @@ class xdhtStartGUI
                      */
                     $question_answer = $question_answers->getAnswers()[$_POST['multiple_choice_result' . $_POST['question_id'] . 'ID']];
                     if (is_object($question_answer)) {
-                        $answertext = ["answertext" => base64_encode($question_answer->getAnswertext())];
+                        $answertext = ["answertext" => base64_encode("Choice " . $question_answer->getAOrder()), "points" => $question_answer->getPoints()];
                     } else {
-                        $answertext = ["answertext" => ""];
+                        $answertext = ["answertext" => "", "points" => 0];
                     }
                     break;
                 case 'assMultipleChoice':
@@ -346,9 +352,9 @@ class xdhtStartGUI
                         if (strpos($key, 'multiple_choice_result') !== false) {
                             $question_answer = $question_answers->getAnswers()[$value];
                             if (is_object($question_answer)) {
-                                $answertext[] = ["aorder" => base64_encode($question_answer->getAnswertext())];
+                                $answertext[] = ["answertext" => base64_encode("Choice " . $question_answer->getAOrder()), "points" => $question_answer->getPoints()];
                             } else {
-                                $answertext = ["answertext" => ""];
+                                $answertext = ["answertext" => "", "points" => 0];
                             }
                         }
                     }
@@ -357,26 +363,26 @@ class xdhtStartGUI
                     foreach ($_POST as $key => $value) {
 
                         if (strpos($key, 'gap_') !== false) {
+                            $value = str_replace(array(' ', ','), array('', '.'), $value);
                             $arr_splitted_gap = explode('gap_', $key);
                             $question_answer = $question_answers->getAnswers();
-                            if (in_array($question_answer[$arr_splitted_gap[1]]['cloze_type'], [
-                                xdhtQuestionFactory::CLOZE_TYPE_TEXT,
-                                xdhtQuestionFactory::CLOZE_TYPE_NUMERIC
-                            ])
-                            ) {
-                                $answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type' => 2, 'answertext' => base64_encode($value)];
+                            if (in_array($question_answer[$arr_splitted_gap[1]]['cloze_type'], [xdhtQuestionFactory::CLOZE_TYPE_TEXT, xdhtQuestionFactory::CLOZE_TYPE_NUMERIC])) {
+                                $answertext[] = ["gap_id" => $arr_splitted_gap[1], 'cloze_type' => 2, 'answertext' => base64_encode($value),
+                                    'points' => ($question_answer[$arr_splitted_gap[1]][0]->getAnswertext() == $value) * $question_answer[$arr_splitted_gap[1]][0]->getPoints()];
                             } else {
                                 if (is_object($question_answer[$arr_splitted_gap[1]][$value])) {
                                     $answertext[] = [
                                         "gap_id"     => $arr_splitted_gap[1],
                                         'cloze_type' => $question_answer[$arr_splitted_gap[1]]['cloze_type'],
-                                        'answertext' => base64_encode($question_answer[$arr_splitted_gap[1]][$value]->getAnswertext())
+                                        'answertext' => base64_encode($question_answer[$arr_splitted_gap[1]][$value]->getAnswertext()),
+                                        'points' => $question_answer[$arr_splitted_gap[1]][$value]->getPoints()
                                     ];
                                 } else {
                                     $answertext[] = [
                                         "gap_id"     => $arr_splitted_gap[1],
                                         'cloze_type' => $question_answer[$arr_splitted_gap[1]]['cloze_type'],
-                                        'answertext' => ""
+                                        'answertext' => "",
+                                        'points' => 0
                                     ];
                                 }
                             }
@@ -386,7 +392,7 @@ class xdhtStartGUI
             }
 
             $recommender = new RecommenderCurl($this->facade, $this->response);
-            $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $answertext);
+            $recommender->answer($_POST['recomander_id'], $question['question_type_fi'], $question['points'], $question['skills'], $answertext);
 
             $this->proceedWithReturnOfRecommender();
         }

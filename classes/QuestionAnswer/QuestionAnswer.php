@@ -30,6 +30,10 @@ class QuestionAnswer
      */
     //Todo separate Class er Question!
     protected $cloze_type;
+    /**
+     * @var float
+     */
+    protected $points;
 
 
     /**
@@ -100,7 +104,7 @@ class QuestionAnswer
      */
     public function setAnswertext(string $answertext)
     {
-        $this->answertext = $answertext;
+        $this->answertext = str_replace(array(' ', ','), array('', '.'), $answertext);
     }
 
 
@@ -119,5 +123,22 @@ class QuestionAnswer
     public function setClozeType(int $cloze_type)
     {
         $this->cloze_type = $cloze_type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPoints() : float
+    {
+        return $this->points;
+    }
+
+
+    /**
+     * @param float $points
+     */
+    public function setPoints(float $points)
+    {
+        $this->points = $points;
     }
 }

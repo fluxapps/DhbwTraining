@@ -153,7 +153,7 @@ class RecommenderCurl
                 $this->response->setResponseType(intval($result['response_type']));
             }
 
-            if (!empty($result['answer_response'])) {
+            if (isset($result['answer_response'])) {
                 $this->response->setAnswerResponse(strval($result['answer_response']));
             }
 
@@ -214,6 +214,10 @@ class RecommenderCurl
                 if(strlen(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)) > 0) {
                    $this->response->setProgressmeters((array) unserialize(ilSession::get(self::KEY_RESPONSE_PROGRESS_METER)));
                 }
+            }
+
+            if (isset($result['correct'])) {
+                $this->response->setCorrect($result['correct']);
             }
 
 
@@ -279,10 +283,12 @@ class RecommenderCurl
 
     /**
      * @param string $recomander_id
-     * @param int    $question_type
-     * @param mixed  $answer
+     * @param int $question_type
+     * @param int $question_max_points
+     * @param array $skill
+     * @param mixed $answer
      */
-    public function answer(string $recomander_id, int $question_type, $answer)/*:void*/
+    public function answer(string $recomander_id, int $question_type, int $question_max_points, array $skill, $answer)/*:void*/
     {
         global $DIC;
 
@@ -300,7 +306,9 @@ class RecommenderCurl
             "question_pool_obj_id" => $this->facade->settings()->getQuestionPoolId(),
             "recomander_id"        => $recomander_id,
             "question_type"        => $question_type,
-            "answer"               => $answer
+            "question_max_points"  => $question_max_points,
+            "answer"               => $answer,
+            "skills"               => $skill
         ];
 
         $this->doRequest("/v1/answer", $headers, $data);
