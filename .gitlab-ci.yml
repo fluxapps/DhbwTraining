@@ -1,0 +1,9 @@
+build:
+  stage: build
+  script:
+    - echo -n $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
+    - docker build . --pull -t $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker logout $CI_REGISTRY
+  only:
+    - /^main$/
