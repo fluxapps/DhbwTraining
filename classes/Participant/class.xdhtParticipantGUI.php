@@ -66,7 +66,7 @@ class xdhtParticipantGUI
         self::dic()->ctrl()->saveParameterByClass(xdhtParticipantTableGUI::class, self::PARTICIPANT_IDENTIFIER);
         $xdhtParticipantTableGUI = new xdhtParticipantTableGUI($this, self::CMD_STANDARD, $this->facade);
         self::dic()->ui()->mainTemplate()->setContent($xdhtParticipantTableGUI->getHTML());
-        self::dic()->ui()->mainTemplate()->show();
+
     }
 
 
