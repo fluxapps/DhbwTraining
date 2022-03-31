@@ -1,27 +1,27 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3b54dd7163531d92de1e9429c5cca75c",
+    "content-hash": "6e97b1a6ab69152a3f79572511bf429e",
     "packages": [
         {
             "name": "paragonie/random_compat",
-            "version": "v9.99.99",
+            "version": "v9.99.100",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95"
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
-                "reference": "84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
+                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
                 "shasum": ""
             },
             "require": {
-                "php": "^7"
+                "php": ">= 7"
             },
             "require-dev": {
                 "phpunit/phpunit": "4.*|5.*",
@@ -49,26 +49,31 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-07-02T15:55:56+00:00"
+            "support": {
+                "email": "info@paragonie.com",
+                "issues": "https://github.com/paragonie/random_compat/issues",
+                "source": "https://github.com/paragonie/random_compat"
+            },
+            "time": "2020-10-15T08:29:30+00:00"
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.9.3",
+            "version": "3.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "7e1633a6964b48589b142d60542f9ed31bd37a92"
+                "reference": "ffa80ab953edd85d5b6c004f96181a538aad35a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/7e1633a6964b48589b142d60542f9ed31bd37a92",
-                "reference": "7e1633a6964b48589b142d60542f9ed31bd37a92",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/ffa80ab953edd85d5b6c004f96181a538aad35a3",
+                "reference": "ffa80ab953edd85d5b6c004f96181a538aad35a3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "paragonie/random_compat": "^1 | ^2 | 9.99.99",
-                "php": "^5.4 | ^7 | ^8",
+                "paragonie/random_compat": "^1 | ^2 | ^9.99.99",
+                "php": "^5.4 | ^7.0 | ^8.0",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "replace": {
@@ -77,14 +82,16 @@
             "require-dev": {
                 "codeception/aspect-mock": "^1 | ^2",
                 "doctrine/annotations": "^1.2",
-                "goaop/framework": "1.0.0-alpha.2 | ^1 | ^2.1",
-                "jakub-onderka/php-parallel-lint": "^1",
+                "goaop/framework": "1.0.0-alpha.2 | ^1 | >=2.1.0 <=2.3.2",
                 "mockery/mockery": "^0.9.11 | ^1",
                 "moontoast/math": "^1.1",
+                "nikic/php-parser": "<=4.5.0",
                 "paragonie/random-lib": "^2",
-                "php-mock/php-mock-phpunit": "^0.3 | ^1.1",
-                "phpunit/phpunit": "^4.8 | ^5.4 | ^6.5",
-                "squizlabs/php_codesniffer": "^3.5"
+                "php-mock/php-mock-phpunit": "^0.3 | ^1.1 | ^2.6",
+                "php-parallel-lint/php-parallel-lint": "^1.3",
+                "phpunit/phpunit": ">=4.8.36 <9.0.0 | >=9.3.0",
+                "squizlabs/php_codesniffer": "^3.5",
+                "yoast/phpunit-polyfills": "^1.0"
             },
             "suggest": {
                 "ext-ctype": "Provides support for PHP Ctype functions",
@@ -103,12 +110,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Ramsey\\Uuid\\": "src/"
-                },
                 "files": [
                     "src/functions.php"
-                ]
+                ],
+                "psr-4": {
+                    "Ramsey\\Uuid\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -136,24 +143,40 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2020-02-21T04:36:14+00:00"
+            "support": {
+                "issues": "https://github.com/ramsey/uuid/issues",
+                "rss": "https://github.com/ramsey/uuid/releases.atom",
+                "source": "https://github.com/ramsey/uuid",
+                "wiki": "https://github.com/ramsey/uuid/wiki"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ramsey",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/ramsey/uuid",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-09-25T23:07:42+00:00"
         },
         {
             "name": "srag/activerecordconfig",
-            "version": "0.20.2",
+            "version": "0.21.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/studer-raimann/ActiveRecordConfig.git",
-                "reference": "e182738290d2819c4e9d4a997bfd2ca2362ba9b6"
+                "url": "https://github.com/fluxapps/ActiveRecordConfig.git",
+                "reference": "a717d2f31140a78e71517a6b8d3972e107f1eacb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/ActiveRecordConfig/zipball/e182738290d2819c4e9d4a997bfd2ca2362ba9b6",
-                "reference": "e182738290d2819c4e9d4a997bfd2ca2362ba9b6",
+                "url": "https://api.github.com/repos/fluxapps/ActiveRecordConfig/zipball/a717d2f31140a78e71517a6b8d3972e107f1eacb",
+                "reference": "a717d2f31140a78e71517a6b8d3972e107f1eacb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0",
+                "php": ">=7.2",
                 "srag/custominputguis": ">=0.1.0",
                 "srag/dic": ">=0.1.0"
             },
@@ -163,10 +186,9 @@
             "type": "library",
             "extra": {
                 "ilias_plugin": {
-                    "ilias_min_version": "5.4.0",
-                    "ilias_max_version": "6.999"
-                },
-                "generate_plugin_readme_template": "SRAG_ILIAS_LIBRARY"
+                    "ilias_min_version": "6.0",
+                    "ilias_max_version": "7.999"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -179,37 +201,40 @@
             ],
             "authors": [
                 {
-                    "name": "studer + raimann ag - Team Custom 1",
-                    "email": "support-custom1@studer-raimann.ch",
-                    "homepage": "https://studer-raimann.ch",
+                    "name": "fluxlabs",
+                    "email": "support@fluxlabs.ch",
+                    "homepage": "https://fluxlabs.ch",
                     "role": "Developer"
                 }
             ],
             "description": "Simple ActiveRecord config for ILIAS plugins",
-            "homepage": "https://github.com/studer-raimann/ActiveRecordConfig",
+            "homepage": "https://github.com/fluxapps/ActiveRecordConfig",
             "keywords": [
                 "ILIAS",
                 "activerecord",
                 "config"
             ],
-            "time": "2020-11-13T09:58:37+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/ActiveRecordConfig/tree/v0.21.1"
+            },
+            "time": "2021-07-20T08:32:29+00:00"
         },
         {
             "name": "srag/custominputguis",
-            "version": "0.41.2",
+            "version": "0.43.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/studer-raimann/CustomInputGUIs.git",
-                "reference": "cbbbb3cf2e9857db12a349bcf878192b7bb0ea18"
+                "url": "https://github.com/fluxapps/CustomInputGUIs.git",
+                "reference": "547ac0aaf7056848aac936b965e8847deb1cf415"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/CustomInputGUIs/zipball/cbbbb3cf2e9857db12a349bcf878192b7bb0ea18",
-                "reference": "cbbbb3cf2e9857db12a349bcf878192b7bb0ea18",
+                "url": "https://api.github.com/repos/fluxapps/CustomInputGUIs/zipball/547ac0aaf7056848aac936b965e8847deb1cf415",
+                "reference": "547ac0aaf7056848aac936b965e8847deb1cf415",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0",
+                "php": ">=7.2",
                 "srag/dic": ">=0.1.0"
             },
             "require-dev": {
@@ -218,10 +243,9 @@
             "type": "library",
             "extra": {
                 "ilias_plugin": {
-                    "ilias_min_version": "5.4.0",
-                    "ilias_max_version": "6.999"
-                },
-                "generate_plugin_readme_template": "SRAG_ILIAS_LIBRARY"
+                    "ilias_min_version": "6.0",
+                    "ilias_max_version": "7.999"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -240,14 +264,14 @@
             ],
             "authors": [
                 {
-                    "name": "studer + raimann ag - Team Custom 1",
-                    "email": "support-custom1@studer-raimann.ch",
-                    "homepage": "https://studer-raimann.ch",
+                    "name": "fluxlabs",
+                    "email": "support@fluxlabs.ch",
+                    "homepage": "https://fluxlabs.ch",
                     "role": "Developer"
                 }
             ],
             "description": "Custom Input-GUI's",
-            "homepage": "https://github.com/studer-raimann/CustomInputGUIs",
+            "homepage": "https://github.com/fluxapps/CustomInputGUIs",
             "keywords": [
                 "ILIAS",
                 "PropertyForm",
@@ -255,24 +279,27 @@
                 "input",
                 "table"
             ],
-            "time": "2020-11-13T09:45:09+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/CustomInputGUIs/tree/v0.43.2"
+            },
+            "time": "2021-08-31T08:50:12+00:00"
         },
         {
             "name": "srag/dic",
-            "version": "0.31.3",
+            "version": "0.34.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/studer-raimann/DIC.git",
-                "reference": "05671be74b361e1cc95862323836d13af411996b"
+                "url": "https://github.com/fluxapps/DIC.git",
+                "reference": "d07315f7303e82982f78cdecce5f5aa83205a9e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/DIC/zipball/05671be74b361e1cc95862323836d13af411996b",
-                "reference": "05671be74b361e1cc95862323836d13af411996b",
+                "url": "https://api.github.com/repos/fluxapps/DIC/zipball/d07315f7303e82982f78cdecce5f5aa83205a9e4",
+                "reference": "d07315f7303e82982f78cdecce5f5aa83205a9e4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "srag/generateplugininfoshelper": ">=0.1.0"
@@ -280,10 +307,9 @@
             "type": "library",
             "extra": {
                 "ilias_plugin": {
-                    "ilias_min_version": "5.4.0",
-                    "ilias_max_version": "6.999"
-                },
-                "generate_plugin_readme_template": "SRAG_ILIAS_LIBRARY"
+                    "ilias_min_version": "6.0",
+                    "ilias_max_version": "7.999"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -296,46 +322,46 @@
             ],
             "authors": [
                 {
-                    "name": "studer + raimann ag - Team Custom 1",
-                    "email": "support-custom1@studer-raimann.ch",
-                    "homepage": "https://studer-raimann.ch",
+                    "name": "fluxlabs",
+                    "email": "support@fluxlabs.ch",
+                    "homepage": "https://fluxlabs.ch",
                     "role": "Developer"
                 }
             ],
             "description": "Use all ILIAS globals in your class",
-            "homepage": "https://github.com/studer-raimann/DIC",
+            "homepage": "https://github.com/fluxapps/DIC",
             "keywords": [
                 "ILIAS",
                 "dic",
                 "globals",
                 "trait"
             ],
-            "time": "2020-12-10T12:28:26+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/DIC/tree/v0.34.1"
+            },
+            "time": "2022-03-17T09:36:38+00:00"
         },
         {
             "name": "srag/librariesnamespacechanger",
-            "version": "0.14.2",
+            "version": "0.16.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/studer-raimann/LibrariesNamespaceChanger.git",
-                "reference": "196916a264362f10fe508f718c5e939955678c5a"
+                "url": "https://github.com/fluxapps/LibrariesNamespaceChanger.git",
+                "reference": "186c543c88544ecf3907767e1645d4faf37dede0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/LibrariesNamespaceChanger/zipball/196916a264362f10fe508f718c5e939955678c5a",
-                "reference": "196916a264362f10fe508f718c5e939955678c5a",
+                "url": "https://api.github.com/repos/fluxapps/LibrariesNamespaceChanger/zipball/186c543c88544ecf3907767e1645d4faf37dede0",
+                "reference": "186c543c88544ecf3907767e1645d4faf37dede0",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "srag/generateplugininfoshelper": ">=0.1.0"
             },
             "type": "library",
-            "extra": {
-                "generate_plugin_readme_template": "SRAG_LIBRARY"
-            },
             "autoload": {
                 "psr-4": {
                     "srag\\LibrariesNamespaceChanger\\": "src/"
@@ -347,37 +373,41 @@
             ],
             "authors": [
                 {
-                    "name": "studer + raimann ag - Team Custom 1",
-                    "email": "support-custom1@studer-raimann.ch",
-                    "homepage": "https://studer-raimann.ch",
+                    "name": "fluxlabs",
+                    "email": "support@fluxlabs.ch",
+                    "homepage": "https://fluxlabs.ch",
                     "role": "Developer"
                 }
             ],
             "description": "Change namespace of libraries to plugin namespace",
-            "homepage": "https://github.com/studer-raimann/LibrariesNamespaceChanger",
+            "homepage": "https://github.com/fluxapps/LibrariesNamespaceChanger",
             "keywords": [
                 "changer",
                 "libraries",
                 "namespace"
             ],
-            "time": "2020-11-13T09:54:27+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/LibrariesNamespaceChanger/tree/v0.16.1"
+            },
+            "abandoned": "https://github.com/flux-eco/flux-namespace-changer",
+            "time": "2021-07-20T08:31:26+00:00"
         },
         {
             "name": "srag/librarylanguageinstaller",
-            "version": "1.1.2",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/studer-raimann/LibraryLanguageInstaller.git",
-                "reference": "8f484ac9bbeb0aea0157d1dc93283f75922a373f"
+                "url": "https://github.com/fluxapps/LibraryLanguageInstaller.git",
+                "reference": "7c0e146d92f66368e9c756bc89e257fc60ea3e59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/LibraryLanguageInstaller/zipball/8f484ac9bbeb0aea0157d1dc93283f75922a373f",
-                "reference": "8f484ac9bbeb0aea0157d1dc93283f75922a373f",
+                "url": "https://api.github.com/repos/fluxapps/LibraryLanguageInstaller/zipball/7c0e146d92f66368e9c756bc89e257fc60ea3e59",
+                "reference": "7c0e146d92f66368e9c756bc89e257fc60ea3e59",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0",
+                "php": ">=7.2",
                 "srag/dic": ">=0.1.0"
             },
             "require-dev": {
@@ -386,10 +416,9 @@
             "type": "library",
             "extra": {
                 "ilias_plugin": {
-                    "ilias_min_version": "5.4.0",
-                    "ilias_max_version": "6.999"
-                },
-                "generate_plugin_readme_template": "SRAG_ILIAS_LIBRARY"
+                    "ilias_min_version": "6.0",
+                    "ilias_max_version": "7.999"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -402,38 +431,41 @@
             ],
             "authors": [
                 {
-                    "name": "studer + raimann ag - Team Custom 1",
-                    "email": "support-custom1@studer-raimann.ch",
-                    "homepage": "https://studer-raimann.ch",
+                    "name": "fluxlabs",
+                    "email": "support@fluxlabs.ch",
+                    "homepage": "https://fluxlabs.ch",
                     "role": "Developer"
                 }
             ],
             "description": "Install additional and external lang files for a plugin",
-            "homepage": "https://github.com/studer-raimann/LibraryLanguageInstaller",
+            "homepage": "https://github.com/fluxapps/LibraryLanguageInstaller",
             "keywords": [
                 "ILIAS",
                 "installer",
                 "language",
                 "library"
             ],
-            "time": "2020-11-13T09:56:56+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/LibraryLanguageInstaller/tree/v1.2.1"
+            },
+            "time": "2021-07-20T08:31:18+00:00"
         },
         {
             "name": "srag/removeplugindataconfirm",
-            "version": "0.7.2",
+            "version": "0.8.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/studer-raimann/RemovePluginDataConfirm.git",
-                "reference": "be5e7b4e3fdff8bd2a32151f116020f135886e79"
+                "url": "https://github.com/fluxapps/RemovePluginDataConfirm.git",
+                "reference": "c2bdd6425e04edc3d49da36b0822ba2b33e21600"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/studer-raimann/RemovePluginDataConfirm/zipball/be5e7b4e3fdff8bd2a32151f116020f135886e79",
-                "reference": "be5e7b4e3fdff8bd2a32151f116020f135886e79",
+                "url": "https://api.github.com/repos/fluxapps/RemovePluginDataConfirm/zipball/c2bdd6425e04edc3d49da36b0822ba2b33e21600",
+                "reference": "c2bdd6425e04edc3d49da36b0822ba2b33e21600",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.0",
+                "php": ">=7.2",
                 "srag/dic": ">=0.1.0",
                 "srag/librarylanguageinstaller": ">=0.1.0"
             },
@@ -443,10 +475,9 @@
             "type": "library",
             "extra": {
                 "ilias_plugin": {
-                    "ilias_min_version": "5.4.0",
-                    "ilias_max_version": "6.999"
-                },
-                "generate_plugin_readme_template": "SRAG_ILIAS_LIBRARY"
+                    "ilias_min_version": "6.0",
+                    "ilias_max_version": "7.999"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -462,14 +493,14 @@
             ],
             "authors": [
                 {
-                    "name": "studer + raimann ag - Team Custom 1",
-                    "email": "support-custom1@studer-raimann.ch",
-                    "homepage": "https://studer-raimann.ch",
+                    "name": "fluxlabs",
+                    "email": "support@fluxlabs.ch",
+                    "homepage": "https://fluxlabs.ch",
                     "role": "Developer"
                 }
             ],
             "description": "Demand if plugin data should be removed on uninstall",
-            "homepage": "https://github.com/studer-raimann/RemovePluginDataConfirm",
+            "homepage": "https://github.com/fluxapps/RemovePluginDataConfirm",
             "keywords": [
                 "ILIAS",
                 "confirm",
@@ -477,24 +508,30 @@
                 "plugin",
                 "uninstall"
             ],
-            "time": "2020-11-13T09:48:50+00:00"
+            "support": {
+                "source": "https://github.com/fluxapps/RemovePluginDataConfirm/tree/v0.8.1"
+            },
+            "time": "2021-07-20T08:30:56+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.20.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "f4ba089a5b6366e453971d3aad5fe8e897b37f41"
+                "reference": "30885182c981ab175d4d034db0f6f469898070ab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/f4ba089a5b6366e453971d3aad5fe8e897b37f41",
-                "reference": "f4ba089a5b6366e453971d3aad5fe8e897b37f41",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/30885182c981ab175d4d034db0f6f469898070ab",
+                "reference": "30885182c981ab175d4d034db0f6f469898070ab",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1"
+            },
+            "provide": {
+                "ext-ctype": "*"
             },
             "suggest": {
                 "ext-ctype": "For best performance"
@@ -502,7 +539,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.20-dev"
+                    "dev-main": "1.23-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -510,12 +547,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -539,7 +576,24 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2020-10-23T14:02:19+00:00"
+            "support": {
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.25.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-10-20T20:35:02+00:00"
         }
     ],
     "packages-dev": [],
@@ -551,5 +605,6 @@
     "platform": {
         "php": ">=7.0"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
 }
