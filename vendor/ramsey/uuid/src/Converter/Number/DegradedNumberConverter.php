@@ -6,16 +6,16 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Converter\Number;
 
-use Ramsey\Uuid\Converter\NumberConverterInterface;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Ramsey\Uuid\Converter\NumberConverterInterface;
 
 /**
  * DegradedNumberConverter throws `UnsatisfiedDependencyException` exceptions
@@ -24,12 +24,10 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
  */
 class DegradedNumberConverter implements NumberConverterInterface
 {
-
     /**
      * Throws an `UnsatisfiedDependencyException`
      *
      * @param string $hex The hexadecimal string representation to convert
-     *
      * @return void
      * @throws UnsatisfiedDependencyException
      */
@@ -42,12 +40,10 @@ class DegradedNumberConverter implements NumberConverterInterface
         );
     }
 
-
     /**
      * Throws an `UnsatisfiedDependencyException`
      *
      * @param mixed $integer An integer representation to convert
-     *
      * @return void
      * @throws UnsatisfiedDependencyException
      */

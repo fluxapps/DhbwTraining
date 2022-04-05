@@ -6,8 +6,6 @@ namespace srag\RemovePluginDataConfirm\DhbwTraining;
  * Trait PluginUninstallTrait
  *
  * @package srag\RemovePluginDataConfirm\DhbwTraining
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
 trait PluginUninstallTrait
 {
@@ -17,7 +15,7 @@ trait PluginUninstallTrait
     /**
      * @internal
      */
-    protected final function afterUninstall()/*: void*/
+    protected final function afterUninstall() : void
     {
 
     }

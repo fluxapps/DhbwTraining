@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Converter;
@@ -22,7 +22,6 @@ use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
  */
 interface NumberConverterInterface
 {
-
     /**
      * Converts a hexadecimal number into an integer representation of the number
      *
@@ -30,21 +29,18 @@ interface NumberConverterInterface
      * representation of the integer, depending on the implementation.
      *
      * @param string $hex The hexadecimal string representation to convert
-     *
      * @return mixed
      * @throws UnsatisfiedDependencyException if `Moontoast\Math\BigNumber` is not present
      */
     public function fromHex($hex);
-
 
     /**
      * Converts an integer representation into a hexadecimal string representation
      * of the number
      *
      * @param mixed $integer An integer representation to convert; this may be
-     *                       a true integer, a string integer, or a object representation that
-     *                       this converter can understand
-     *
+     *     a true integer, a string integer, or a object representation that
+     *     this converter can understand
      * @return string Hexadecimal string
      * @throws UnsatisfiedDependencyException if `Moontoast\Math\BigNumber` is not present
      */

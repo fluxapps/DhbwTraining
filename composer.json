@@ -1,23 +1,24 @@
 {
-  "name": "srag/dhbwtraining",
-  "description": "",
-  "type": "project",
+  "name": "flux/dhbwtraining",
+  "description": "ILIAS Plugin DhbwTraining",
+  "version": "2.0.0",
   "keywords": [
-    "ILIAS",
-    "Plugin"
+    "ilias",
+    "fluxlabs",
+    "DhbwTraining"
   ],
-  "homepage": "https://github.com/studer-raimann/DhbwTraining",
+  "homepage": "https://fluxlabs.ch",
   "license": "GPL-3.0-only",
   "authors": [
     {
-      "name": "studer + raimann ag - Team Custom 1",
-      "email": "support-custom1@studer-raimann.ch",
-      "homepage": "https://studer-raimann.ch",
-      "role": "Developer"
+      "name": "fluxlabs ag",
+      "email": "support@fluxlabs.ch",
+      "homepage": "https://fluxlabs.ch",
+      "role": "Maintainer, Developer"
     }
   ],
   "support": {
-    "issues": "https://plugins.studer-raimann.ch/goto.php?target=uihk_srsu_PLTRAINING"
+    "issues": "support@fluxlabs.ch"
   },
   "require": {
     "php": ">=7.0",

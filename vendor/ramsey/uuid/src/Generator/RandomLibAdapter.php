@@ -6,16 +6,16 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Generator;
 
-use RandomLib\Factory;
 use RandomLib\Generator;
+use RandomLib\Factory;
 
 /**
  * RandomLibAdapter provides functionality to generate strings of random
@@ -25,12 +25,10 @@ use RandomLib\Generator;
  */
 class RandomLibAdapter implements RandomGeneratorInterface
 {
-
     /**
      * @var Generator
      */
     private $generator;
-
 
     /**
      * Constructs a `RandomLibAdapter` using a `RandomLib\Generator`
@@ -51,12 +49,10 @@ class RandomLibAdapter implements RandomGeneratorInterface
         }
     }
 
-
     /**
      * Generates a string of random binary data of the specified length
      *
      * @param integer $length The number of bytes of random binary data to generate
-     *
      * @return string A binary string
      */
     public function generate($length)

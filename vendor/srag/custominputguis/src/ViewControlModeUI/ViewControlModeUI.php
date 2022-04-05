@@ -9,8 +9,6 @@ use srag\DIC\DhbwTraining\DICTrait;
  * Class ViewControlModeUI
  *
  * @package srag\CustomInputGUIs\DhbwTraining\ViewControlModeUI
- *
- * @author  studer + raimann ag - Team Custom 1 <support-custom1@studer-raimann.ch>
  */
 class ViewControlModeUI
 {
@@ -63,7 +61,7 @@ class ViewControlModeUI
     /**
      *
      */
-    public function handleButtons()/*: void*/
+    public function handleButtons() : void
     {
         $active_id = filter_input(INPUT_GET, self::CMD_HANDLE_BUTTONS);
 

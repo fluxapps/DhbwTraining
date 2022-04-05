@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Generator;
@@ -26,16 +26,14 @@ namespace Ramsey\Uuid\Generator;
  *     random_bytes() function, is recommended as the safest and most reliable
  *     source of randomness.
  *     <em>This generator will be removed in ramsey/uuid 4.0.0.</em>
- * @link       http://php.net/openssl_random_pseudo_bytes
+ * @link http://php.net/openssl_random_pseudo_bytes
  */
 class OpenSslGenerator implements RandomGeneratorInterface
 {
-
     /**
      * Generates a string of random binary data of the specified length
      *
      * @param integer $length The number of bytes of random binary data to generate
-     *
      * @return string A binary string
      */
     public function generate($length)

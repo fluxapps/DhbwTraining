@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Provider\Time;
@@ -25,18 +25,15 @@ use Ramsey\Uuid\Provider\TimeProviderInterface;
  */
 class FixedTimeProvider implements TimeProviderInterface
 {
-
     /**
      * @var int[] Array containing `sec` and `usec` components of a timestamp
      */
     private $fixedTime;
 
-
     /**
      * Constructs a `FixedTimeProvider` using the provided `$timestamp`
      *
      * @param int[] Array containing `sec` and `usec` components of a timestamp
-     *
      * @throws InvalidArgumentException if the `$timestamp` does not contain `sec` or `usec` components
      */
     public function __construct(array $timestamp)
@@ -48,7 +45,6 @@ class FixedTimeProvider implements TimeProviderInterface
         $this->fixedTime = $timestamp;
     }
 
-
     /**
      * Sets the `usec` component of the timestamp
      *
@@ -59,7 +55,6 @@ class FixedTimeProvider implements TimeProviderInterface
         $this->fixedTime['usec'] = $value;
     }
 
-
     /**
      * Sets the `sec` component of the timestamp
      *
@@ -69,7 +64,6 @@ class FixedTimeProvider implements TimeProviderInterface
     {
         $this->fixedTime['sec'] = $value;
     }
-
 
     /**
      * Returns a timestamp array

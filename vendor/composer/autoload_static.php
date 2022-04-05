@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
+class ComposerStaticInit34030aba90993960f5d84f166652878b
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -14,13 +14,13 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
     public static $prefixLengthsPsr4 = array (
         's' => 
         array (
-            'srag\\RemovePluginDataConfirm\\' => 29,
+            'srag\\RemovePluginDataConfirm\\DhbwTraining\\' => 42,
             'srag\\Plugins\\DhbwTraining\\' => 26,
-            'srag\\LibraryLanguageInstaller\\' => 30,
+            'srag\\LibraryLanguageInstaller\\DhbwTraining\\' => 43,
             'srag\\LibrariesNamespaceChanger\\' => 31,
-            'srag\\DIC\\' => 9,
-            'srag\\CustomInputGUIs\\' => 21,
-            'srag\\ActiveRecordConfig\\' => 24,
+            'srag\\DIC\\DhbwTraining\\' => 22,
+            'srag\\CustomInputGUIs\\DhbwTraining\\' => 34,
+            'srag\\ActiveRecordConfig\\DhbwTraining\\' => 37,
         ),
         'S' => 
         array (
@@ -33,7 +33,7 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
     );
 
     public static $prefixDirsPsr4 = array (
-        'srag\\RemovePluginDataConfirm\\' => 
+        'srag\\RemovePluginDataConfirm\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/removeplugindataconfirm/src',
         ),
@@ -41,7 +41,7 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'srag\\LibraryLanguageInstaller\\' => 
+        'srag\\LibraryLanguageInstaller\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/librarylanguageinstaller/src',
         ),
@@ -49,15 +49,15 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         array (
             0 => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src',
         ),
-        'srag\\DIC\\' => 
+        'srag\\DIC\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/dic/src',
         ),
-        'srag\\CustomInputGUIs\\' => 
+        'srag\\CustomInputGUIs\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/custominputguis/src',
         ),
-        'srag\\ActiveRecordConfig\\' => 
+        'srag\\ActiveRecordConfig\\DhbwTraining\\' => 
         array (
             0 => __DIR__ . '/..' . '/srag/activerecordconfig/src',
         ),
@@ -72,12 +72,13 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DhbwRepositorySelectorInputGUI' => __DIR__ . '/../..' . '/classes/class.DhbwRepositorySelectorInputGUI.php',
+        'Feedback' => __DIR__ . '/../..' . '/classes/Feedback/Feedback.php',
         'LearningProgressStatusRepresentation' => __DIR__ . '/../..' . '/classes/LearningProgress/class.LearningProgressStatusRepresentation.php',
         'ProgressMeter' => __DIR__ . '/../..' . '/classes/ProgressMeter/ProgressMeter.php',
         'QuestionAnswer' => __DIR__ . '/../..' . '/classes/QuestionAnswer/QuestionAnswer.php',
         'QuestionAnswers' => __DIR__ . '/../..' . '/classes/QuestionAnswer/QuestionAnswers.php',
-        'Feedback' => __DIR__ . '/../..' . '/classes/Feedback/Feedback.php',
         'Ramsey\\Uuid\\BinaryUtils' => __DIR__ . '/..' . '/ramsey/uuid/src/BinaryUtils.php',
         'Ramsey\\Uuid\\Builder\\DefaultUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DefaultUuidBuilder.php',
         'Ramsey\\Uuid\\Builder\\DegradedUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DegradedUuidBuilder.php',
@@ -135,17 +136,9 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'ilObjDhbwTrainingAccess' => __DIR__ . '/../..' . '/classes/class.ilObjDhbwTrainingAccess.php',
         'ilObjDhbwTrainingGUI' => __DIR__ . '/../..' . '/classes/class.ilObjDhbwTrainingGUI.php',
         'ilObjDhbwTrainingListGUI' => __DIR__ . '/../..' . '/classes/class.ilObjDhbwTrainingListGUI.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfig' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfig.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigFactory' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfig.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigFormGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigFormGUI.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigGUI.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigRepository' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfig.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigTableGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigTableGUI.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordObjectFormGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordObjectFormGUI.php',
         'srag\\ActiveRecordConfig\\DhbwTraining\\Config\\AbstractFactory' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/AbstractFactory.php',
         'srag\\ActiveRecordConfig\\DhbwTraining\\Config\\AbstractRepository' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/AbstractRepository.php',
         'srag\\ActiveRecordConfig\\DhbwTraining\\Config\\Config' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/Config.php',
-        'srag\\ActiveRecordConfig\\DhbwTraining\\Exception\\ActiveRecordConfigException' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Exception/ActiveRecordConfigException.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\AjaxCheckbox\\AjaxCheckbox' => __DIR__ . '/..' . '/srag/custominputguis/src/AjaxCheckbox/AjaxCheckbox.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\CheckboxInputGUI\\CheckboxInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/CheckboxInputGUI/CheckboxInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\ColorPickerInputGUI\\ColorPickerInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ColorPickerInputGUI/ColorPickerInputGUI.php',
@@ -154,19 +147,14 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'srag\\CustomInputGUIs\\DhbwTraining\\DateDurationInputGUI\\DateDurationInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/DateDurationInputGUI/DateDurationInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\FormBuilder\\AbstractFormBuilder' => __DIR__ . '/..' . '/srag/custominputguis/src/FormBuilder/AbstractFormBuilder.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\FormBuilder\\FormBuilder' => __DIR__ . '/..' . '/srag/custominputguis/src/FormBuilder/FormBuilder.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\GlyphGUI\\GlyphGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/GlyphGUI/GlyphGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\HiddenInputGUI\\HiddenInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/HiddenInputGUI/HiddenInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\InputGUIWrapperUIInputComponent\\AbstractRenderer' => __DIR__ . '/..' . '/srag/custominputguis/src/InputGUIWrapperUIInputComponent/AbstractRenderer.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\InputGUIWrapperUIInputComponent\\InputGUIWrapperConstraint' => __DIR__ . '/..' . '/srag/custominputguis/src/InputGUIWrapperUIInputComponent/InputGUIWrapperConstraint.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\InputGUIWrapperUIInputComponent\\InputGUIWrapperConstraint54' => __DIR__ . '/..' . '/srag/custominputguis/src/InputGUIWrapperUIInputComponent/InputGUIWrapperConstraint54.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\InputGUIWrapperUIInputComponent\\InputGUIWrapperConstraintTrait' => __DIR__ . '/..' . '/srag/custominputguis/src/InputGUIWrapperUIInputComponent/InputGUIWrapperConstraintTrait.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\InputGUIWrapperUIInputComponent\\InputGUIWrapperUIInputComponent' => __DIR__ . '/..' . '/srag/custominputguis/src/InputGUIWrapperUIInputComponent/InputGUIWrapperUIInputComponent.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\InputGUIWrapperUIInputComponent\\Renderer' => __DIR__ . '/..' . '/srag/custominputguis/src/InputGUIWrapperUIInputComponent/Renderer.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\Loader\\CustomInputGUIsLoaderDetector' => __DIR__ . '/..' . '/srag/custominputguis/src/Loader/CustomInputGUIsLoaderDetector.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\MultiLineInputGUI\\MultiLineInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiLineInputGUI/MultiLineInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\MultiLineNewInputGUI\\MultiLineNewInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiLineNewInputGUI/MultiLineNewInputGUI.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchInputGUI\\MultiSelectSearchInput2GUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI/MultiSelectSearchInput2GUI.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchInputGUI\\MultiSelectSearchInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchInputGUI/MultiSelectSearchInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchNewInputGUI\\AbstractAjaxAutoCompleteCtrl' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchNewInputGUI/AbstractAjaxAutoCompleteCtrl.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchNewInputGUI\\MultiSelectSearchNewInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchNewInputGUI/MultiSelectSearchNewInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchNewInputGUI\\ObjectChildrenAjaxAutoCompleteCtrl' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchNewInputGUI/class.ObjectChildrenAjaxAutoCompleteCtrl.php',
@@ -174,10 +162,8 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchNewInputGUI\\OrgUnitAjaxAutoCompleteCtrl' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchNewInputGUI/class.OrgUnitAjaxAutoCompleteCtrl.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\MultiSelectSearchNewInputGUI\\UsersAjaxAutoCompleteCtrl' => __DIR__ . '/..' . '/srag/custominputguis/src/MultiSelectSearchNewInputGUI/class.UsersAjaxAutoCompleteCtrl.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\NumberInputGUI\\NumberInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/NumberInputGUI/NumberInputGUI.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\PropertyFormGUI\\ConfigPropertyFormGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/ConfigPropertyFormGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\PropertyFormGUI\\Exception\\PropertyFormGUIException' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/Exception/PropertyFormGUIException.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\PropertyFormGUI\\Items\\Items' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/Items/Items.php',
-        'srag\\CustomInputGUIs\\DhbwTraining\\PropertyFormGUI\\ObjectPropertyFormGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/ObjectPropertyFormGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\PropertyFormGUI\\PropertyFormGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/PropertyFormGUI/PropertyFormGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\ScreenshotsInputGUI\\ScreenshotsInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ScreenshotsInputGUI/ScreenshotsInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\StaticHTMLPresentationInputGUI\\StaticHTMLPresentationInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/StaticHTMLPresentationInputGUI/StaticHTMLPresentationInputGUI.php',
@@ -201,15 +187,14 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'srag\\DIC\\DhbwTraining\\DICTrait' => __DIR__ . '/..' . '/srag/dic/src/DICTrait.php',
         'srag\\DIC\\DhbwTraining\\DIC\\AbstractDIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/AbstractDIC.php',
         'srag\\DIC\\DhbwTraining\\DIC\\DICInterface' => __DIR__ . '/..' . '/srag/dic/src/DIC/DICInterface.php',
-        'srag\\DIC\\DhbwTraining\\DIC\\Implementation\\ILIAS54DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS54DIC.php',
         'srag\\DIC\\DhbwTraining\\DIC\\Implementation\\ILIAS60DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS60DIC.php',
+        'srag\\DIC\\DhbwTraining\\DIC\\Implementation\\ILIAS70DIC' => __DIR__ . '/..' . '/srag/dic/src/DIC/Implementation/ILIAS70DIC.php',
         'srag\\DIC\\DhbwTraining\\Database\\AbstractILIASDatabaseDetector' => __DIR__ . '/..' . '/srag/dic/src/Database/AbstractILIASDatabaseDetector.php',
         'srag\\DIC\\DhbwTraining\\Database\\DatabaseDetector' => __DIR__ . '/..' . '/srag/dic/src/Database/DatabaseDetector.php',
         'srag\\DIC\\DhbwTraining\\Database\\DatabaseInterface' => __DIR__ . '/..' . '/srag/dic/src/Database/DatabaseInterface.php',
         'srag\\DIC\\DhbwTraining\\Database\\PdoContextHelper' => __DIR__ . '/..' . '/srag/dic/src/Database/PdoContextHelper.php',
         'srag\\DIC\\DhbwTraining\\Database\\PdoStatementContextHelper' => __DIR__ . '/..' . '/srag/dic/src/Database/PdoStatementContextHelper.php',
         'srag\\DIC\\DhbwTraining\\Exception\\DICException' => __DIR__ . '/..' . '/srag/dic/src/Exception/DICException.php',
-        'srag\\DIC\\DhbwTraining\\Ilias7PreWarn' => __DIR__ . '/..' . '/srag/dic/src/Ilias7PreWarn.php',
         'srag\\DIC\\DhbwTraining\\Loader\\AbstractLoaderDetector' => __DIR__ . '/..' . '/srag/dic/src/Loader/AbstractLoaderDetector.php',
         'srag\\DIC\\DhbwTraining\\Output\\Output' => __DIR__ . '/..' . '/srag/dic/src/Output/Output.php',
         'srag\\DIC\\DhbwTraining\\Output\\OutputInterface' => __DIR__ . '/..' . '/srag/dic/src/Output/OutputInterface.php',
@@ -217,12 +202,10 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
         'srag\\DIC\\DhbwTraining\\Plugin\\Plugin' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Plugin.php',
         'srag\\DIC\\DhbwTraining\\Plugin\\PluginInterface' => __DIR__ . '/..' . '/srag/dic/src/Plugin/PluginInterface.php',
         'srag\\DIC\\DhbwTraining\\Plugin\\Pluginable' => __DIR__ . '/..' . '/srag/dic/src/Plugin/Pluginable.php',
+        'srag\\DIC\\DhbwTraining\\Version\\PluginVersionParameter' => __DIR__ . '/..' . '/srag/dic/src/Version/PluginVersionParameter.php',
         'srag\\DIC\\DhbwTraining\\Version\\Version' => __DIR__ . '/..' . '/srag/dic/src/Version/Version.php',
         'srag\\DIC\\DhbwTraining\\Version\\VersionInterface' => __DIR__ . '/..' . '/srag/dic/src/Version/VersionInterface.php',
         'srag\\LibrariesNamespaceChanger\\LibrariesNamespaceChanger' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/LibrariesNamespaceChanger.php',
-        'srag\\LibrariesNamespaceChanger\\PHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP72Backport.php',
-        'srag\\LibrariesNamespaceChanger\\PHP7Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/PHP7Backport.php',
-        'srag\\LibrariesNamespaceChanger\\RemovePHP72Backport' => __DIR__ . '/..' . '/srag/librariesnamespacechanger/src/RemovePHP72Backport.php',
         'srag\\LibraryLanguageInstaller\\DhbwTraining\\LibraryLanguageInstaller' => __DIR__ . '/..' . '/srag/librarylanguageinstaller/src/LibraryLanguageInstaller.php',
         'srag\\Plugins\\DhbwTraining\\Config\\Config' => __DIR__ . '/../..' . '/src/Config/Config.php',
         'srag\\Plugins\\DhbwTraining\\Config\\ConfigFormGUI' => __DIR__ . '/../..' . '/src/Config/ConfigFormGUI.php',
@@ -261,9 +244,9 @@ class ComposerStaticInit268597d9500c41eaba80b604ac39cdcf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit268597d9500c41eaba80b604ac39cdcf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit268597d9500c41eaba80b604ac39cdcf::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit268597d9500c41eaba80b604ac39cdcf::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit34030aba90993960f5d84f166652878b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit34030aba90993960f5d84f166652878b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit34030aba90993960f5d84f166652878b::$classMap;
 
         }, null, ClassLoader::class);
     }
