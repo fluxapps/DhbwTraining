@@ -1,9 +1,7 @@
-build:
+flux-publish-utils:
   stage: build
+  image: docker-registry.fluxpublisher.ch/flux-publish-utils:latest
   script:
-    - echo -n $CI_JOB_TOKEN | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY
-    - docker build . --pull -t $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:latest
-    - docker logout $CI_REGISTRY
+    - "false"
   only:
-    - /^main$/
+    - main
