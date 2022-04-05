@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Codec;
@@ -24,12 +24,10 @@ use Ramsey\Uuid\UuidInterface;
  */
 class GuidStringCodec extends StringCodec
 {
-
     /**
      * Encodes a UuidInterface as a string representation of a GUID
      *
      * @param UuidInterface $uuid
-     *
      * @return string Hexadecimal string representation of a GUID
      */
     public function encode(UuidInterface $uuid)
@@ -45,30 +43,10 @@ class GuidStringCodec extends StringCodec
         );
     }
 
-
-    /**
-     * Swaps fields to support GUID byte order
-     *
-     * @param array $components An array of UUID components (the UUID exploded on its dashes)
-     *
-     * @return void
-     */
-    protected function swapFields(array &$components)
-    {
-        $hex = unpack('H*', pack('L', hexdec($components[0])));
-        $components[0] = $hex[1];
-        $hex = unpack('H*', pack('S', hexdec($components[1])));
-        $components[1] = $hex[1];
-        $hex = unpack('H*', pack('S', hexdec($components[2])));
-        $components[2] = $hex[1];
-    }
-
-
     /**
      * Encodes a UuidInterface as a binary representation of a GUID
      *
      * @param UuidInterface $uuid
-     *
      * @return string Binary string representation of a GUID
      */
     public function encodeBinary(UuidInterface $uuid)
@@ -78,12 +56,10 @@ class GuidStringCodec extends StringCodec
         return hex2bin(implode('', $components));
     }
 
-
     /**
      * Decodes a string representation of a GUID into a UuidInterface object instance
      *
      * @param string $encodedUuid
-     *
      * @return UuidInterface
      * @throws InvalidUuidStringException
      */
@@ -96,12 +72,10 @@ class GuidStringCodec extends StringCodec
         return $this->getBuilder()->build($this, $this->getFields($components));
     }
 
-
     /**
      * Decodes a binary representation of a GUID into a UuidInterface object instance
      *
      * @param string $bytes
-     *
      * @return UuidInterface
      * @throws InvalidUuidStringException
      */
@@ -109,5 +83,21 @@ class GuidStringCodec extends StringCodec
     {
         // Specifically call parent::decode to preserve correct byte order
         return parent::decode(bin2hex($bytes));
+    }
+
+    /**
+     * Swaps fields to support GUID byte order
+     *
+     * @param array $components An array of UUID components (the UUID exploded on its dashes)
+     * @return void
+     */
+    protected function swapFields(array &$components)
+    {
+        $hex = unpack('H*', pack('L', hexdec($components[0])));
+        $components[0] = $hex[1];
+        $hex = unpack('H*', pack('S', hexdec($components[1])));
+        $components[1] = $hex[1];
+        $hex = unpack('H*', pack('S', hexdec($components[2])));
+        $components[2] = $hex[1];
     }
 }

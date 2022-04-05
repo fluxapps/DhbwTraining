@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid\Builder;
@@ -23,12 +23,10 @@ use Ramsey\Uuid\DegradedUuid;
  */
 class DegradedUuidBuilder implements UuidBuilderInterface
 {
-
     /**
      * @var NumberConverterInterface
      */
     private $converter;
-
 
     /**
      * Constructs the DegradedUuidBuilder
@@ -40,14 +38,12 @@ class DegradedUuidBuilder implements UuidBuilderInterface
         $this->converter = $converter;
     }
 
-
     /**
      * Builds a DegradedUuid
      *
-     * @param CodecInterface $codec  The codec to use for building this DegradedUuid
-     * @param array          $fields An array of fields from which to construct the DegradedUuid;
-     *                               see {@see \Ramsey\Uuid\UuidInterface::getFieldsHex()} for array structure.
-     *
+     * @param CodecInterface $codec The codec to use for building this DegradedUuid
+     * @param array $fields An array of fields from which to construct the DegradedUuid;
+     *     see {@see \Ramsey\Uuid\UuidInterface::getFieldsHex()} for array structure.
      * @return DegradedUuid
      */
     public function build(CodecInterface $codec, array $fields)

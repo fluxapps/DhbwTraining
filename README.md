@@ -7,7 +7,7 @@ Start at your ILIAS root directory
 ```bash
 mkdir -p Customizing/global/plugins/Services/Repository/RepositoryObject
 cd Customizing/global/plugins/Services/Repository/RepositoryObject
-git clone https://github.com/studer-raimann/DhbwTraining.git
+git clone https://github.com/fluxapps/DhbwTraining.git
 ```
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.  
 
@@ -39,18 +39,17 @@ As ILIAS administrator go to "Administration->Plugins" and install/activate the 
 ![](docs/Progressmeter.png)
 
 ### Requirements
-* ILIAS 5.3
+* ILIAS 6.0
 * PHP >=7.0
 * Recommender Phython Software
 
-### ILIAS Plugin SLA
+## Contributing :purple_heart:
+Please ...
+1. ... register an account at https://git.fluxlabs.ch
+2. ... create pull requests :fire:
 
-Wir lieben und leben die Philosophie von Open Source Software! Die meisten unserer Entwicklungen, welche wir im Kundenauftrag oder in Eigenleistung entwickeln, stellen wir öffentlich allen Interessierten kostenlos unter https://github.com/studer-raimann zur Verfügung.
-
-Setzen Sie eines unserer Plugins professionell ein? Sichern Sie sich mittels SLA die termingerechte Verfügbarkeit dieses Plugins auch für die kommenden ILIAS Versionen. Informieren Sie sich hierzu unter https://studer-raimann.ch/produkte/ilias-plugins/plugin-sla.
-
-Bitte beachten Sie, dass wir nur Institutionen, welche ein SLA abschliessen Unterstützung und Release-Pflege garantieren.
-
-### Contact
-support-core1@studer-raimann.ch  
-https://studer-raimann.ch  
+## Adjustment suggestions / bug reporting :feet:
+Please ...
+1. ... register an account at https://git.fluxlabs.ch
+2. ... ask us for a Service Level Agreement: support@fluxlabs.ch :kissing_heart:
+3. ... Read and create issues

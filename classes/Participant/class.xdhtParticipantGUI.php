@@ -40,6 +40,7 @@ class xdhtParticipantGUI
             default:
                 $this->performCommand();
         }
+        self::dic()->ui()->mainTemplate()->printToStdout();
     }
 
 

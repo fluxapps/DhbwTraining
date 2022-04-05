@@ -6,10 +6,10 @@
  * file that was distributed with this source code.
  *
  * @copyright Copyright (c) Ben Ramsey <ben@benramsey.com>
- * @license   http://opensource.org/licenses/MIT MIT
- * @link      https://benramsey.com/projects/ramsey-uuid/ Documentation
- * @link      https://packagist.org/packages/ramsey/uuid Packagist
- * @link      https://github.com/ramsey/uuid GitHub
+ * @license http://opensource.org/licenses/MIT MIT
+ * @link https://benramsey.com/projects/ramsey-uuid/ Documentation
+ * @link https://packagist.org/packages/ramsey/uuid Packagist
+ * @link https://github.com/ramsey/uuid GitHub
  */
 
 namespace Ramsey\Uuid;
@@ -26,7 +26,6 @@ use Ramsey\Uuid\Exception\UnsupportedOperationException;
  */
 class DegradedUuid extends Uuid
 {
-
     /**
      * @inheritdoc
      */
@@ -47,7 +46,6 @@ class DegradedUuid extends Uuid
         return new DateTime("@{$unixTime}");
     }
 
-
     /**
      * For degraded UUIDs, throws an `UnsatisfiedDependencyException` when
      * called on a 32-bit system
@@ -62,7 +60,6 @@ class DegradedUuid extends Uuid
             . '; consider calling getFieldsHex instead'
         );
     }
-
 
     /**
      * For degraded UUIDs, throws an `UnsatisfiedDependencyException` when
@@ -80,7 +77,6 @@ class DegradedUuid extends Uuid
         );
     }
 
-
     /**
      * For degraded UUIDs, throws an `UnsatisfiedDependencyException` when
      * called on a 32-bit system
@@ -96,7 +92,6 @@ class DegradedUuid extends Uuid
             . '; consider calling getTimeLowHex instead'
         );
     }
-
 
     /**
      * For degraded UUIDs, throws an `UnsatisfiedDependencyException` when
