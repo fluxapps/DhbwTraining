@@ -1,11 +1,11 @@
 {
   "name": "flux/dhbwtraining",
   "description": "ILIAS Plugin DhbwTraining",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "keywords": [
     "ilias",
     "fluxlabs",
-    "DhbwTraining"
+    "dhbw-training"
   ],
   "homepage": "https://fluxlabs.ch",
   "license": "GPL-3.0-only",
