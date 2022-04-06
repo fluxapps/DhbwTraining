@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [2.0.1]
+## [2.0.2]
 - changed keywords in composer.json
 
 ## [2.0.0]
