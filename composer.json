@@ -17,13 +17,10 @@
       "role": "Maintainer, Developer"
     }
   ],
-  "support": {
-    "issues": "support@fluxlabs.ch"
-  },
   "require": {
     "php": ">=7.0",
     "ramsey/uuid": "^3.8",
-    "srag/activerecordconfig": "0.21.1",
+    "srag/activerecordconfig": "0.20.7",
     "srag/custominputguis": "0.43.2",
     "srag/dic": "0.34.1",
     "srag/librariesnamespacechanger": "0.16.1",
