@@ -23,11 +23,11 @@
   "require": {
     "php": ">=7.0",
     "ramsey/uuid": "^3.8",
-    "srag/activerecordconfig": ">=0.1.0",
-    "srag/custominputguis": ">=0.1.0",
-    "srag/dic": ">=0.1.0",
-    "srag/librariesnamespacechanger": ">=0.1.0",
-    "srag/removeplugindataconfirm": ">=0.1.0"
+    "srag/activerecordconfig": "0.21.1",
+    "srag/custominputguis": "0.43.2",
+    "srag/dic": "0.34.1",
+    "srag/librariesnamespacechanger": "0.16.1",
+    "srag/removeplugindataconfirm": "0.8.1"
   },
   "autoload": {
     "psr-4": {
