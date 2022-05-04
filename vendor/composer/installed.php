@@ -1,15 +1,24 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'type' => 'project',
+        'pretty_version' => '2.0.2',
+        'version' => '2.0.2.0',
+        'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '876815811f95372826666baf5bd79b9ce31bef58',
-        'name' => 'srag/dhbwtraining',
+        'reference' => NULL,
+        'name' => 'flux/dhbwtraining',
         'dev' => true,
     ),
     'versions' => array(
+        'flux/dhbwtraining' => array(
+            'pretty_version' => '2.0.2',
+            'version' => '2.0.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => NULL,
+            'dev_requirement' => false,
+        ),
         'paragonie/random_compat' => array(
             'pretty_version' => 'v9.99.100',
             'version' => '9.99.100.0',
@@ -35,12 +44,12 @@
             ),
         ),
         'srag/activerecordconfig' => array(
-            'pretty_version' => '0.21.1',
-            'version' => '0.21.1.0',
+            'pretty_version' => '0.20.7',
+            'version' => '0.20.7.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../srag/activerecordconfig',
             'aliases' => array(),
-            'reference' => 'a717d2f31140a78e71517a6b8d3972e107f1eacb',
+            'reference' => 'e05c313e7792d0ce125a0ef854c4c15b5ca9d95d',
             'dev_requirement' => false,
         ),
         'srag/custominputguis' => array(
@@ -50,15 +59,6 @@
             'install_path' => __DIR__ . '/../srag/custominputguis',
             'aliases' => array(),
             'reference' => '547ac0aaf7056848aac936b965e8847deb1cf415',
-            'dev_requirement' => false,
-        ),
-        'srag/dhbwtraining' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'reference' => '876815811f95372826666baf5bd79b9ce31bef58',
             'dev_requirement' => false,
         ),
         'srag/dic' => array(

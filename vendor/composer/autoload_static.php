@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit34030aba90993960f5d84f166652878b
+class ComposerStaticInit856cc32f668de58545568255a1118505
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -136,9 +136,15 @@ class ComposerStaticInit34030aba90993960f5d84f166652878b
         'ilObjDhbwTrainingAccess' => __DIR__ . '/../..' . '/classes/class.ilObjDhbwTrainingAccess.php',
         'ilObjDhbwTrainingGUI' => __DIR__ . '/../..' . '/classes/class.ilObjDhbwTrainingGUI.php',
         'ilObjDhbwTrainingListGUI' => __DIR__ . '/../..' . '/classes/class.ilObjDhbwTrainingListGUI.php',
+        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfig' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfig.php',
+        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigFormGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigFormGUI.php',
+        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigGUI.php',
+        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordConfigTableGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordConfigTableGUI.php',
+        'srag\\ActiveRecordConfig\\DhbwTraining\\ActiveRecordObjectFormGUI' => __DIR__ . '/..' . '/srag/activerecordconfig/src/ActiveRecordObjectFormGUI.php',
         'srag\\ActiveRecordConfig\\DhbwTraining\\Config\\AbstractFactory' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/AbstractFactory.php',
         'srag\\ActiveRecordConfig\\DhbwTraining\\Config\\AbstractRepository' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/AbstractRepository.php',
         'srag\\ActiveRecordConfig\\DhbwTraining\\Config\\Config' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Config/Config.php',
+        'srag\\ActiveRecordConfig\\DhbwTraining\\Exception\\ActiveRecordConfigException' => __DIR__ . '/..' . '/srag/activerecordconfig/src/Exception/ActiveRecordConfigException.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\AjaxCheckbox\\AjaxCheckbox' => __DIR__ . '/..' . '/srag/custominputguis/src/AjaxCheckbox/AjaxCheckbox.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\CheckboxInputGUI\\CheckboxInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/CheckboxInputGUI/CheckboxInputGUI.php',
         'srag\\CustomInputGUIs\\DhbwTraining\\ColorPickerInputGUI\\ColorPickerInputGUI' => __DIR__ . '/..' . '/srag/custominputguis/src/ColorPickerInputGUI/ColorPickerInputGUI.php',
@@ -244,9 +250,9 @@ class ComposerStaticInit34030aba90993960f5d84f166652878b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit34030aba90993960f5d84f166652878b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit34030aba90993960f5d84f166652878b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit34030aba90993960f5d84f166652878b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit856cc32f668de58545568255a1118505::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit856cc32f668de58545568255a1118505::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit856cc32f668de58545568255a1118505::$classMap;
 
         }, null, ClassLoader::class);
     }
