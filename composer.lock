@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a48027cebc5bbfccc90e18eecd1c01c1",
+    "content-hash": "19fa92dfdaacede7f138020d1a356675",
     "packages": [
         {
             "name": "paragonie/random_compat",
@@ -223,20 +223,20 @@
         },
         {
             "name": "srag/custominputguis",
-            "version": "0.43.2",
+            "version": "0.42.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fluxapps/CustomInputGUIs.git",
-                "reference": "547ac0aaf7056848aac936b965e8847deb1cf415"
+                "reference": "14967d168c8f62e20e6f0b46b03109063c912541"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fluxapps/CustomInputGUIs/zipball/547ac0aaf7056848aac936b965e8847deb1cf415",
-                "reference": "547ac0aaf7056848aac936b965e8847deb1cf415",
+                "url": "https://api.github.com/repos/fluxapps/CustomInputGUIs/zipball/14967d168c8f62e20e6f0b46b03109063c912541",
+                "reference": "14967d168c8f62e20e6f0b46b03109063c912541",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2",
+                "php": ">=7.0",
                 "srag/dic": ">=0.1.0"
             },
             "require-dev": {
@@ -245,9 +245,11 @@
             "type": "library",
             "extra": {
                 "ilias_plugin": {
-                    "ilias_min_version": "6.0",
-                    "ilias_max_version": "7.999"
-                }
+                    "ilias_min_version": "5.4.0",
+                    "ilias_max_version": "6.999"
+                },
+                "generate_plugin_readme_template": "ILIAS_LIBRARY",
+                "long_description_template": "src/LONG_DESCRIPTION.md"
             },
             "autoload": {
                 "psr-4": {
@@ -282,9 +284,9 @@
                 "table"
             ],
             "support": {
-                "source": "https://github.com/fluxapps/CustomInputGUIs/tree/v0.43.2"
+                "source": "https://github.com/fluxapps/CustomInputGUIs/tree/v0.42.9"
             },
-            "time": "2021-08-31T08:50:12+00:00"
+            "time": "2021-06-28T12:12:20+00:00"
         },
         {
             "name": "srag/dic",

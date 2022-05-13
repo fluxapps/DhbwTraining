@@ -1,7 +1,7 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '2.0.2',
-        'version' => '2.0.2.0',
+        'pretty_version' => '2.0.3',
+        'version' => '2.0.3.0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,8 +11,8 @@
     ),
     'versions' => array(
         'flux/dhbwtraining' => array(
-            'pretty_version' => '2.0.2',
-            'version' => '2.0.2.0',
+            'pretty_version' => '2.0.3',
+            'version' => '2.0.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -53,12 +53,12 @@
             'dev_requirement' => false,
         ),
         'srag/custominputguis' => array(
-            'pretty_version' => '0.43.2',
-            'version' => '0.43.2.0',
+            'pretty_version' => '0.42.9',
+            'version' => '0.42.9.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../srag/custominputguis',
             'aliases' => array(),
-            'reference' => '547ac0aaf7056848aac936b965e8847deb1cf415',
+            'reference' => '14967d168c8f62e20e6f0b46b03109063c912541',
             'dev_requirement' => false,
         ),
         'srag/dic' => array(
