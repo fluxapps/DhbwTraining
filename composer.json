@@ -1,7 +1,7 @@
 {
   "name": "flux/dhbwtraining",
   "description": "ILIAS Plugin DhbwTraining",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "keywords": [
     "ilias",
     "fluxlabs",
@@ -21,7 +21,7 @@
     "php": ">=7.0",
     "ramsey/uuid": "^3.8",
     "srag/activerecordconfig": "0.20.7",
-    "srag/custominputguis": "0.43.2",
+    "srag/custominputguis": "0.42.9",
     "srag/dic": "0.34.1",
     "srag/librariesnamespacechanger": "0.16.1",
     "srag/removeplugindataconfirm": "0.8.1"
