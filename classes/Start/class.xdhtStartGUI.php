@@ -452,8 +452,13 @@ class xdhtStartGUI
             ->user()
             ->getId()), function (array $items, array $competence) : array {
 
-            $title = (new ilBasicSkill($competence["skill_node_id"]))->getLevelData(ilPersonalSkill::getSelfEvaluation(self::dic()->user()->getId(), $competence["skill_node_id"],
-                0, $competence["skill_node_id"]))["title"];
+            $level_id = ilPersonalSkill::getSelfEvaluation(self::dic()->user()->getId(), $competence["skill_node_id"], 0, $competence["skill_node_id"]);
+
+            if ($level_id === null) {
+                return [];
+            }
+
+            $title = (new ilBasicSkill($competence["skill_node_id"]))->getLevelData($level_id)["title"];
 
             if ($title === null) {
                 return [];
