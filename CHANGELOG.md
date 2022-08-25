@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## [2.0.4]
+- fixed bug with renderCompetences
+
 ## [2.0.3]
 - changed srag/custominputguis to 0.42.9
 
