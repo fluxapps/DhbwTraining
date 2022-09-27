@@ -50,7 +50,7 @@ As ILIAS administrator go to "Administration->Plugins" and install/activate the 
 * PHP >=7.0
 * Recommender Phython Software
 
-## Maintenance
+### Maintenance
 fluxlabs ag, support@fluxlabs.ch
 
 This project is maintained by fluxlabs.
